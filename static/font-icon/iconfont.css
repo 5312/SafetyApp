@@ -1,0 +1,80 @@
+@font-face {
+  font-family: "safety-icon"; /* Project id 2326982 */
+  src: 
+       url('data:application/x-font-woff2;charset=utf-8;base64,d09GMgABAAAAAA9kAAsAAAAAGdQAAA8UAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHFQGZACFGgqiJJw6ATYCJANECyQABCAFhREHgiYbABYzg8LGAQQoXovsvzqwg+GzM6hPswVsE6q9etUeEPFaOwOD8MVxSW0jRqohEGHG/c+11zgjfJEg7/pQSni+3y899933CRNWm5UhVkAKWBKXVKaqksjWoqsRqFZ1fHXQ1m8BBNxP94rxZarMZWr9m231Xde8Czkkj0BKLjpA2+zIOHH0iDaSKAM82gQbxAajauEii5Xbl8tm7e8rwjQHPB+s+7ekddJ6UAqDEsd6wZlrch087PqBH2bwf3OlTe49QuGgSN78yebgZ2ZhjueI5/ZoykkZbR06YFV1gJA9VUDjakStqzTkdCpwPEJnk6laiOeu8JhKX6aZvRwECOk3wcx9LG6SPoCLR7SzzO4VSI6WB+Z0H1/PwdYkC77XJYZ3rMh/DphXJgx8CBS5YzDDo3GU2YxWT+aP+HHJVU2rZ0vf5dVwZ2F4A/U6OIAC3WuXJ7U2xX/QCLsDGlJOy0fQLi9M+lJ5UrlmFQMW3Hv8T9eGe6xLLl36YmZvJrSrqM4py3KmRCS4yCZ3SYZPgCXGW6/fPJcZjRH+tynHJcyTMAFHwQw4KZiCE4G54CRgHiyKLIVFf5bDAqwZHAesAk4GNgCOD7YATgB2Dzth4WqcEwfsEzgeWA1FhMxo4Q1TBTPgfAPvFfA+DVDn1MoANJHwcJiu79fHYPDDnEg6UUGlEpPZkUliMpVHo7EWwFhaEokiRWNwKgIWJxCQQBZGxEXCaVgOl0UhkROZDCJpNlkmOp00tDfRInkJLYjpleul9erFP2u5iajG41uHyWxEqbsyXiSEJexQ11/jl74PeELEthYhsc78ZDNnO0zfUTyPBJo1hB7nNqUQ6Wsqc8q3Zrncnq90K36eR/rKwBSHayG1JV2FU92KgSeI5Nw8xjTrZB7f8ZaafiShWYFieKmYbse1e0EsrtvpbB2mk6rpbxxfNPIFVw+3s7ahQ6hmpEN2jto9TFtxfhF3S0WISw+3h82EssXjgs/Xt5NTAVGaDGYkmkTjuP5ry9LtjbeXJTYJa8QS0u60JTeHTW7gqW7L6026oDLqO5IB05wsnk/zcLqbQ5vC+8vLbIWmOjSPDFSYuZWD26ein6egqa61Ro3EYAykjP1QacMgXycA4HsGHzapXEBykMsEF9Lsi0ihDpGRVehPzqmUq3+m5qQSxE6sliNTpVlNDBFuHhlNnmCygw1FlVBaQhhDljj8oOiDiBAwnu9PVHTEQ0hHUyXqlB8Wtpovqlb8efC1UdiZPW6n3W1Ww/s5TlNKq6kLSrq9jw9ESSzxoqrqq0XOjjSxW7mOVX/J47oexnIpxVOGGD+b5Qe7L9fK3Z1S3NICS4QMJ7NpE5zq5mkWTHlds8WLqFFMlwfLAhvuv0KSAfhoSarD2ENybA5p0Er2v4830vqlJg0xtkpGyNCONwW2tR3Pz2mkyjLjMIxB6AEQhm85Grw7eucs/Xer2syPR81TZsDk5nTr8viymGaVilNa7tIxJOvbgekDR1nxh3fgwDplWTXYzzPmkYlVaLo7ib/NI5lDijOD7sC0NJ7/rJ877MoOJAc4B8I1V0CjlOLY+ZmdtjKebVJgHWP86Dl6eEIbEFJePx3wx70uXSkp56GyRwhggASHeung8WWJAxDbGKL48k1sx9ZQ/3Nr4cjWxt3Fo9sbdpVaoY7/2ZF74fCTc0jLSTSVVoyBU8RzaSmEmDYDkNp0uL2PV6gDjAPolg7S/mbeDAMtUc0/Tn8zlZ0XGRdfI3w3Za44bdp+cZf9tS3YZC21mA1VWxKZgqJEgAPAXGh4W054Kc3V7yNycxB2SK+GwB28SlT/2RlwgTOjw4ehvj0MfV/xlijXTUgsVw994ADH8wJohb661/cUhWj7gvAbQS8sEgThUT0Ousvjy8Pl+rHr6c3p3o1JNcnsfra4NKpGARDXie/9uICktNxyKUhS01dVsR1Gt3iJn4imBYEuy1IxNbuPkmkFekevHi9U8xaQ2jYULycKm2ictuhfX0IPtTV+oOGSuHSArr11tEzfzAevE8acK/FkV4ifmdFnHLin5ZpSDVwTPvwJNN4b9o+ng3DFrbsMR2RP5Z9oOkds7u7S063XpT2l8MJNv6qFwTp/WbciJfVS3C7gHvdMQeMxTrScPrfaMffVVNorJzgd5FUrZ/1eG2EwF9Uu2FHdUdGyA7p21Lp6eqPIuW3UGHjAPmN/+y/pDHcdZYPvIvA9zD4ePrgCR1n/uESeKwpPcxqGcLsbfXemI7h+SvXs4sVbOVuV6+jroLGxxaaAjn5hG49bv7TAUGC566SCz1ricQFKsamaF/eM19Ghq9T4/ZpK3ccBAeHuuqOD9yzu/z3/kERsEcnrr6b//AMByRM7t+SQS/7FF/U9HFoyF0vyCC7cn8Z+ci2fAGuTunz1/T6Jqw30EK59ggWqBjGCDXiYVT9DxVI3EGCWqKvC0jMBbWoNvFcXqE6dIVxJutTqYbSBmtS9Df09375/ePbRd377a48PYyuizAvvnued/3LAXudB7PVB3hmVNbOpwmFR5iTvNe+957lxcyYXaY75SwSJrdjdMeY9kMgq3o01Rxd6sSFy+Bd4Q8DTt3dQeGOHIo6fXH13yZJp9rRlpFmUJVI9/fx2JaUvYKhVZoEOzEJ4eeE+DP09eohNYZys5CrJ48K234UhJgc8wwzFNcLf24TlEwa061YwM5ll0bmKTFusI+6YPd4S697pLYamMd4f783VeQxVmMT4IjLVSk3043d1xZXGl+WdoHqpNaCdBvqg77DEGPnr5xzFiS6bM8meHeXNiUq2swB2zXhzmaZUpfZqypqhmInWP/74Xh4Gv/nv3xcTMVCbX+1Tqko0vjc1ZSqvV1WmaaryWBUWudwSZT2QCcozlubssyoy5DnTufA8hU0KTbv//2ODXEpIt/+B10IxIXp6wGAIpinDgEA8XO+X+2QrV0q9ivInCr/UR5tP5pc/KZd7ib1lPrn/ibxc5nXdKyuXD8W88m5jcStsjkB43oporPjx6buK5yfSY5OeHnUC879f1khLJcWLFxdLSqW3BQ16sqRYWnpb/s92FiGoyWudjPrCezufU0q5RfFfDWOUz0ctvoUeUkC5nGQ5+1qG0hgzQp966bQtdpqrfZEX+/EN5lT0WOwRqDIRCa/9kBoU9lIjwV5hEKQBD+evVC/4W//jcW+0WNLwazcSMygEEfEOJUFg4Tc9StS/v5t34zH0h+LHr3bJd33VPgv/1WwYCwfvW84H437rRTnjmiuqICd+7sUdctZGfNrbWcofePyakW0YWkg2f29NcnXutm3bhZWY0M8meyoUkhVD6wujVD3Vod1rDmEq6X9ti/6qxiHhYFZWERGDTM4Iq2hPnoieBUQIAAOicu+T6M9LYB8q+hR75tc2XlBciFwruN6GIjU1stb+AEs1Bvv0wfi4yzBnnMRI9DPKdckuZGl0buBw6a0li7TU9CaSHegSRY791dLXNx3maQNAty4Q17MdILFy3NxiMrUtCnTFZKsp/QcCP7gvEOA6jCkByoHpqluG+eW5qWNpNG6hUPAyzn6PPth0h7h+jrFxZiISR5u4YlHTGPHgAkoDXCep55wV/SBawxY+EGSLyW6ykh0cEM6ve5xkKnHFOmKinTGZeet+BvtAz2ggOIvA+X8oo4nMIUQhwLqiC3VVYbfHDaQ8MZ38Gna2G6g1Vup1VYbabwwBfVW1vtbwnX7MKr2+yhjohQ1/fXoGuDDU6CsrdTUG4GQnNf+lU+9zvqIP7OuAZNezr6jTEVa8vstR/nVzUnhbsBfFQlvfLYSbOwQFRcUQcSkJej8bF2DoM6H68vOar1p1BoeVZ/k2+nDjJ4SLTre0KUFydpNB2vzliAZcfb4DN9Uxi+ewMSVnDqPnCBnXpdekKZ48nL3/6EYYCg57H8gBUI9xjk6k/ftIa/MrpdcjiueP9DqXYwXuj+dGWO/M7uyHTLwI8GMHupftAHQzdiZxsAFdHBk0Fhg8pwK1mMFy2WdfHipJ6j1CC5ZIBxqTE0WEIkDMRoAVbTv3l/vRVJMJ3CMtSG7eBvrx9TbCjva0H1slgDuxYRPVi7LAUEwULRkJ+ps27/L50Ah0KcFUiT5a2bGXVo1JLFwBssAVp/gRlW27CpW2PVBEYnpzerTRpOa0UTM6Lv0jbZlaXdYKkL9VOk6zRFmUnFwUJNAflNpGGar1+upuAv3d0rgB/vPKOnoD7+MW0fvOFZZ2Y2W91ZtSxzGsQL31+SSW9hXOjkbhtbqFY299HUJFOMVfb0UB6WsTqUFBkLpAYvGsn3NG5tHd0GaZSWAWFm+PZpXPK4kJaJTbd2dIPDRTjNQqs3lKYl1RDme0K3Ym0LDhHn9JntQmhv7Nj8iQjC+XyH9iwEHI3N5uXiKQf3HUFhibHwc+oa8jQqXepvsRZqX4e72eDVbqQ0R2XfIDxERxqX5DpToWQDzpOqpfIOrm/5sPWyIioW/xXkRVW/oHgjX6CFEMCsum1us9RHrxPxpqIzL6V535N6U74Nfzi/EVlJTfsPinS92/t2nsgAyv99GJL1QKryoWgD8lAhtY2n/nG9dAgfxwvQRGel50nWfADQUQAnxjuRjO7wL4L1JeAu9L3qbWhoeEjKltMmAQbFIIyHUbnqw74am6G+7YFBID5LeNoAGjAALRFlfaCazDJhh04MImOGSebkJABz7QkeG/aaj4U0f6SXjHpj5/1+MccP0deg0IhAmPW26EdzJO6hcgkdqn7Mu/UJUWgn523PCHoTC4n09HE6LlEx2G4ZSiUjOiM1oGn/EPzjNDaz3Pg09R0EgT5bvxWFIDjoTP9vq8ChAgb9sEF2sPNATPkWOTPgUgIdJ6qrN/QUrJajcT6i+CKP6DramR3g43NTJpp38CjLbnXUdAakWZSSJxhmHcnOE+1logO0cv0ZyWKSSc4hHdQ+Z2xvPrSYmOluvNLo2M3zEXmLkBNqJixRFXPPElkFAiiSWRVDLJF0tUHGpfloRBDsY/ojHgFCv6piGfnVJZvnLnrIWIy0tzMgk8PQW0CAVGwgRh8UrL0nm3QqP7N05FWXlnDcams/NOWXBUTnjU1ShKgel0mb01TpfgztKVIEuxpHV0jEaiY23wJFXZmCnzLbWu6rD2CSYgkU5e1jl7ekwUPe/tAQAAAA==') format('woff2');
+     /*  url('iconfont.woff?t=1622434458151') format('woff'),
+       url('iconfont.ttf?t=1622434458151') format('truetype'); */
+}
+
+.safety-icon {
+  font-family: "safety-icon" !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.safety-icon-choucha:before {
+  content: "\e60e";
+}
+
+.safety-icon-paichaxiang:before {
+  content: "\e610";
+}
+
+.safety-icon-choucha1:before {
+  content: "\e601";
+}
+
+.safety-icon-choucha2:before {
+  content: "\e66a";
+}
+
+.safety-icon-xiaoxi3:before {
+  content: "\e616";
+}
+
+.safety-icon-paichabu:before {
+  content: "\e607";
+}
+
+.safety-icon-xiada--release_circle:before {
+  content: "\e7a1";
+}
+
+.safety-icon-xiaohaoshenqing_xiaohaoshenqing:before {
+  content: "\e631";
+}
+
+.safety-icon-liebiaozonglantubiao_zhenggaizhongyinhuan:before {
+  content: "\e64b";
+}
+
+.safety-icon-jianchafuchabeifen:before {
+  content: "\e7ca";
+}
+
+.safety-icon-zhenggai:before {
+  content: "\e603";
+}
+
+.safety-icon-fenxi1:before {
+  content: "\e738";
+}
+
+.safety-icon-fengxian:before {
+  content: "\e606";
+}
+
+.safety-icon-wodedangxuan:before {
+  content: "\e602";
+}
+
+.safety-icon-yinhuan1:before {
+  content: "\e620";
+}
+
+.safety-icon-wodeA:before {
+  content: "\e600";
+}
+

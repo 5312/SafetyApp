@@ -1,0 +1,95 @@
+{
+	"easycom": {
+		"^u-(.*)": "@/uview-ui/components/u-$1/u-$1.vue"
+	},
+	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+		{
+			"path": "pages/danger/danger",
+			"style": {
+				"navigationBarTitleText": "隐患",
+				"enablePullDownRefresh": false,
+				"navigationStyle": "custom", // 隐藏系统导航栏
+				"navigationBarTextStyle": "white" // 状态栏字体为白色，只能为 white-白色，black-黑色 二选一
+			}
+
+		}, {
+			"path": "pages/index/index",
+			"style": {
+				"navigationBarTitleText": "uView UI"
+			}
+		},
+		{
+			"path": "pages/js/index",
+			"style": {
+				"navigationBarTitleText": "工具"
+			}
+		}, {
+			"path": "pages/risk/risk",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/analysis/analysis",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/add/add",
+			"style": {
+				"navigationBarTitleText": "录入",
+				"enablePullDownRefresh": false,
+				"navigationBarTextStyle": "black" 
+				
+			}
+
+		}
+	],
+	"globalStyle": {
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "Safety",
+		"navigationBarBackgroundColor": "#fff",
+		"backgroundColor": "#fff"
+	},	
+	"tabBar": {
+		"color": "#909399",
+		"selectedColor": "#303133",
+		"backgroundColor": "#FFFFFF",
+		"borderStyle": "black",
+		"list": [{
+				"pagePath": "pages/danger/danger",
+				"iconPath": "/static/uview/example/yinhuan1.png",
+				"selectedIconPath": "/static/uview/example/yinhuan1_select.png",
+				"text": "隐患"
+			},
+			{
+				"pagePath": "pages/risk/risk",
+				"iconPath": "/static/uview/example/fengxian.png",
+				"selectedIconPath": "/static/uview/example/fengxian_select.png",
+				"text": "风险"
+			},
+			{
+				"pagePath": "pages/add/add",
+				"iconPath": "static/uview/example/min_button.png",
+				"selectedIconPath": "static/uview/example/min_button_select.png",
+				"text": "录入",
+				"midButton": true,
+				"customIcon": false
+			},
+			{
+				"pagePath": "pages/analysis/analysis",
+				"iconPath": "static/uview/example/fenx.png",
+				"selectedIconPath": "static/uview/example/fenxi_select.png",
+				"text": "分析"
+			}, {
+				"pagePath": "pages/index/index",
+				"iconPath": "static/uview/example/wodedangxuan.png",
+				"selectedIconPath": "static/uview/example/wodedangxuan_select.png",
+				"text": "个人"
+			}
+		]
+	}
+}

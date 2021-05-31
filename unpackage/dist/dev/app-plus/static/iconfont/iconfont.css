@@ -1,0 +1,56 @@
+@font-face {
+  font-family: "safety-icon"; /* Project id 2326982 */
+  /* Color fonts */
+  src: 
+       url('/static/iconfont/iconfont.woff2?t=1622202323372') format('woff2'),
+       url('/static/iconfont/iconfont.ttf?t=1622202323372') format('truetype');
+}
+
+.safety-icon {
+  font-family: "safety-icon" !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.safety-icon-xiaohaoshenqing_xiaohaoshenqing:before {
+  content: "\e631";
+}
+
+.safety-icon-liebiaozonglantubiao_zhenggaizhongyinhuan:before {
+  content: "\e64b";
+}
+
+.safety-icon-xiadatongzhi:before {
+  content: "\e687";
+}
+
+.safety-icon-jianchafuchabeifen:before {
+  content: "\e7ca";
+}
+
+.safety-icon-zhenggai:before {
+  content: "\e603";
+}
+
+.safety-icon-fenxi1:before {
+  content: "\e738";
+}
+
+.safety-icon-fengxian:before {
+  content: "\e606";
+}
+
+.safety-icon-wodedangxuan:before {
+  content: "\e602";
+}
+
+.safety-icon-yinhuan1:before {
+  content: "\e620";
+}
+
+.safety-icon-wodeA:before {
+  content: "\e600";
+}
+

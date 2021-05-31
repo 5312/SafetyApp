@@ -1,0 +1,121 @@
+{
+  "id": "2326982",
+  "name": "SafetyApp",
+  "font_family": "safety-icon",
+  "css_prefix_text": "safety-icon-",
+  "description": "双预控",
+  "glyphs": [
+    {
+      "icon_id": "15431267",
+      "name": "抽查",
+      "font_class": "choucha",
+      "unicode": "e60e",
+      "unicode_decimal": 58894
+    },
+    {
+      "icon_id": "16528581",
+      "name": "排查项",
+      "font_class": "paichaxiang",
+      "unicode": "e610",
+      "unicode_decimal": 58896
+    },
+    {
+      "icon_id": "18707562",
+      "name": "抽查",
+      "font_class": "choucha1",
+      "unicode": "e601",
+      "unicode_decimal": 58881
+    },
+    {
+      "icon_id": "18931719",
+      "name": "抽查",
+      "font_class": "choucha2",
+      "unicode": "e66a",
+      "unicode_decimal": 58986
+    },
+    {
+      "icon_id": "19153797",
+      "name": "消 息 (3)",
+      "font_class": "xiaoxi3",
+      "unicode": "e616",
+      "unicode_decimal": 58902
+    },
+    {
+      "icon_id": "21615536",
+      "name": "排查部",
+      "font_class": "paichabu",
+      "unicode": "e607",
+      "unicode_decimal": 58887
+    },
+    {
+      "icon_id": "20978451",
+      "name": "下达--release_circle",
+      "font_class": "xiada--release_circle",
+      "unicode": "e7a1",
+      "unicode_decimal": 59297
+    },
+    {
+      "icon_id": "21423876",
+      "name": "销号申请_销号申请",
+      "font_class": "xiaohaoshenqing_xiaohaoshenqing",
+      "unicode": "e631",
+      "unicode_decimal": 58929
+    },
+    {
+      "icon_id": "5324904",
+      "name": "整改中隐患",
+      "font_class": "liebiaozonglantubiao_zhenggaizhongyinhuan",
+      "unicode": "e64b",
+      "unicode_decimal": 58955
+    },
+    {
+      "icon_id": "13543416",
+      "name": "检查复查",
+      "font_class": "jianchafuchabeifen",
+      "unicode": "e7ca",
+      "unicode_decimal": 59338
+    },
+    {
+      "icon_id": "16167775",
+      "name": "整改",
+      "font_class": "zhenggai",
+      "unicode": "e603",
+      "unicode_decimal": 58883
+    },
+    {
+      "icon_id": "10939342",
+      "name": "分析",
+      "font_class": "fenxi1",
+      "unicode": "e738",
+      "unicode_decimal": 59192
+    },
+    {
+      "icon_id": "2531743",
+      "name": "风险",
+      "font_class": "fengxian",
+      "unicode": "e606",
+      "unicode_decimal": 58886
+    },
+    {
+      "icon_id": "6777467",
+      "name": "我 的",
+      "font_class": "wodedangxuan",
+      "unicode": "e602",
+      "unicode_decimal": 58882
+    },
+    {
+      "icon_id": "18873542",
+      "name": "隐患",
+      "font_class": "yinhuan1",
+      "unicode": "e620",
+      "unicode_decimal": 58912
+    },
+    {
+      "icon_id": "12600276",
+      "name": "我 的",
+      "font_class": "wodeA",
+      "unicode": "e600",
+      "unicode_decimal": 58880
+    }
+  ]
+}
