@@ -4,8 +4,8 @@ import App from './App'
 //数据管理中心
 import store from '@/store'
 Vue.prototype.$store = store;
-// request 请求
-import $http from '@/uni_modules/zhouWei-request/js_sdk/requestConfig';
+//挂载全局http请求
+import $http from '@/config/requestConfig'
 Vue.prototype.$http = $http;
 
 Vue.config.productionTip = false
