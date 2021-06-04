@@ -21,7 +21,7 @@
 	body {
 		background-color: #f2f7fd;
 	}
-
+/* #ifndef APP-NVUE */
 	page {
 		height: 100%;
 		background-color: #f5f5f5;

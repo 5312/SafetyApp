@@ -6,7 +6,7 @@
 				<u-search placeholder="隐患查询"></u-search>
 			</view>
 		</u-navbar>
-		<view class="u-wrap">
+		<view class="u-wrap" @click="">
 			<view class="wrap-top">
 				<view>隐患排查</view>
 				<u-icon name='more-dot-fill'></u-icon>

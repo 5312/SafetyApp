@@ -1,4 +1,4 @@
-import request from '@/uni_modules/zhouWei-request/js_sdk/requestConfig';
+import request from "@/uni_modules/zhouWei-request/js_sdk/request";
 // 数据中心
 import store from '@/store';
 // 全局配置
@@ -66,15 +66,16 @@ $http.requestStart = function(options) {
 					return false;
 				}
 			} else if (item.fileType == "video") {
-				if (item.duration < 3) {
-					setTimeout(() => {
-						uni.showToast({
-							title: "视频长度不足3秒，请重新上传",
-							icon: "none"
-						});
-					}, 500);
-					return false;
-				}
+				// console.log(item)
+				// if (item.duration < 3) {
+				// 	setTimeout(() => {
+				// 		uni.showToast({
+				// 			title: "视频长度不足3秒，请重新上传",
+				// 			icon: "none"
+				// 		});
+				// 	}, 500);
+				// 	return false;
+				// }
 			}
 		}
 	}
@@ -85,9 +86,9 @@ $http.requestStart = function(options) {
 	}
 	// #endif
 	//请求前加入token
-	if (store.state.userInfo.token) {
-		options.header['user_token'] = store.state.userInfo.token;
-	};
+	// if (store.state.userInfo.token) {
+	// 	options.header['user_token'] = store.state.userInfo.token;
+	// };
 	return options;
 }
 
