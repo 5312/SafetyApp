@@ -1,12 +1,47 @@
 <template>
-	<view class="content">
-		<!-- 个人 -->
-		<image class="logo" src="/static/uview/common/logo.png"></image>
-		<view class="text-area">
-			<view class="">
-				
+	<view>
+		<u-navbar :is-back="false" title="　" :border-bottom="false">
+			<view class="u-flex u-row-right" style="width: 100%;">
+				<view class="camera u-flex u-row-center">
+					<u-icon name="camera-fill" color="#000000" size="48"></u-icon>
+				</view>
 			</view>
-			<text class="title">{{title}}</text>
+		</u-navbar>
+		<view class="u-flex user-box u-p-l-30 u-p-r-20 u-p-b-30">
+			<view class="u-m-r-10">
+				<u-avatar :src="pic" size="140"></u-avatar>
+			</view>
+			<view class="u-flex-1">
+				<view class="u-font-18 u-p-b-20">admin</view>
+				<view class="u-font-14 u-tips-color">微信号:helang_uView</view>
+			</view>
+			<view class="u-m-l-10 u-p-10">
+				<u-icon name="scan" color="#969799" size="28"></u-icon>
+			</view>
+			<view class="u-m-l-10 u-p-10">
+				<u-icon name="arrow-right" color="#969799" size="28"></u-icon>
+			</view>
+		</view>
+		
+		<view class="u-m-t-20">
+			<u-cell-group>
+				<u-cell-item icon="chat" title="消息"></u-cell-item>
+			</u-cell-group>
+		</view>
+		
+		<view class="u-m-t-20">
+			<u-cell-group>
+				<u-cell-item icon="star" title="收藏"></u-cell-item>
+				<u-cell-item icon="photo" title="相册"></u-cell-item>
+				<!-- <u-cell-item icon="coupon" title="卡券"></u-cell-item> -->
+				<!-- <u-cell-item icon="heart" title="关注"></u-cell-item> -->
+			</u-cell-group>
+		</view>
+		
+		<view class="u-m-t-20">
+			<u-cell-group>
+				<u-cell-item icon="setting" title="设置"></u-cell-item>
+			</u-cell-group>
 		</view>
 		<u-tabbar :list="tabbar" :mid-button="true"></u-tabbar>
 	</view>
@@ -16,40 +51,37 @@
 	export default {
 		data() {
 			return {
-				title: 'Hello uView',
-				tabbar: ''
+				pic:'http://59.110.63.135:9010//pic/2021052412092558_鲨鱼.png',
+				show:true
 			}
 		},
 		onLoad() {
-			this.tabbar = this.$store.state.list
+			this.tabbar = this.$store.state.list;
+		},
+		methods: {
+			personalDetail(){
+				this.$http.get('?',{
+					
+				})
+			}
 		}
 	}
 </script>
 
-<style>
-	.content {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		justify-content: center;
-	}
+<style lang="scss">
+page{
+	background-color: #ededed;
+}
 
-	.logo {
-		height: 200rpx;
-		width: 200rpx;
-		margin-top: 200rpx;
-		margin-left: auto;
-		margin-right: auto;
-		margin-bottom: 50rpx;
+.camera{
+	width: 54px;
+	height: 44px;
+	
+	&:active{
+		background-color: #ededed;
 	}
-
-	.text-area {
-		display: flex;
-		justify-content: center;
-	}
-
-	.title {
-		font-size: 36rpx;
-		color: #8f8f94;
-	}
+}
+.user-box{
+	background-color: #fff;
+}
 </style>

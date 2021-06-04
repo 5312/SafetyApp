@@ -27,7 +27,8 @@
 		{
 			"path": "pages/index/index",
 			"style": {
-				"navigationBarTitleText": "uView UI"
+				"navigationStyle": "custom", // 隐藏系统导航栏
+				"navigationBarTitleText": ""
 			}
 		},
 		{
@@ -45,7 +46,7 @@
 		}, {
 			"path": "pages/analysis/analysis",
 			"style": {
-				"navigationBarTitleText": "",
+				"navigationBarTitleText": "分析",
 				"enablePullDownRefresh": false
 			}
 

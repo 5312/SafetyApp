@@ -13,7 +13,7 @@
 			</view>
 			<!-- 统计数据 -->
 			<view class="wrap-content">
-				<view>10,235,450</view>
+				<view>{{topNum}}</view>
 			</view>
 		</view>
 		<view class="card">
@@ -34,7 +34,7 @@
 
 			</u-row>
 		</view>
-		<u-tabbar :list="tabbar" :mid-button="true"></u-tabbar>
+		<u-tabbar :before-switch="beforeSwitch" :list="tabbar" :mid-button="true"></u-tabbar>
 	</view>
 </template>
 
@@ -44,6 +44,7 @@
 			return {
 				title: '',
 				tabbar: "",
+				topNum:0,
 				cardList: [{
 						icon: 'xiada--release_circle',
 						text: '下达',
@@ -88,6 +89,9 @@
 			}
 		},
 		methods: {
+			beforeSwitch(){
+				return true
+			},
 			goList() {
 				this.$u.route({
 					url: './dangerList',
@@ -95,10 +99,23 @@
 						
 					}
 				})
+			},
+			async getYhCount(){
+				const result = await this.$http.get('?type=sel',{
+					tabid: "YH_liebiao5d9ca720-e8d5-42b1-a4c7-2505c224f7ca",
+					mid: "9c6a100d-8543-438e-9311-ce6a38e75cae",
+					job: "demo_node_1",
+					tbname: "YH",
+					T:'yh_count_sql',
+					page: 1,
+					limit: 10
+				})
+				this.topNum = result.data.count
 			}
 		},
 		onLoad() {
-			this.tabbar = this.$store.state.list
+			this.tabbar = this.$store.state.list;
+			this.getYhCount()//数据
 		}
 	}
 </script>

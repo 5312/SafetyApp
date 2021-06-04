@@ -1,12 +1,11 @@
 <template>
 	<view class="content">
-		<!-- 分析 -->
-		<image class="logo" src="/static/uview/common/logo.png"></image>
-		<view class="text-area">
-			<view class="">
-
-			</view>
-			<text class="title">{{title}}</text>
+		<view class="u-wrap">
+			<u-card  title="隐患状态分析">
+				<view class="charts-box" slot="body">
+					<qiun-data-charts type="ring" :chartData="chartData" background="none" />
+				</view>
+			</u-card>
 		</view>
 		<u-tabbar :list="tabbar" :mid-button="true"></u-tabbar>
 	</view>
@@ -16,6 +15,39 @@
 	export default {
 		data() {
 			return {
+				chartData: {
+					"categories": [
+						"2016",
+						"2017",
+						"2018",
+						"2019",
+						"2020",
+						"2021"
+					],
+					"series": [{
+						"data": [{
+								"name": "一班",
+								"value": 50
+							},
+							{
+								"name": "二班",
+								"value": 30
+							},
+							{
+								"name": "三班",
+								"value": 20
+							},
+							{
+								"name": "四班",
+								"value": 18
+							},
+							{
+								"name": "五班",
+								"value": 8
+							}
+						]
+					}]
+				},
 				title: '',
 				tabbar: ""
 			}
@@ -29,30 +61,10 @@
 	}
 </script>
 
-<style>
-	.content {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		justify-content: center;
-	}
-
-	.logo {
-		height: 200rpx;
-		width: 200rpx;
-		margin-top: 200rpx;
-		margin-left: auto;
-		margin-right: auto;
-		margin-bottom: 50rpx;
-	}
-
-	.text-area {
-		display: flex;
-		justify-content: center;
-	}
-
-	.title {
-		font-size: 36rpx;
-		color: #8f8f94;
+<style lang="scss">
+	/* 请根据需求修改图表容器尺寸，如果父容器没有高度图表则会显示异常 */
+	.charts-box {
+		width: 100%;
+		height: 300px;
 	}
 </style>
