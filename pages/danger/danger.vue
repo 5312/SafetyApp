@@ -6,7 +6,7 @@
 				<u-search placeholder="隐患查询"></u-search>
 			</view>
 		</u-navbar>
-		<view class="u-wrap" @click="">
+		<view class="u-wrap" @click="goList">
 			<view class="wrap-top">
 				<view>隐患排查</view>
 				<u-icon name='more-dot-fill'></u-icon>
@@ -21,7 +21,7 @@
 				<u-col span="6" v-for="(item,i) in cardList" :key="i">
 					<view class="item">
 						<view class="item-top-row">
-							<u-icon :name="item.icon" :color="item.color"  custom-prefix="safety-icon" ></u-icon>
+							<u-icon :name="item.icon" :color="item.color" custom-prefix="safety-icon"></u-icon>
 							<!-- <view>{{item.text}}</view> -->
 							<u-icon name="more-dot-fill"></u-icon>
 						</view>
@@ -48,47 +48,54 @@
 						icon: 'xiada--release_circle',
 						text: '下达',
 						number: '2,393',
-						color:'#1296db',
+						color: '#1296db',
 						de: '下达',
-						bg:'xiada--release_circle.png'
+						bg: 'xiada--release_circle.png'
 					},
 					{
 						icon: 'zhenggai',
 						text: '整改',
-						color:'#f4ea2a',
+						color: '#f4ea2a',
 						number: '2,393',
 						de: '整改'
 					}, {
 						icon: 'xiaohaoshenqing_xiaohaoshenqing',
 						text: '复查销号',
-						color:'red',
+						color: 'red',
 						number: '2,393',
 						de: '销号'
 					}, {
 						icon: 'choucha1',
 						text: '抽查',
 						number: '2,393',
-						color:'#d4237a',
+						color: '#d4237a',
 						de: '抽查'
 					}, {
 						icon: 'paichaxiang',
 						text: '排查',
 						number: '2,393',
-						color:'#d81e06',
+						color: '#d81e06',
 						de: '排查'
 					},
 					{
 						icon: 'xiaoxi3',
 						text: '消息',
 						number: '20',
-						color:'#8a8a8a',
+						color: '#8a8a8a',
 						de: '来自十矿的整改消息'
 					}
 				]
 			}
 		},
 		methods: {
-
+			goList() {
+				this.$u.route({
+					url: './dangerList',
+					params:{
+						
+					}
+				})
+			}
 		},
 		onLoad() {
 			this.tabbar = this.$store.state.list
@@ -162,9 +169,10 @@
 					.h-text {
 						font-size: 50rpx;
 					}
-					.detail{
-						padding:20rpx 0;
-						color:$uni-text-color-grey;
+
+					.detail {
+						padding: 20rpx 0;
+						color: $uni-text-color-grey;
 					}
 				}
 			}
