@@ -22,7 +22,6 @@
 					<view class="item">
 						<view class="item-top-row">
 							<u-icon :name="item.icon" :color="item.color" custom-prefix="safety-icon"></u-icon>
-							<!-- <view>{{item.text}}</view> -->
 							<u-icon name="more-dot-fill"></u-icon>
 						</view>
 						<view class="item-content-row">
@@ -45,13 +44,15 @@
 				title: '',
 				tabbar: "",
 				topNum:0,
+				data:[],
 				cardList: [{
 						icon: 'xiada--release_circle',
 						text: '下达',
 						number: '2,393',
 						color: '#1296db',
 						de: '下达',
-						bg: 'xiada--release_circle.png'
+						bg: 'xiada--release_circle.png',
+						event:''
 					},
 					{
 						icon: 'zhenggai',
@@ -101,6 +102,17 @@
 				})
 			},
 			async getYhCount(){
+					
+				const paicah = await this.$http.get('?type=sel',{
+					type: 'sel',
+					tabid: 'checkd2d28edd-d60d-4466-8263-aa37a5771b19',
+					mid: '93a04587-debd-43f3-8901-a70eb4faf0a5',
+					job: 'demo_node_2',
+					tbname: 'yh_check',
+					T: 'yh_check_sql',
+					menu_type: 'check'
+				})
+				this.cardList[4].number = paicah.data.count;
 				const result = await this.$http.get('?type=sel',{
 					tabid: "YH_liebiao5d9ca720-e8d5-42b1-a4c7-2505c224f7ca",
 					mid: "9c6a100d-8543-438e-9311-ce6a38e75cae",
@@ -110,7 +122,28 @@
 					page: 1,
 					limit: 10
 				})
-				this.topNum = result.data.count
+				this.topNum = result.data.count;
+				let alldata = result.data.data
+				let get = 0;// 已下达
+				let n = 0;
+				let x = 0;
+				for (let i = 0; i < alldata.length; i++) {
+					const obj = alldata[i]
+					// 已下达
+					if(obj.yh_state == '1'){
+						get+=1
+					}
+					if(obj.yh_state == '7'){
+						n+=1;
+					}
+					if(obj.yh_state == '8'){
+						x+=1;
+					}
+				}
+				this.cardList[0].number =get
+				this.cardList[1].number =n
+				this.cardList[2].number =x
+				this.cardList[3].number = n
 			}
 		},
 		onLoad() {

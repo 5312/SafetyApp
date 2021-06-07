@@ -1,10 +1,8 @@
 <template>
 	<view class="content">
 		<!-- 风险 -->
-		<image class="logo" src="/static/uview/common/logo.png"></image>
 		<view class="text-area">
 			<view class="">
-				adsfasdf
 			</view>
 			<text class="title">{{title}}</text>
 		</view>

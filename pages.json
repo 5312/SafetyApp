@@ -4,6 +4,15 @@
 	},
 	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
 		{
+			"path": "pages/login/login",
+			"style": {
+				"navigationBarTitleText": "",
+				"navigationStyle": "custom", // 隐藏系统导航栏
+				"enablePullDownRefresh": false
+			}
+
+		},
+		{
 			"path": "pages/danger/danger",
 			"style": {
 				"navigationBarTitleText": "隐患",
@@ -12,17 +21,15 @@
 				"navigationBarTextStyle": "white" // 状态栏字体为白色，只能为 white-白色，black-黑色 二选一
 			}
 
-		}
-		,{
-		    "path" : "pages/danger/dangerList",
-		    "style" :                                                                                    
-		    {
-		        "navigationBarTitleText": "",
-		        "enablePullDownRefresh": false,
+		}, {
+			"path": "pages/danger/dangerList",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false,
 				"navigationStyle": "custom", // 隐藏系统导航栏
 				"navigationBarTextStyle": "white" // 状态栏字体为白色，只能为 white-白色，black-黑色
-		    }
-		    
+			}
+
 		},
 		{
 			"path": "pages/index/index",
@@ -39,7 +46,7 @@
 		}, {
 			"path": "pages/risk/risk",
 			"style": {
-				"navigationBarTitleText": "",
+				"navigationBarTitleText": "风险",
 				"enablePullDownRefresh": false
 			}
 
@@ -55,19 +62,20 @@
 			"style": {
 				"navigationBarTitleText": "录入",
 				"enablePullDownRefresh": false,
-				"navigationBarTextStyle": "black" 
-				
+				"navigationBarTextStyle": "black"
+
 			}
 
 		}
-	    
-    ],
+
+
+	],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "Safety",
 		"navigationBarBackgroundColor": "#fff",
 		"backgroundColor": "#fff"
-	},	
+	},
 	"tabBar": {
 		"color": "#909399",
 		"selectedColor": "#303133",

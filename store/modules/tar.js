@@ -28,7 +28,9 @@ export const state = {
 			"pagePath": "/pages/index/index",
 			"iconPath": "/static/uview/example/wodedangxuan.png",
 			"selectedIconPath": "/static/uview/example/wodedangxuan_select.png",
-			"text": "个人"
+			"text": "个人",
+			"count": 1,
+			
 		}
 	]
 };

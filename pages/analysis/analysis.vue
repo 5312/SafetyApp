@@ -26,23 +26,23 @@
 					],
 					"series": [{
 						"data": [{
-								"name": "一班",
+								"name": "一矿",
 								"value": 50
 							},
 							{
-								"name": "二班",
+								"name": "二矿",
 								"value": 30
 							},
 							{
-								"name": "三班",
+								"name": "三矿",
 								"value": 20
 							},
 							{
-								"name": "四班",
+								"name": "十矿",
 								"value": 18
 							},
 							{
-								"name": "五班",
+								"name": "八矿",
 								"value": 8
 							}
 						]
