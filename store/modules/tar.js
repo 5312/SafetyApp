@@ -29,13 +29,18 @@ export const state = {
 			"iconPath": "/static/uview/example/wodedangxuan.png",
 			"selectedIconPath": "/static/uview/example/wodedangxuan_select.png",
 			"text": "个人",
-			"count": 1,
+			"count": 0
 			
 		}
 	]
 };
 export const mutations = {
-
+	msg(state){
+		state.list[4].count = state.mesNum
+	}
+};
+export const getters = {
+	
 };
 export const actions = {
 

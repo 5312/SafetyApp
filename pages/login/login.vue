@@ -92,6 +92,9 @@
 				return style;
 			}
 		},
+		onLoad(){
+			this.isLogin();
+		},
 		methods: {
 			isLogin() {
 				//判断缓存中是否登录过，直接登录
@@ -99,7 +102,7 @@
 					const value = uni.getStorageSync('setUser');
 					if (value) {
 						//有登录信息
-						this.$store.commit('setUser', JSON.parse(res.data.us)); //存入状态
+						this.$store.commit('setUser', JSON.parse(value)); //存入状态
 						this.$u.route({
 							type: 'tab',
 							url: '../danger/danger',
@@ -107,6 +110,7 @@
 					}
 				} catch (e) {
 					// error
+					console.log(e)
 				}
 			},
 			startLogin(e) {
@@ -138,7 +142,8 @@
 				this.isRotate = true
 				this.$http.post('?type=login', {
 					name: this.tel,
-					pwd: this.password
+					pwd: this.password,
+					laod:false
 				}).then(res => {
 					setTimeout(() => {
 						if (res.data.code == '200') {

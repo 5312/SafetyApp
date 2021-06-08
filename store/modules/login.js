@@ -6,6 +6,9 @@ export const mutations = {
 		state.user = data
 	}
 };
+export const getters = {
+	
+}; 
 export const actions = {
 
 };

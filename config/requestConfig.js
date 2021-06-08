@@ -19,6 +19,7 @@ setTimeout(() => {
 
 //可以new多个request来支持多个域名请求
 let $http = new request({
+	timeout: 100000,
 	//接口请求地址
 	baseUrl: base.baseUrl,
 	//服务器本地上传文件地址
@@ -37,7 +38,7 @@ let $http = new request({
 let requestNum = 0;
 //请求开始拦截器
 $http.requestStart = function(options) {
-	console.log("请求开始", options);
+	// console.log("请求开始", options);
 	if (options.load) {
 		//打开加载动画
 		// store.commit("setLoadingShow", true);

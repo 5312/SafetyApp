@@ -19,7 +19,7 @@
 		<view class="card">
 			<u-row gutter="30" align="center" justify='center'>
 				<u-col span="6" v-for="(item,i) in cardList" :key="i">
-					<view class="item">
+					<view class="item" @click="routes(item.event)">
 						<view class="item-top-row">
 							<u-icon :name="item.icon" :color="item.color" custom-prefix="safety-icon"></u-icon>
 							<u-icon name="more-dot-fill"></u-icon>
@@ -38,72 +38,96 @@
 </template>
 
 <script>
+	import {
+		mapState,
+		mapMutations
+	} from 'vuex';
 	export default {
 		data() {
 			return {
 				title: '',
 				tabbar: "",
-				topNum:0,
-				data:[],
-				cardList: [{
+				topNum: 0,
+				data: [],
+			}
+		}, 
+		computed:{
+			...mapState(['mesNum','message']),
+			cardList(){
+				return  [{
 						icon: 'xiada--release_circle',
 						text: '下达',
-						number: '2,393',
+						number: '0',
 						color: '#1296db',
 						de: '下达',
 						bg: 'xiada--release_circle.png',
-						event:''
+						event: '../getDOWN/getDOWN' //
 					},
 					{
 						icon: 'zhenggai',
 						text: '整改',
 						color: '#f4ea2a',
-						number: '2,393',
-						de: '整改'
+						number: '0',
+						de: '整改',
+						event: '../zhengGai/zhengGai'
 					}, {
 						icon: 'xiaohaoshenqing_xiaohaoshenqing',
 						text: '复查销号',
 						color: 'red',
-						number: '2,393',
-						de: '销号'
+						number: '0',
+						de: '销号',
+						event: '../xiaohao/xiaohao'
 					}, {
 						icon: 'choucha1',
 						text: '抽查',
-						number: '2,393',
+						number: '0',
 						color: '#d4237a',
-						de: '抽查'
+						de: '抽查',
+						event: '../choucha/choucha'
 					}, {
 						icon: 'paichaxiang',
 						text: '排查',
-						number: '2,393',
+						number: '0',
 						color: '#d81e06',
-						de: '排查'
+						de: '排查',
+						event: '../paicha/paicha'
 					},
 					{
 						icon: 'xiaoxi3',
 						text: '消息',
-						number: '20',
+						number: this.mesNum,
 						color: '#8a8a8a',
-						de: '来自十矿的整改消息'
+						de: this.message,
+						event: ''
 					}
 				]
 			}
 		},
+ 
 		methods: {
-			beforeSwitch(){
+			routes(event) {
+				this.$u.route({
+					type: "to",
+					url: event
+				})
+			},
+			beforeSwitch() {
 				return true
 			},
 			goList() {
 				this.$u.route({
 					url: './dangerList',
-					params:{
-						
-					}
 				})
 			},
-			async getYhCount(){
-					
-				const paicah = await this.$http.get('?type=sel',{
+			async getYhCount() {
+				const users = this.$store.state.user
+				let level = 'A';
+				let bind ='';
+				if (users) {
+					level = users.level
+					bind = users.department_id;
+				}
+				const paicah = await this.$http.get('?type=sel', {
 					type: 'sel',
 					tabid: 'checkd2d28edd-d60d-4466-8263-aa37a5771b19',
 					mid: '93a04587-debd-43f3-8901-a70eb4faf0a5',
@@ -113,42 +137,47 @@
 					menu_type: 'check'
 				})
 				this.cardList[4].number = paicah.data.count;
-				const result = await this.$http.get('?type=sel',{
-					tabid: "YH_liebiao5d9ca720-e8d5-42b1-a4c7-2505c224f7ca",
-					mid: "9c6a100d-8543-438e-9311-ce6a38e75cae",
-					job: "demo_node_1",
-					tbname: "YH",
-					T:'yh_count_sql',
+				const result = await this.$http.get('?type=sel', {
+					type: 'sel',
+					tabid: 'YH_liebiao61c11f22-1a18-4562-a4d7-03237c9ba6f6',
+					mid: '9c6a100d-8543-438e-9311-ce6a38e75cae',
+					job: 'demo_node_1',
+					tbname: 'YH',
+					bind: bind,
+					level:level,
+					T: '隐患列表sql',
 					page: 1,
 					limit: 10
 				})
 				this.topNum = result.data.count;
 				let alldata = result.data.data
-				let get = 0;// 已下达
+				let get = 0; // 已下达
 				let n = 0;
 				let x = 0;
+				if(!alldata) return;
 				for (let i = 0; i < alldata.length; i++) {
 					const obj = alldata[i]
 					// 已下达
-					if(obj.yh_state == '1'){
-						get+=1
+					if (obj.yh_state == '0') {
+						get += 1
 					}
-					if(obj.yh_state == '7'){
-						n+=1;
+					if (obj.yh_state == '7') {
+						n += 1;
 					}
-					if(obj.yh_state == '8'){
-						x+=1;
+					if (obj.yh_state == '8') {
+						x += 1;
 					}
 				}
-				this.cardList[0].number =get
-				this.cardList[1].number =n
-				this.cardList[2].number =x
+				this.cardList[0].number = get
+				this.cardList[1].number = n
+				this.cardList[2].number = x
 				this.cardList[3].number = n
 			}
 		},
 		onLoad() {
 			this.tabbar = this.$store.state.list;
-			this.getYhCount()//数据
+			this.getYhCount() //数据
+			this.$store.commit('setMessage', '99+')
 		}
 	}
 </script>

@@ -31,7 +31,7 @@
 		
 		<view class="u-m-t-20">
 			<u-cell-group>
-				<!-- <u-cell-item icon="star" title="收藏"></u-cell-item> -->
+				<u-cell-item icon="star" title="考核管理        "></u-cell-item>
 				<!-- <u-cell-item icon="photo" title="相册"></u-cell-item> -->
 				<!-- <u-cell-item icon="coupon" title="卡券"></u-cell-item> -->
 				<!-- <u-cell-item icon="heart" title="关注"></u-cell-item> -->

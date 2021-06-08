@@ -69,7 +69,52 @@
 		}
 
 
-	],
+	    ,{
+            "path" : "pages/getDOWN/getDOWN",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "下达",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/zhengGai/zhengGai",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "整改",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/xiaohao/xiaohao",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "销号",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/choucha/choucha",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "抽查",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/paicha/paicha",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "排查",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+    ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "Safety",

@@ -233,7 +233,7 @@
 					</scroll-view>
 				</swiper-item>
 				<swiper-item class="swiper-item">
-					<scroll-view v-if="orderList[3].length!=0" scroll-y style="height: 100%;width: 100%;"
+					<scroll-view v-if="orderList[3]&&orderList[3].length!=0" scroll-y style="height: 100%;width: 100%;"
 						@scrolltolower="reachBottom">
 						<view class="page-box">
 							<view class="order" v-for="(res, index) in orderList[3]" :key="res.id">
@@ -322,15 +322,15 @@
 				],
 				dataList: [],
 				list: [{
-						name: '新排查'
+						name: '我的'
 					}, {
-						name: '已下达'
+						name: '下达'
 					},
 					{
-						name: '已整改'
+						name: '整改'
 					},
 					{
-						name: '已销号',
+						name: '销号',
 						// count: 12
 					}
 				],
@@ -338,14 +338,15 @@
 				swiperCurrent: 0,
 				tabsHeight: 0,
 				dx: 0,
+				page:1,
 				loadStatus: ['loadmore', 'loadmore', 'loadmore', 'loadmore'],
 			};
 		},
 		onLoad() {
 			this.getOrderList(0);
-			this.getOrderList(1);
-			this.getOrderList(2);
-			this.getOrderList(3);
+			// this.getOrderList(1);
+			// this.getOrderList(2);
+			// this.getOrderList(3);
 		},
 		computed: {
 			state() {
@@ -365,55 +366,64 @@
 					return stateText[val]
 				}
 			},
-			// 价格小数
-			priceDecimal() {
-				return val => {
-					// if (val !== parseInt(val)) return val.slice(-2);
-					// else return '00';
-				};
-			},
-			// 价格整数
-			priceInt() {
-				return val => {
-					// if (val !== parseInt(val)) return val.split('.')[0];
-					// else return val;
-				};
-			}
 		},
 		methods: {
 			reachBottom() {// 下拉懒加载
+				this.loadStatus.splice(this.current, 1, "loading")
+				this.page +=1;
+				this.getOrderList(this.current,true);
 				// 此tab为空数据
 				// if (this.current != 2) {
-				// 	this.loadStatus.splice(this.current, 1, "loading")
 				// 	setTimeout(() => {
 				// 		this.getOrderList(this.current);
 				// 	}, 1200);
 				// }
 			},
 			// 页面数据
-			async getOrderList(idx) {
-				const result_yh = await this.$http.get('?type=sel', {
+			async getOrderList(idx,ispush = true) {
+				const users = this.$store.state.user
+				let level = 'A';
+				let bind ='';
+				if (users) {
+					level = users.level
+					bind = users.department_id;
+				}
+				let state ={
+					0:0,
+					1:0,
+					2:1,
+					3:7
+				} 
+				const result_yh = await this.$http.post('?type=sel', {
 					tabid: "YH_liebiao5d9ca720-e8d5-42b1-a4c7-2505c224f7ca",
 					mid: " 9c6a100d-8543-438e-9311-ce6a38e75cae",
 					job: "demo_node_1",
 					tbname: "YH",
-					bind: "761c99d3-06ed-42df-81c6-79dbe41683ef",
-					level: "A",
+					bind: bind,// 本部门 查看条件
+					level: level,
 					T: "隐患列表sql",
-					page: 1,
+					state:state[idx],// 条件
+					page: this.page,
 					limit: 10
 				})
+				if(!result_yh.data.data)return;
 				for (let i = 0; i < result_yh.data.data.length; i++) {
 					const data1 = result_yh.data.data[i]
-					this.orderList[idx].push(data1);
+					if(ispush){
+						this.orderList[idx].push(data1);
+					}else{
+						this.orderList[idx] = [];
+						this.orderList[idx].push(data1);
+					}
 				}
 				this.loadStatus.splice(this.current, 1, "loadmore")
 			},
 
 			// tab栏切换
 			change(index) {
+				this.page = 1;// 页数重置
 				this.swiperCurrent = index;
-				// this.getOrderList(index);
+				this.getOrderList(index,false);
 			},
 			transition({
 				detail: {

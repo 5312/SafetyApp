@@ -4,9 +4,18 @@
 		<view class="wrap">
 			<u-form :model="form" ref="uForm" :error-type="errorType">
 				<u-form-item label-width='150rpx' prop="responsibledepartme" label="责任部门">
-					<u-select v-model="depart" label-name='bumen_name' value-name='id' :list="departmentData"
-						@confirm="departFunc"></u-select>
-					<u-input v-model="form.responsibledepartmeT" type="select" @click='depart = true' />
+					<u-popup v-model="depart" mode="center" border-radius='14' width='90%' height="90%">
+						<ly-tree ref="tree" :props="props" :showRadio='true' :tree-data="treeData" :ready="ready"
+							node-key="id" @node-expand="handleNodeExpand" @node-click="handleNodeClick">
+						</ly-tree>
+						<view class="btngroup">
+							<u-button size="medium" :ripple="true" shape="square" type="primary" @click="treeSelect">确定
+							</u-button>
+							<u-button size="medium" :ripple="true" shape="square" type="info" @click="depart=false">取消
+							</u-button>
+						</view>
+					</u-popup>
+					<u-input v-model="form.responsibledepartmeT" :select-open='depart' type="select" @click='zren' />
 				</u-form-item>
 				<u-form-item label-width='150rpx' prop="address" label="检查地点">
 					<u-input v-model="form.address" />
@@ -17,16 +26,19 @@
 				<u-form-item label-width='150rpx' prop="inspeopleTitle" label="检查人">
 					<u-select v-model="jcpeople" label-name='title' value-name='value' :list="inspeopleList"
 						@confirm="insFunc"></u-select>
-					<u-input v-model="form.inspeopleTitle" type="select" @click='jcpeople = true' />
+					<u-input v-model="form.inspeopleTitle" :select-open='jcpeople' type="select"
+						@click='jcpeople = true' />
 				</u-form-item>
 				<u-form-item label-width='150rpx' prop="accompanyTitle" label="陪检人">
 					<u-select v-model="pjpeople" label-name='title' value-name='value' :list="inspeopleList"
 						@confirm='accFunc'></u-select>
-					<u-input v-model="form.accompanyTitle" type="select" @click='pjpeople = true' />
+					<u-input v-model="form.accompanyTitle" :select-open='pjpeople' type="select"
+						@click='pjpeople = true' />
 				</u-form-item>
 				<u-form-item label-width='150rpx' prop="inspectiondate" label="检查日期">
 					<u-calendar v-model="dateShow" mode="date" @change='inspectiondateFunc'></u-calendar>
-					<u-input v-model="form.inspectiondate" type="select" @click='dateShow = true' />
+					<u-input v-model="form.inspectiondate" :select-open='dateShow' type="select"
+						@click='dateShow = true' />
 				</u-form-item>
 				<u-form-item label-width='150rpx' prop="oldofclass" label="班次">
 					<u-radio-group v-model="form.oldofclass">
@@ -51,22 +63,38 @@
 				<u-form-item label-width='150rpx' prop="yh_level" label="隐患等级">
 					<!-- <u-input v-model="form.yh_level" type="textarea" /> -->
 					<u-radio-group v-model="form.yh_level">
-						<u-radio v-for="(item, index) in radioList" :key="item.ids" :name="item.dict_name + '~' + item.dict_text + '~' + item.color"
+						<u-radio v-for="(item, index) in radioList" :key="item.ids"
+							:name="item.dict_name + '~' + item.dict_text + '~' + item.color"
 							:disabled="item.isshow == 'True'?'':'disabled'">
 							{{ item.dict_name }}
 						</u-radio>
 					</u-radio-group>
 				</u-form-item>
-				<u-form-item label-width='150rpx' prop="dangertypeShow" label="隐患种类">
-					<u-select v-model="dangertypeShow" @confirm="dangertypeFunc" label-name='dict_name'
+				<u-form-item label-width='150rpx' prop="yh_kindt" label="隐患种类">
+					<!-- <u-select v-model="dangertypeShow" @confirm="dangertypeFunc" label-name='dict_name'
 						value-name='dict_name' :list="dangertype">
-					</u-select>
-					<u-input v-model="form.yh_kindt" type="select" @click='dangertypeShow = true' />
+					</u-select> -->
+					<u-popup v-model="dangertypeShow" mode="center" border-radius='14' width='90%' height="90%">
+						<ly-tree ref="hiddenDanger" :props="propsType" :showRadio='true' :tree-data="dangertype" :ready="ready"
+							node-key="ids">
+						</ly-tree>
+						<view class="btngroup">
+							<u-button size="medium" :ripple="true" shape="square" type="primary"
+								@click="dangertypeFunc">确定
+							</u-button>
+							<u-button size="medium" :ripple="true" shape="square" type="info"
+								@click="dangertypeShow = false">取消
+							</u-button>
+						</view>
+					</u-popup>
+					<u-input v-model="form.yh_kindt" :select-open='dangertypeShow' type="select"
+						@click='dangertypeShow = true' />
 				</u-form-item>
-				<u-form-item label-width='150rpx' label="标准条款">
+				<u-form-item label-width='150rpx' prop="yh_termst" label="标准条款">
 					<u-select v-model="termsShow" @confirm="termsFunc" label-name='file_name' value-name='ids'
 						:list="terms"></u-select>
-					<u-input v-model="form.yh_termst" type="select" @click='termsShow = true' />
+					<u-input v-model="form.yh_termst" :select-open='termsShow' type="select"
+						@click='termsShow = true' />
 				</u-form-item>
 				<u-form-item label-width='150rpx' label="单位罚款">
 					<u-input v-model="form.fine" type="text" />
@@ -75,13 +103,35 @@
 					<u-input v-model="form.personalfine" type="text" />
 				</u-form-item>
 				<u-form-item label-width='150rpx' label="接收部门">
-					<u-select v-model="rec" label-name='bumen_name' value-name='id' :list="departmentData"
-						@confirm="recFunc"></u-select>
-					<u-input v-model="form.yh_receivet" type="select" @click='rec = true' />
+					<!-- <u-select v-model="rec" label-name='bumen_name' value-name='id' :list="departmentData"
+						@confirm="recFunc"></u-select> -->
+					<u-popup v-model="rec" mode="center" border-radius='14' width='90%' height="90%">
+						<ly-tree ref="jieshou" :props="props" :showRadio='true' :tree-data="treeData" :ready="ready"
+							node-key="id">
+						</ly-tree>
+						<view class="btngroup">
+							<u-button size="medium" :ripple="true" shape="square" type="primary" @click="recFunc">确定
+							</u-button>
+							<u-button size="medium" :ripple="true" shape="square" type="info" @click="rec = false">取消
+							</u-button>
+						</view>
+					</u-popup>
+					<u-input v-model="form.yh_receivet" :select-open='rec' type="select" @click='rec = true' />
 				</u-form-item>
 				<u-form-item label-width='150rpx' label="抄送部门">
-					<u-select v-model="copy" label-name='bumen_name' value-name='id' :list="departmentData"
-						@confirm="copyFunc"></u-select>
+					<!-- <u-select v-model="copy" label-name='bumen_name' value-name='id' :list="departmentData"
+						@confirm="copyFunc"></u-select> -->
+					<u-popup v-model="copy" mode="center" border-radius='14' width='90%' height="90%">
+						<ly-tree ref="chasong" :props="props" :showRadio='true' :tree-data="treeData" :ready="ready"
+							node-key="id">
+						</ly-tree>
+						<view class="btngroup">
+							<u-button size="medium" :ripple="true" shape="square" type="primary" @click="copyFunc">确定
+							</u-button>
+							<u-button size="medium" :ripple="true" shape="square" type="info" @click="copy = false">取消
+							</u-button>
+						</view>
+					</u-popup>
 					<u-input v-model="form.yh_copyt" type="select" @click='copy = true' />
 				</u-form-item>
 				<u-upload ref="uUpload" :action="action" :file-list="fileList" @on-change='uploadChange'></u-upload>
@@ -102,6 +152,18 @@
 						<view class="upload-img" @click="uploadFile"></view>
 					</view>
 				</view>
+				<u-form-item label-width='180rpx' label="要求完成时间">
+					<u-calendar v-model="claim" mode="date" @change='reqDate'></u-calendar>
+					<u-input v-model="form.yh_requesttime" type="select" @click='claim = true' />
+				</u-form-item>
+				<u-form-item>
+					<u-radio-group v-model="rname" @change="radioGroupChange">
+						<u-radio name='0'>当天整改</u-radio>
+						<u-radio name='1'>一天整改</u-radio>
+						<u-radio name='2'>二天整改</u-radio>
+						<u-radio name='3'>三天整改</u-radio>
+					</u-radio-group>
+				</u-form-item>
 				<view class="btnbox u-flex u-flex-nowrap uicon-file-text-fill">
 					<u-button class="btn" type="success" :ripple="true" size="medium" @click='submit'>提交并下达</u-button>
 					<u-button class="btn" type="primary" :ripple="true" size="medium" @click="save">保存</u-button>
@@ -114,10 +176,27 @@
 </template>
 
 <script>
-	import base from '@/config/baseUrl.js'
+	import base from '@/config/baseUrl.js';
+	import LyTree from '@/components/ly-tree/ly-tree.vue'
+	import util from '@/config/utils.js'
 	export default {
+		components: {
+			LyTree
+		},
 		data() {
 			return {
+				ready: true, // 这里用于自主控制loading加载状态，避免异步正在加载数据的空档显示“暂无数据”
+				props: {
+					label: 'bumen_name', // 指把数据中的‘personName’当做label也就是节点名称
+					children: 'children' // 指把数据中的‘childs’当做children当做子节点数据
+				},
+				propsType:{
+					label: 'dict_name', // 指把数据中的‘personName’当做label也就是节点名称
+					children: 'children' // 指把数据中的‘childs’当做children当做子节点数据
+				},
+				rangeKey: 'bumen_name',
+				rname: 0, // 当天整改选中
+				claim: false, // 要求完成时间
 				video: [],
 				jcpeople: false, // 检查人
 				pjpeople: false, // 陪检人
@@ -147,11 +226,16 @@
 					yh_circuit: '',
 					id: this.$u.guid(null),
 					yh_state: 0,
+					yh_requesttime: this.getDateNow()
 				},
 				rules: { // 验证
 					responsibledepartme: [{
 						required: true,
 						message: '请输入责任部门',
+					}],
+					yh_level: [{
+						required: true,
+						message: '请输入隐患等级',
 					}],
 					address: [{
 						required: true,
@@ -181,6 +265,14 @@
 						required: true,
 						message: '请输入隐患内容',
 					}],
+					yh_kindt: [{
+						required: true,
+						message: '请输入隐患种类',
+					}],
+					yh_termst: [{
+						required: true,
+						message: '请选择标准条款',
+					}]
 				},
 				inspeopleList: [],
 				dangerData: [],
@@ -328,6 +420,10 @@
 			}
 		},
 		computed: {
+			treeData() {
+				const childrenData = util.toTreeData(this.departmentData, 'id', 'pid', 'children', '')
+				return childrenData
+			},
 			radioList() {
 				return this.dangerData.filter(function(item) {
 					if (item.type == "yh_grade") {
@@ -347,12 +443,14 @@
 				})
 			},
 			dangertype() {
-				return this.dangerData.filter(function(item) {
+				const data = this.dangerData.filter(function(item) {
 					if (item.type == "dangertype") {
-						
+
 						return item
 					}
 				})
+				const childrenData = util.toTreeData(data, 'ids', 'dict_pid', 'children', '')
+				return childrenData
 			},
 
 		},
@@ -366,6 +464,39 @@
 			this.danger()
 		},
 		methods: {
+			zren() {
+				this.depart = true
+			},
+			// 补零函数
+			doHandleZero(zero) {
+				var date = zero;
+				if (zero.toString().length == 1) {
+					date = "0" + zero;
+				}
+				return date;
+			},
+			// 获取当前年-月-日
+			getDateNow(n = 0) {
+				var myDate = new Date();
+				var tYear = myDate.getFullYear();
+				var tMonth = myDate.getMonth();
+				var tDay = myDate.getDate() * 1 + n * 1;
+
+				tMonth = this.doHandleZero(tMonth + 1);
+				tDay = this.doHandleZero(tDay);
+
+				return tYear + "-" + tMonth + "-" + tDay;
+			},
+			// 选中要求完成时间
+			reqDate(d) {
+				this.form.yh_requesttime = d.result
+			},
+			// 要求完成时间单选组
+			radioGroupChange(d) {
+				console.log(this.getDateNow(d))
+				this.rname = d
+				this.form.yh_requesttime = this.getDateNow(d);
+			},
 			uploadFile() {
 				// 视频上传
 				this.$http.urlVideoUpload({
@@ -393,21 +524,49 @@
 				this.form.inspeople = d[0].value
 				this.form.inspeopleTitle = d[0].label
 			},
-			departFunc(d) { // 责任部门
-				this.form.responsibledepartme = d[0].value;
-				this.form.responsibledepartmeT = d[0].label;
-			},
+
 			copyFunc(d) {
-				this.form.yh_copy = d[0].value;
-				this.form.yh_copyt = d[0].label;
+				// 选中的部门数据
+				let sel = this.$refs.chasong.getCheckedNodes()
+				if (sel.length != 0) {
+					this.form.yh_copy = sel[0].bumen_name+'~'+sel[0].id;
+					this.form.yh_copyt = sel[0].bumen_name;
+					this.copy = false;
+				} else {
+					this.$refs.uToast.show({
+						title: '请选择抄送部门',
+						type: 'error',
+					})
+				}
 			},
 			recFunc(d) { // 接收部门
-				this.form.yh_receive = d[0].value;
-				this.form.yh_receivet = d[0].label;
+				// 选中的部门数据
+				let sel = this.$refs.jieshou.getCheckedNodes()
+				if (sel.length != 0) {
+					this.form.yh_receive = sel[0].bumen_name+'~'+sel[0].id;
+					this.form.yh_receivet = sel[0].bumen_name;
+					this.rec = false;
+				} else {
+					this.$refs.uToast.show({
+						title: '请选择接收部门',
+						type: 'error',
+					})
+				}
 			},
 			dangertypeFunc(d) { // 隐患种类
-				this.form.yh_kind = d[0].value;
-				this.form.yh_kindt = d[0].label;
+				// this.form.yh_kind = d[0].value;
+				// this.form.yh_kindt = d[0].label;
+				let sel = this.$refs.hiddenDanger.getCheckedNodes()
+				if (sel.length != 0) {
+					this.form.yh_kind = sel[0].dict_name;
+					this.form.yh_kindt = sel[0].dict_name;
+					this.dangertypeShow = false;
+				} else {
+					this.$refs.uToast.show({
+						title: '请选择部门',
+						type: 'error',
+					})
+				}
 			},
 			termsFunc(d) { // 执行条款
 				this.form.yh_terms = JSON.stringify([{
@@ -427,17 +586,44 @@
 				// 删除文件
 				this.video.splice(index, 1)
 			},
+			handleNodeExpand() {
+
+			},
+			handleNodeClick() {
+
+			},
+			treeSelect() { // 责任部门
+				// 选中的部门数据
+				let sel = this.$refs.tree.getCheckedNodes()
+				if (sel.length != 0) {
+					this.form.responsibledepartme = sel[0].id;
+					this.form.responsibledepartmeT = sel[0].bumen_name;
+					this.depart = false;
+				} else {
+					this.$refs.uToast.show({
+						title: '请选择部门',
+						type: 'error',
+					})
+				}
+			},
 			danger() { // 班次 - 隐患等级
-				this.$http.get('?type=sel', {
-					tabid: 'YH_liebiao178698a5-ccf0-439a-8cf1-f4d8dc8121d8',
-					mid: '9c6a100d-8543-438e-9311-ce6a38e75cae',
-					job: 'demo_node_1',
-					tbname: 'YH',
-					T: '部门管理sql',
-					level: 'A'
-				}).then(res => {
-					this.departmentData = res.data.data
-				})
+				const department = uni.getStorageSync('depart');
+				if (department) {
+					this.departmentData = department
+				} else {
+					this.$http.get('?type=sel', {
+						tabid: 'YH_liebiao178698a5-ccf0-439a-8cf1-f4d8dc8121d8',
+						mid: '9c6a100d-8543-438e-9311-ce6a38e75cae',
+						job: 'demo_node_1',
+						tbname: 'YH',
+						T: '部门管理sql',
+						level: 'A'
+					}).then(res => {
+						this.departmentData = res.data.data
+						uni.setStorageSync('depart', res.data.data)
+					})
+				}
+
 				// 隐患等级
 				this.$http.get('?type=sel', {
 					tabid: 'YH_liebiao08d2367f-618b-429c-bb8f-5c7634ad508b',
@@ -481,8 +667,11 @@
 				let lev = this.$store.state.user.level;
 
 				let prop = lev + this.form.yh_level.split('~')[1];
+				// 隐患流程
 				this.form.yh_circuit = JSON.stringify(this.json[prop]) || JSON.stringify(this.unding);
-
+				this.form.operating_json = JSON.stringify(this.form) // 隐患信息插入
+				// 录入人
+				this.form.yh_enroll = this.$store.state.user.jobnumber
 				this.$http.post(
 					'?type=ajaxaddup&mid=9c6a100d-8543-438e-9311-ce6a38e75cae&tabid=YH_liebiao178698a5-ccf0-439a-8cf1-f4d8dc8121d8&job=demo_node_1&tbname=YH&T=circuit',
 					this.form).then(res => {
@@ -493,10 +682,10 @@
 							url: '/pages/danger/danger'
 						})
 						this.$u.route({
-							type:'tab',
+							type: 'tab',
 							url: '../danger/danger',
-							params:{
-								
+							params: {
+
 							}
 						})
 					}
@@ -589,6 +778,23 @@
 		justify-content: space-between;
 
 		.btn {
+			margin: 10rpx;
+		}
+	}
+
+	.btngroup {
+		position: fixed;
+		z-index: 2;
+		background: #fff;
+		bottom: 68rpx;
+		padding: 15rpx;
+		width: 80%;
+		left: 0;
+		text-align: center;
+		right: 0;
+		margin: auto;
+
+		button {
 			margin: 10rpx;
 		}
 	}

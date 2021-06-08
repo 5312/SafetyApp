@@ -1,13 +1,31 @@
 <script>
+	import {
+		mapState,
+		mapMutations
+	} from 'vuex'
 	export default {
+		components:{},
 		onLaunch: function() {
 			console.log('App Launch')
-		},
+			let users = uni.getStorageSync('setUser')
+			if (users) {
+				uni.getStorage({
+					key: 'setUser',
+					success: (res) => {
+						this.setUser(JSON.parse(res.data))
+					}
+				})
+			}
+
+		}, 
 		onShow: function() {
 			console.log('App Show')
 		},
 		onHide: function() {
 			console.log('App Hide')
+		},
+		methods: {
+			...mapMutations(['setUser']),
 		}
 	}
 </script>
@@ -21,7 +39,8 @@
 	body {
 		background-color: #f2f7fd;
 	}
-/* #ifndef APP-NVUE */
+
+	/* #ifndef APP-NVUE */
 	page {
 		height: 100%;
 		background-color: #f5f5f5;
