@@ -3,17 +3,21 @@
 		<view v-if="rectify_data.length <=0">
 			<u-empty text="暂无待整改隐患" mode="list"></u-empty>
 		</view>
-		<view v-for="(item,i) in rectify_data" :key='item.ids' @click="rectifyFun(item.ids)">
-			<u-card :title="'编号：'+item.ids" :sub-title="item.createdate"  padding="30">
+
+		<view v-for="(item,i) in rectify_data" :key='item.ids'>
+			<u-card :title="'编号：'+item.ids" @click="rectifyFun(item)" :sub-title="item.createdate" padding="30">
 				<view class="" slot="body">
 					<view class="u-body-item u-flex u-border-bottom u-col-between u-p-t-0">
 						<view class="center  u-body-item-title u-line-2">
 							<view class="u-body-item-title u-line-2 itempadding">检查人：{{split(item.inspeople)}}</view>
 							<view class="u-body-item-title u-line-2 itempadding">检查单位：{{split(item.yh_origin)}}</view>
-							<view class="u-body-item-title u-line-2 itempadding ">隐患内容：<text class="content">{{item.yh_content}}</text></view>
+							<view class="u-body-item-title u-line-2 itempadding ">隐患内容：<text
+									class="content">{{item.yh_content}}</text></view>
 							<view class="u-body-item-title u-line-2 itempadding">隐患等级：{{split(item.yh_level)}}</view>
 						</view>
-						<image src="https://img11.360buyimg.com/n7/jfs/t1/94448/29/2734/524808/5dd4cc16E990dfb6b/59c256f85a8c3757.jpg" mode="aspectFill"></image>
+						<image
+							src="https://img11.360buyimg.com/n7/jfs/t1/94448/29/2734/524808/5dd4cc16E990dfb6b/59c256f85a8c3757.jpg"
+							mode="aspectFill"></image>
 					</view>
 					<view class="u-body-item u-flex u-row-between u-p-b-0 itempadding">
 						<view class="u-body-item-title u-line-2">检查地点：{{item.address}}</view>
@@ -30,7 +34,28 @@
 				</view>
 			</u-card>
 		</view>
-
+		<u-popup v-model="show" mode="center" border-radius="14" width='80%'>
+			<u-card :title="form.responsibledepartme">
+				<view class="" slot="body">
+					<u-form :model="form" ref='uForm'>
+						<u-form-item label="整改措施:" :required='true' label-width='150' prop="yh_rectify_step">
+							<u-input type="textarea" v-model="form.yh_rectify_step" />
+						</u-form-item>
+						<u-form-item label="整改人:" :required='true' label-width='150' prop="rectify_time">
+							<u-input type="text" v-model="form.rectify_man" />
+						</u-form-item>
+						<u-form-item label="整改情况:" :required='true' label-width='150' prop="rectify_state">
+							<u-input type="text" v-model="form.rectify_state" />
+						</u-form-item>
+					</u-form>
+				</view>
+				<view slot="foot" class="btnbox u-flex u-flex-nowrap uicon-file-text-fill">
+					<u-button class="btn" type="success" :ripple="true" size="medium" @click='submit'>整改</u-button>
+					<u-button class="btn" type="primary" :ripple="true" size="medium" @click="show = false">取消
+					</u-button>
+				</view>
+			</u-card>
+		</u-popup>
 	</view>
 </template>
 
@@ -38,6 +63,10 @@
 	export default {
 		data() {
 			return {
+				show: false,
+				form: {
+					rectify_time: new Date()
+				},
 				rectify_data: [],
 			}
 		},
@@ -48,13 +77,15 @@
 			split(v) {
 				return v.split('~')[0]
 			},
-			rectifyFun(){
-				
+			rectifyFun(obj) {
+				this.form = obj
+				this.show = true;
+
 			},
 			async getRquest() {
 				const users = this.$store.state.user
 				let level = 'A';
-				let bind ='';
+				let bind = '';
 				if (users) {
 					level = users.level
 					bind = users.department_id;
@@ -81,25 +112,30 @@
 	.itempadding {
 		padding: 10rpx 0;
 	}
-	.content{
-		color:$uni-text-color-placeholder;
-		line-height:50rpx;
+
+	.content {
+		color: $uni-text-color-placeholder;
+		line-height: 50rpx;
 	}
+
 	.u-card-wrap {
 		background-color: $u-bg-color;
 		padding: 1px;
 	}
+
 	$width:170rpx;
+
 	.u-body-item {
 		font-size: 32rpx;
 		color: #333;
 		padding: 20rpx 10rpx;
 		justify-content: space-between;
 	}
+
 	.u-body-item image {
 		width: $width;
 		flex: 0 0 $width;
-		height:280rpx;
+		height: 280rpx;
 		border-radius: 8rpx;
 		margin-left: 12rpx;
 	}

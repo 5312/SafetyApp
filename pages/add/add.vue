@@ -3,7 +3,7 @@
 		<!-- 录入 -->
 		<view class="wrap">
 			<u-form :model="form" ref="uForm" :error-type="errorType">
-				<u-form-item label-width='150rpx' prop="responsibledepartme" label="责任部门">
+				<u-form-item label-width='150rpx' :required ='true' prop="responsibledepartme" label="责任部门">
 					<u-popup v-model="depart" mode="center" border-radius='14' width='90%' height="90%">
 						<ly-tree ref="tree" :props="props" :showRadio='true' :tree-data="treeData" :ready="ready"
 							node-key="id" @node-expand="handleNodeExpand" @node-click="handleNodeClick">
@@ -17,30 +17,30 @@
 					</u-popup>
 					<u-input v-model="form.responsibledepartmeT" :select-open='depart' type="select" @click='zren' />
 				</u-form-item>
-				<u-form-item label-width='150rpx' prop="address" label="检查地点">
+				<u-form-item label-width='150rpx' :required ='true' prop="address" label="检查地点">
 					<u-input v-model="form.address" />
 				</u-form-item>
-				<u-form-item label-width='150rpx' prop="yh_address_all" label="详细地点">
+				<u-form-item label-width='150rpx' :required ='true' prop="yh_address_all" label="详细地点">
 					<u-input v-model="form.yh_address_all" type="text" />
 				</u-form-item>
-				<u-form-item label-width='150rpx' prop="inspeopleTitle" label="检查人">
+				<u-form-item label-width='150rpx' :required ='true' prop="inspeopleTitle" label="检查人">
 					<u-select v-model="jcpeople" label-name='title' value-name='value' :list="inspeopleList"
 						@confirm="insFunc"></u-select>
 					<u-input v-model="form.inspeopleTitle" :select-open='jcpeople' type="select"
 						@click='jcpeople = true' />
 				</u-form-item>
-				<u-form-item label-width='150rpx' prop="accompanyTitle" label="陪检人">
+				<u-form-item label-width='150rpx' :required ='true' prop="accompanyTitle" label="陪检人">
 					<u-select v-model="pjpeople" label-name='title' value-name='value' :list="inspeopleList"
 						@confirm='accFunc'></u-select>
 					<u-input v-model="form.accompanyTitle" :select-open='pjpeople' type="select"
 						@click='pjpeople = true' />
 				</u-form-item>
-				<u-form-item label-width='150rpx' prop="inspectiondate" label="检查日期">
+				<u-form-item label-width='150rpx' :required ='true' prop="inspectiondate" label="检查日期">
 					<u-calendar v-model="dateShow" mode="date" @change='inspectiondateFunc'></u-calendar>
 					<u-input v-model="form.inspectiondate" :select-open='dateShow' type="select"
 						@click='dateShow = true' />
 				</u-form-item>
-				<u-form-item label-width='150rpx' prop="oldofclass" label="班次">
+				<u-form-item label-width='150rpx' :required ='true' prop="oldofclass" label="班次">
 					<u-radio-group v-model="form.oldofclass">
 						<u-radio v-model="item.checked" v-for="(item, index) in oldOfClass" :key="index"
 							:name="item.dict_name">
@@ -54,14 +54,13 @@
 				<u-form-item label-width='150rpx' label="行走路线">
 					<u-input v-model="form.yh_route" type="texgt" />
 				</u-form-item>
-				<u-form-item label-width='150rpx' prop="yh_content" label="隐患内容">
+				<u-form-item label-width='150rpx' :required ='true' prop="yh_content" label="隐患内容">
 					<u-input v-model="form.yh_content" type="textarea" />
 				</u-form-item>
 				<u-form-item label-width='150rpx' label="整改要求">
 					<u-input v-model="form.yh_rectify" type="textarea" />
 				</u-form-item>
-				<u-form-item label-width='150rpx' prop="yh_level" label="隐患等级">
-					<!-- <u-input v-model="form.yh_level" type="textarea" /> -->
+				<u-form-item label-width='150rpx' :required ='true' prop="yh_level" label="隐患等级">
 					<u-radio-group v-model="form.yh_level">
 						<u-radio v-for="(item, index) in radioList" :key="item.ids"
 							:name="item.dict_name + '~' + item.dict_text + '~' + item.color"

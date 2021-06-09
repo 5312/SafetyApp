@@ -1,5 +1,5 @@
 <template>
-	<view class="login">
+	<view class="login wrap">
 		<view class="content">
 			<!-- 头部logo -->
 			<view class="header">
@@ -31,6 +31,14 @@
 				<text>|</text>
 				<navigator url="register" open-type="navigate">注册账号</navigator>
 			</view>
+			<!-- <view class="buttom">
+				<view class="hint">
+					登录代表同意
+					<text class="link">用户协议、隐私政策，</text>
+					并授权使用您的账号信息（如昵称、头像、收获地址）以便您统一管理
+				</view>
+			</view> -->
+
 		</view>
 	</view>
 	<!-- <view class="wrap">
@@ -92,7 +100,7 @@
 				return style;
 			}
 		},
-		onLoad(){
+		onLoad() {
 			this.isLogin();
 		},
 		methods: {
@@ -143,7 +151,7 @@
 				this.$http.post('?type=login', {
 					name: this.tel,
 					pwd: this.password,
-					laod:false
+					laod: false
 				}).then(res => {
 					setTimeout(() => {
 						if (res.data.code == '200') {
@@ -209,76 +217,76 @@
 	@import url("../../components/watch-login/css/icon.css");
 	@import url("./css/main.css");
 
-	// .wrap {
-	// 	font-size: 28rpx;
+	.wrap {
+		font-size: 28rpx;
 
-	// 	.content {
-	// 		width: 600rpx;
-	// 		margin: 80rpx auto 0;
+		.content {
+			width: 600rpx;
+			margin: 80rpx auto 0;
 
-	// 		.title {
-	// 			text-align: left;
-	// 			font-size: 60rpx;
-	// 			font-weight: 500;
-	// 			margin-bottom: 100rpx;
-	// 		}
+			.title {
+				text-align: left;
+				font-size: 60rpx;
+				font-weight: 500;
+				margin-bottom: 100rpx;
+			}
 
-	// 		input {
-	// 			text-align: left;
-	// 			margin-bottom: 10rpx;
-	// 			padding-bottom: 6rpx;
-	// 		}
+			input {
+				text-align: left;
+				margin-bottom: 10rpx;
+				padding-bottom: 6rpx;
+			}
 
-	// 		.tips {
-	// 			color: $u-type-info;
-	// 			margin-bottom: 60rpx;
-	// 			margin-top: 8rpx;
-	// 		}
+			.tips {
+				color: $u-type-info;
+				margin-bottom: 60rpx;
+				margin-top: 8rpx;
+			}
 
-	// 		.getCaptcha {
-	// 			background-color: rgb(253, 243, 208);
-	// 			color: $u-tips-color;
-	// 			border: none;
-	// 			font-size: 30rpx;
-	// 			padding: 12rpx 0;
+			.getCaptcha {
+				background-color: rgb(253, 243, 208);
+				color: $u-tips-color;
+				border: none;
+				font-size: 30rpx;
+				padding: 12rpx 0;
 
-	// 			&::after {
-	// 				border: none;
-	// 			}
-	// 		}
+				&::after {
+					border: none;
+				}
+			}
 
-	// 		.alternative {
-	// 			color: $u-tips-color;
-	// 			display: flex;
-	// 			justify-content: space-between;
-	// 			margin-top: 30rpx;
-	// 		}
-	// 	}
+			.alternative {
+				color: $u-tips-color;
+				display: flex;
+				justify-content: space-between;
+				margin-top: 30rpx;
+			}
+		}
 
-	// 	.buttom {
-	// 		.loginType {
-	// 			display: flex;
-	// 			padding: 350rpx 150rpx 150rpx 150rpx;
-	// 			justify-content: space-between;
+		.buttom {
+			.loginType {
+				display: flex;
+				padding: 350rpx 150rpx 150rpx 150rpx;
+				justify-content: space-between;
 
-	// 			.item {
-	// 				display: flex;
-	// 				flex-direction: column;
-	// 				align-items: center;
-	// 				color: $u-content-color;
-	// 				font-size: 28rpx;
-	// 			}
-	// 		}
+				.item {
+					display: flex;
+					flex-direction: column;
+					align-items: center;
+					color: $u-content-color;
+					font-size: 28rpx;
+				}
+			}
 
-	// 		.hint {
-	// 			padding: 20rpx 40rpx;
-	// 			font-size: 20rpx;
-	// 			color: $u-tips-color;
+			.hint {
+				padding: 20rpx 40rpx;
+				font-size: 20rpx;
+				color: $u-tips-color;
 
-	// 			.link {
-	// 				color: $u-type-warning;
-	// 			}
-	// 		}
-	// 	}
-	// }
+				.link {
+					color: $u-type-warning;
+				}
+			}
+		}
+	}
 </style>
