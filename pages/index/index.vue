@@ -12,8 +12,8 @@
 				<u-avatar :src="pic" size="140"></u-avatar>
 			</view>
 			<view class="u-flex-1">
-				<view class="u-font-18 u-p-b-20">admin</view>
-				<view class="u-font-14 u-tips-color">微信号:helang_uView</view>
+				<view class="u-font-18 u-p-b-20">{{name}}</view>
+				<view class="u-font-14 u-tips-color">所属部门:{{user.department_name}}</view>
 			</view>
 			<view class="u-m-l-10 u-p-10">
 				<u-icon name="scan" color="#969799" size="28"></u-icon>
@@ -25,43 +25,58 @@
 		
 		<view class="u-m-t-20">
 			<u-cell-group>
-				<u-cell-item icon="chat" title="消息"></u-cell-item>
+				<!-- <u-cell-item icon="chat" title="消息"></u-cell-item> -->
 			</u-cell-group>
 		</view>
 		
 		<view class="u-m-t-20">
 			<u-cell-group>
 				<u-cell-item icon="star" title="考核管理        "></u-cell-item>
-				<!-- <u-cell-item icon="photo" title="相册"></u-cell-item> -->
-				<!-- <u-cell-item icon="coupon" title="卡券"></u-cell-item> -->
-				<!-- <u-cell-item icon="heart" title="关注"></u-cell-item> -->
+				<u-cell-item icon="photo" title="日报"></u-cell-item>
 			</u-cell-group>
 		</view>
 		
 		<view class="u-m-t-20">
 			<u-cell-group>
-				<u-cell-item icon="setting" title="设置"></u-cell-item>
+				<u-cell-item icon="setting" title="设置" @click="navUrl('./setting/setting')"></u-cell-item>
 			</u-cell-group>
 		</view>
-		<u-tabbar :list="tabbar" :mid-button="true"></u-tabbar>
+		<u-tabbar :list="list" :mid-button="true"></u-tabbar>
 	</view>
 </template>
 
 <script>
+	import {
+		mapState,
+		mapMutations
+	} from 'vuex';
+	import base from '../../config/baseUrl.js'
 	export default {
 		data() {
 			return {
-				pic:'http://59.110.63.135:9010//pic/2021052412092558_鲨鱼.png',
-				show:true
+				pic:'',
+				show:true,
+				name:''
 			}
 		},
 		onLoad() {
 			this.tabbar = this.$store.state.list;
+			this.name = this.user.users_name
+			this.pic =base.baseUrl+ this.user.headportrait;
+			console.log(this.pic)
+		},
+		computed:{
+				...mapState([ 'user','list']),
 		},
 		methods: {
 			personalDetail(){
-				this.$http.get('?',{
+				// this.$http.get('?',{
 					
+				// })
+			},
+			navUrl(url){
+				this.$u.route({
+					url:url
 				})
 			}
 		}

@@ -1,17 +1,21 @@
 export const state = {
-	message: '来自集团矿的处分消息',
-	mesNum: 12
+	message: '未读消息',
+	mesNum: 0,
+	title:'',
+	content:''
 };
 export const mutations = {
-	setMessage(state, data) {
+	setMessageNum(state, data) {
 		state.mesNum = data
-		state.list[4].count = state.mesNum
+		// 更新tarbar 数字
+		state.list[1].count = state.mesNum
+	},
+	setMessage(state, data){
+		state.message = data
 	}
 };
 export const getters = {
-	mesNumgetters(state, getters){
-		return getters.mesNum
-	}
+
 }; 
 export const actions = {
 

@@ -1,13 +1,12 @@
 <template>
 	<view class="content">
 		<view class="u-wrap">
-			<u-card  title="隐患状态分析">
+			<u-card  :show-head="false" title="">
 				<view class="charts-box" slot="body">
-					<qiun-data-charts type="ring" :chartData="chartData" background="none" />
+					<qiun-data-charts type="line" :chartData="chartData" background="none" />
 				</view>
 			</u-card>
 		</view>
-		<u-tabbar :list="tabbar" :mid-button="true"></u-tabbar>
 	</view>
 </template>
 
@@ -49,14 +48,12 @@
 					}]
 				},
 				title: '',
-				tabbar: ""
 			}
 		},
 		methods: {
 
 		},
 		onLoad() {
-			this.tabbar = this.$store.state.list
 		}
 	}
 </script>
@@ -65,6 +62,6 @@
 	/* 请根据需求修改图表容器尺寸，如果父容器没有高度图表则会显示异常 */
 	.charts-box {
 		width: 100%;
-		height: 300px;
+		height: 100px;
 	}
 </style>

@@ -3,10 +3,11 @@
 		<!-- 录入 -->
 		<view class="wrap">
 			<u-form :model="form" ref="uForm" :error-type="errorType">
-				<u-form-item label-width='150rpx' :required ='true' prop="responsibledepartme" label="责任部门">
+				<u-form-item label-width='150rpx' :required='true' prop="responsibledepartme" label="责任部门">
 					<u-popup v-model="depart" mode="center" border-radius='14' width='90%' height="90%">
-						<ly-tree ref="tree" :props="props" :showRadio='true' :tree-data="treeData" :ready="ready"
-							node-key="id" @node-expand="handleNodeExpand" @node-click="handleNodeClick">
+						<ly-tree v-if="isReady" ref="tree" :props="props" :showRadio='true' :ready="ready"
+							:checkOnClickNode='true' :lazy="true" :load='load' @node-expand="handleNodeExpand"
+							@node-click="handleNodeClick" node-key="id">
 						</ly-tree>
 						<view class="btngroup">
 							<u-button size="medium" :ripple="true" shape="square" type="primary" @click="treeSelect">确定
@@ -15,32 +16,32 @@
 							</u-button>
 						</view>
 					</u-popup>
-					<u-input v-model="form.responsibledepartmeT" :select-open='depart' type="select" @click='zren' />
+					<u-input v-model="form.bumen_name" :select-open='depart' type="select" @click='depart = true' />
 				</u-form-item>
-				<u-form-item label-width='150rpx' :required ='true' prop="address" label="检查地点">
-					<u-input v-model="form.address" />
+				<u-form-item label-width='150rpx' :required='true' prop="address_name" label="检查地点">
+					<u-input v-model="form.address_name" @click='anExamination' />
 				</u-form-item>
-				<u-form-item label-width='150rpx' :required ='true' prop="yh_address_all" label="详细地点">
+				<u-form-item label-width='150rpx' prop="yh_address_all" label="详细地点">
 					<u-input v-model="form.yh_address_all" type="text" />
 				</u-form-item>
-				<u-form-item label-width='150rpx' :required ='true' prop="inspeopleTitle" label="检查人">
+				<u-form-item label-width='150rpx' :required='true' prop="inspeopleTitle" label="检查人">
 					<u-select v-model="jcpeople" label-name='title' value-name='value' :list="inspeopleList"
 						@confirm="insFunc"></u-select>
 					<u-input v-model="form.inspeopleTitle" :select-open='jcpeople' type="select"
 						@click='jcpeople = true' />
 				</u-form-item>
-				<u-form-item label-width='150rpx' :required ='true' prop="accompanyTitle" label="陪检人">
+				<u-form-item label-width='150rpx' prop="accompanyTitle" label="陪检人">
 					<u-select v-model="pjpeople" label-name='title' value-name='value' :list="inspeopleList"
 						@confirm='accFunc'></u-select>
 					<u-input v-model="form.accompanyTitle" :select-open='pjpeople' type="select"
 						@click='pjpeople = true' />
 				</u-form-item>
-				<u-form-item label-width='150rpx' :required ='true' prop="inspectiondate" label="检查日期">
+				<u-form-item label-width='150rpx' :required='true' prop="inspectiondate" label="检查日期">
 					<u-calendar v-model="dateShow" mode="date" @change='inspectiondateFunc'></u-calendar>
 					<u-input v-model="form.inspectiondate" :select-open='dateShow' type="select"
 						@click='dateShow = true' />
 				</u-form-item>
-				<u-form-item label-width='150rpx' :required ='true' prop="oldofclass" label="班次">
+				<u-form-item label-width='150rpx' :required='true' prop="oldofclass" label="班次">
 					<u-radio-group v-model="form.oldofclass">
 						<u-radio v-model="item.checked" v-for="(item, index) in oldOfClass" :key="index"
 							:name="item.dict_name">
@@ -48,19 +49,31 @@
 						</u-radio>
 					</u-radio-group>
 				</u-form-item>
+				<!--  -->
+				<u-form-item label-width='150rpx' label="检查类别">
+					<u-select @confirm="checkingFunc" v-model="checking" value-name='ids' label-name='jiancha_name'
+						:list="checkingType"></u-select>
+					<!-- <u-button @click="show = true">打开</u-button> -->
+					<u-input v-model="form.yh_zhuanxiangLable" :select-open='checking' @click="checking = true"
+						type="select" />
+				</u-form-item>
+				<u-form-item label-width='150rpx' label="资金">
+					<u-input v-model="form.yh_fine" type="number" />
+				</u-form-item>
+				<!--  -->
 				<u-form-item label-width='150rpx' prop="leader" label="带班领导">
-					<u-switch slot="right" v-model="form.leader"></u-switch>
+					<u-switch slot="right" v-model="form.leaderv"></u-switch>
 				</u-form-item>
 				<u-form-item label-width='150rpx' label="行走路线">
-					<u-input v-model="form.yh_route" type="texgt" />
+					<u-input v-model="form.yh_route" type="text" />
 				</u-form-item>
-				<u-form-item label-width='150rpx' :required ='true' prop="yh_content" label="隐患内容">
-					<u-input v-model="form.yh_content" type="textarea" />
+				<u-form-item label-width='150rpx' :required='true' prop="yh_content" label="隐患内容">
+					<u-input v-model="form.yh_content" type="textarea" @click='yhCentent' />
 				</u-form-item>
 				<u-form-item label-width='150rpx' label="整改要求">
 					<u-input v-model="form.yh_rectify" type="textarea" />
 				</u-form-item>
-				<u-form-item label-width='150rpx' :required ='true' prop="yh_level" label="隐患等级">
+				<u-form-item label-width='150rpx' :required='true' prop="yh_level" label="隐患等级">
 					<u-radio-group v-model="form.yh_level">
 						<u-radio v-for="(item, index) in radioList" :key="item.ids"
 							:name="item.dict_name + '~' + item.dict_text + '~' + item.color"
@@ -69,70 +82,16 @@
 						</u-radio>
 					</u-radio-group>
 				</u-form-item>
+				<u-form-item v-if="pin_number" prop="del_dept" :required='true' label-width='150rpx' label="销号部门">
+					<u-input v-model="form.del_dept" :select-open='depart' type="select" @click='zren' />
+				</u-form-item>
 				<u-form-item label-width='150rpx' prop="yh_kindt" label="隐患种类">
-					<!-- <u-select v-model="dangertypeShow" @confirm="dangertypeFunc" label-name='dict_name'
-						value-name='dict_name' :list="dangertype">
-					</u-select> -->
-					<u-popup v-model="dangertypeShow" mode="center" border-radius='14' width='90%' height="90%">
-						<ly-tree ref="hiddenDanger" :props="propsType" :showRadio='true' :tree-data="dangertype" :ready="ready"
-							node-key="ids">
-						</ly-tree>
-						<view class="btngroup">
-							<u-button size="medium" :ripple="true" shape="square" type="primary"
-								@click="dangertypeFunc">确定
-							</u-button>
-							<u-button size="medium" :ripple="true" shape="square" type="info"
-								@click="dangertypeShow = false">取消
-							</u-button>
-						</view>
-					</u-popup>
+					<u-select v-model="dangertypeShow" label-name='dict_name' value-name='ids' :list="dangertypeAllData"
+						@confirm='dangertypeFunc'></u-select>
 					<u-input v-model="form.yh_kindt" :select-open='dangertypeShow' type="select"
 						@click='dangertypeShow = true' />
 				</u-form-item>
-				<u-form-item label-width='150rpx' prop="yh_termst" label="标准条款">
-					<u-select v-model="termsShow" @confirm="termsFunc" label-name='file_name' value-name='ids'
-						:list="terms"></u-select>
-					<u-input v-model="form.yh_termst" :select-open='termsShow' type="select"
-						@click='termsShow = true' />
-				</u-form-item>
-				<u-form-item label-width='150rpx' label="单位罚款">
-					<u-input v-model="form.fine" type="text" />
-				</u-form-item>
-				<u-form-item label-width='150rpx' label="个人罚款">
-					<u-input v-model="form.personalfine" type="text" />
-				</u-form-item>
-				<u-form-item label-width='150rpx' label="接收部门">
-					<!-- <u-select v-model="rec" label-name='bumen_name' value-name='id' :list="departmentData"
-						@confirm="recFunc"></u-select> -->
-					<u-popup v-model="rec" mode="center" border-radius='14' width='90%' height="90%">
-						<ly-tree ref="jieshou" :props="props" :showRadio='true' :tree-data="treeData" :ready="ready"
-							node-key="id">
-						</ly-tree>
-						<view class="btngroup">
-							<u-button size="medium" :ripple="true" shape="square" type="primary" @click="recFunc">确定
-							</u-button>
-							<u-button size="medium" :ripple="true" shape="square" type="info" @click="rec = false">取消
-							</u-button>
-						</view>
-					</u-popup>
-					<u-input v-model="form.yh_receivet" :select-open='rec' type="select" @click='rec = true' />
-				</u-form-item>
-				<u-form-item label-width='150rpx' label="抄送部门">
-					<!-- <u-select v-model="copy" label-name='bumen_name' value-name='id' :list="departmentData"
-						@confirm="copyFunc"></u-select> -->
-					<u-popup v-model="copy" mode="center" border-radius='14' width='90%' height="90%">
-						<ly-tree ref="chasong" :props="props" :showRadio='true' :tree-data="treeData" :ready="ready"
-							node-key="id">
-						</ly-tree>
-						<view class="btngroup">
-							<u-button size="medium" :ripple="true" shape="square" type="primary" @click="copyFunc">确定
-							</u-button>
-							<u-button size="medium" :ripple="true" shape="square" type="info" @click="copy = false">取消
-							</u-button>
-						</view>
-					</u-popup>
-					<u-input v-model="form.yh_copyt" type="select" @click='copy = true' />
-				</u-form-item>
+
 				<u-upload ref="uUpload" :action="action" :file-list="fileList" @on-change='uploadChange'></u-upload>
 				<view class="input_box u-flex">
 					<view class="upload_info u-flex" v-for="(v,i) in video" :key='i'>
@@ -170,11 +129,15 @@
 			</u-form>
 		</view>
 		<u-toast ref="uToast" />
-		<u-tabbar :list="tabbar" :mid-button="true"></u-tabbar>
+		<u-tabbar :list="list" :mid-button="true"></u-tabbar>
 	</view>
 </template>
 
 <script>
+	import {
+		mapState,
+		mapMutations
+	} from 'vuex';
 	import base from '@/config/baseUrl.js';
 	import LyTree from '@/components/ly-tree/ly-tree.vue'
 	import util from '@/config/utils.js'
@@ -184,15 +147,21 @@
 		},
 		data() {
 			return {
+				isReady: false,
 				ready: true, // 这里用于自主控制loading加载状态，避免异步正在加载数据的空档显示“暂无数据”
 				props: {
-					label: 'bumen_name', // 指把数据中的‘personName’当做label也就是节点名称
-					children: 'children' // 指把数据中的‘childs’当做children当做子节点数据
+					label: 'bumen_name',
+					isleaf: 'havechild',
+					disabled: 'disabled'
 				},
-				propsType:{
-					label: 'dict_name', // 指把数据中的‘personName’当做label也就是节点名称
-					children: 'children' // 指把数据中的‘childs’当做children当做子节点数据
+				propsType: {
+					label: 'dict_name',
+					children: 'children'
 				},
+				// 检查类别
+				checking: false,
+				checkingType: [],
+				// 
 				rangeKey: 'bumen_name',
 				rname: 0, // 当天整改选中
 				claim: false, // 要求完成时间
@@ -205,24 +174,38 @@
 				copy: false,
 				depart: false,
 				dangertypeShow: false, // 隐患种类
+				dangertypeAllData: [],
 				dateShow: false, // 日期
 				params: { // 日期
 					year: true,
 					month: true,
 					day: true,
-
 				}, // 文字提示
 				errorType: ['message', 'toast'],
+				pname: '',
+				pin_number: false, // 销号部门
 				form: {
+					yh_zhuanxiangLable: '',
+					yh_zhuanxiang: '',
+					yh_fine: 0,
+					yh_route: '',
+					yh_rectify: '',
+					yh_level: '一般隐患~c~#a7b308',
+					like1: 1,
+					file: '',
+					personalfine: 0,
+					fine: 0,
+					yh_circuit: '{"0":"B","1":"BE","2":"E","3":"A","4":"A","5":"A","6":"B","7":"B","8":"B"}',
+					yh_terms: '',
+					leaderv: false,
+					yh_content: '',
+					// 
+					address_name: '',
 					responsibledepartme: '',
 					filepath: [],
-					operating_json: JSON.stringify({
-						valie: '1',
-						title: '2'
-					}),
+					operating_json: JSON.stringify({}),
 					operating_type: '隐患下达',
-					yh_origin: '平煤神马集团~761c99d3-06ed-42df-81c6-79dbe41683ef',
-					yh_circuit: '',
+					yh_origin: '',
 					id: this.$u.guid(null),
 					yh_state: 0,
 					yh_requesttime: this.getDateNow()
@@ -244,14 +227,10 @@
 						required: true,
 						message: '请输入检查人',
 					}],
-					yh_address_all: [{
-						required: true,
-						message: '请输入详细地点',
-					}],
-					accompanyTitle: [{
-						required: true,
-						message: '请选择陪检人',
-					}],
+					// accompanyTitle: [{
+					// 	required: true,
+					// 	message: '请选择陪检人',
+					// }],
 					inspectiondate: [{
 						required: true,
 						message: '请选择日期',
@@ -268,160 +247,51 @@
 						required: true,
 						message: '请输入隐患种类',
 					}],
+					del_dept:[{
+						required: true,
+						message: '请选择销号部门',
+					}],
 					yh_termst: [{
 						required: true,
 						message: '请选择标准条款',
 					}]
 				},
-				inspeopleList: [],
+				// inspeopleList: [],
+				inspeople: [],
 				dangerData: [],
 				radio: '',
 				switchVal: false,
 				terms: [], // 条款
-				// 演示地址，请勿直接使用
-				action: 'http://59.110.63.135:9010/root/HandlerUpload.ashx?type=3',
+				action: base.baseUrl + '/root/HandlerUpload.ashx?type=3',
 				fileList: [],
-				unding: {
-					0: 'ABCDE', //提交
-					1: 'ABCDE', // 下达 --整改单位权限
-					2: 'ABCDE', // 退回 - 整改
-					3: 'ABCDE',
-					4: 'AABCDE',
-					5: 'ABCDE',
-					6: 'ABCDE',
-					7: 'ABCDE', // 整改页面 状态提交为7 复查销号页面使用
-					8: 'ABCDE'
-				},
-				json: {
-					Aa: { // 集团 -重大隐患
-						0: 'A', //提交
-						1: 'ABE', // 下达 --整改单位权限
-						2: 'BE', // 退回 - 整改
-						3: 'A',
-						4: 'A',
-						5: 'A',
-						6: 'A',
-						7: 'A', // 整改页面 状态提交为7 复查销号页面使用
-						8: 'A', // 抽查
-					},
-					Ab: { // 集团 - 较大隐患
-						0: 'A', //提交
-						1: 'ABE', // 下达 --整改单位权限
-						2: 'BE', // 退回 - 整改
-						3: 'A',
-						4: 'A',
-						5: 'A',
-						6: 'A',
-						7: 'B', // 整改页面 状态提交为7 复查销号页面使用
-						8: 'A'
-					},
-					Ac: { // 集团 - 一般隐患
-						0: 'A', //提交
-						1: 'ABE', // 下达 --整改单位权限
-						2: 'BE', // 退回 - 整改
-						3: 'A',
-						4: 'A',
-						5: 'A',
-						6: 'A',
-						7: 'B', // 整改页面 状态提交为7 复查销号页面使用
-						8: 'A'
-					},
-					Ad: { // 集团 -严重不安全行为
-						0: 'A', //提交
-						1: 'ABDE', // 下达 --整改单位权限
-						2: 'BE', // 退回 - 整改
-						3: 'A',
-						4: 'A',
-						5: 'A',
-						6: 'A',
-						7: 'BD', // 整改页面 状态提交为7 复查销号页面使用
-						8: 'A'
-					},
-					Ba: { // 矿-重大隐患
-						0: 'B', //提交
-						1: 'BE', // 下达 --整改单位权限
-						2: 'E', // 退回 - 整改
-						3: 'A',
-						4: 'A',
-						5: 'A',
-						6: 'B',
-						7: 'B', // 整改页面 状态提交为7 复查销号页面使用
-						8: 'B'
-					},
-					Bb: { // 矿-较大隐患
-						0: 'B', //提交
-						1: 'BE', // 下达 --整改单位权限
-						2: 'E', // 退回 - 整改
-						3: 'A',
-						4: 'A',
-						5: 'A',
-						6: 'B',
-						7: 'B', // 整改页面 状态提交为7 复查销号页面使用
-						8: 'B'
-					},
-					Bc: { // 矿-一般隐患
-						0: 'B', //提交
-						1: 'BE', // 下达 --整改单位权限
-						2: 'E', // 退回 - 整改
-						3: 'A',
-						4: 'A',
-						5: 'A',
-						6: 'B',
-						7: 'B', // 整改页面 状态提交为7 复查销号页面使用
-						8: 'B'
-					},
-					Be: { // 矿- 不规范 整改流程
-						0: 'B', //提交
-						1: 'BE', // 下达 --整改单位权限
-						2: 'BE', // 退回 - 整改
-						3: 'A',
-						4: 'A',
-						5: 'A',
-						6: 'A',
-						7: 'E', // 整改页面 状态提交为7 复查销号页面使用
-						8: 'B'
-					},
-					Db: { // 科、区-较大隐患整改流程
-						0: 'D', //提交
-						1: 'DE', // 下达 --整改单位权限
-						2: 'E', // 退回 - 整改
-						3: 'A',
-						4: 'A',
-						5: 'A',
-						6: 'A',
-						7: 'D', // 整改页面 状态提交为7 复查销号页面使用
-						8: 'B'
-					},
-					Dc: { // 科、区-一般隐患整改流程
-						0: 'D', //提交
-						1: 'DE', // 下达 --整改单位权限
-						2: 'E', // 退回 - 整改
-						3: 'A',
-						4: 'A',
-						5: 'A',
-						6: 'A',
-						7: 'D', // 整改页面 状态提交为7 复查销号页面使用
-						8: 'B'
-					},
-					Ec: { // 队-一般隐患整改流程
-						0: 'E', //提交
-						1: 'E', // 下达 --整改单位权限
-						2: 'E', // 退回 - 整改
-						3: 'A',
-						4: 'A',
-						5: 'A',
-						6: 'A',
-						7: 'E', // 整改页面 状态提交为7 复查销号页面使用
-						8: 'B'
-					},
 
+			}
+		},
+		watch: {
+			'form.yh_level'(old) {
+				if (old == '较大隐患~b~#f78605') {
+					this.pin_number = true
+				} else if (old == '重大隐患~a~#f82707') {
+					this.pin_number = true
+				} else {
+					this.pin_number = false
 				}
 			}
 		},
 		computed: {
+			...mapState(['user', 'userid','list']),
 			treeData() {
 				const childrenData = util.toTreeData(this.departmentData, 'id', 'pid', 'children', '')
 				return childrenData
+			},
+			inspeopleList() {
+				return this.inspeople.filter(function(item) {
+					let obj = {
+						name: item.title,
+						value: item.value
+					}
+					return obj
+				})
 			},
 			radioList() {
 				return this.dangerData.filter(function(item) {
@@ -441,30 +311,135 @@
 					}
 				})
 			},
-			dangertype() {
-				const data = this.dangerData.filter(function(item) {
-					if (item.type == "dangertype") {
-
-						return item
-					}
-				})
-				const childrenData = util.toTreeData(data, 'ids', 'dict_pid', 'children', '')
-				return childrenData
-			},
 
 		},
 		// 必须要在onReady生命周期，因为onLoad生命周期组件可能尚未创建完毕
-		onReady() {
+		onReady(o) {
 			this.$refs.uForm.setRules(this.rules);
 		},
-		onLoad() {
-			this.tabbar = this.$store.state.list
+		onLoad(option) {
+			// this.tabbar = this.$store.state.list
+			this.isReady = true;
+			// 请求数据
+			this.checkFunc();
+			this.danger().then(res => {
+				// 默认填充
+				this.catchData();
+			})
+			// 监听事件 地点 
+			uni.$on('backAddress', (res) => {
+				// console.log(res)
+				this.form.address = res.address;
+				this.form.address_name = res.address_name;
+				this.form.depart_pname = res.depart_pname;
 
-			this.danger()
+			})
+			// 监听事件 隐患库-隐患内容
+			uni.$on('yhLibContent', (res1) => {
+				this.form.yh_content = res1.yh_lib_content;
+			})
+		},
+		onUnload() {
+			// 移除监听事件
+			uni.$off('backAddress');
+			uni.$off('yhLibContent');
 		},
 		methods: {
+			async danger() {
+				// 隐患等级
+				const res = await this.$http.get('/index/Hjob.ashx?type=sel', {
+					tabid: 'YH_liebiao08d2367f-618b-429c-bb8f-5c7634ad508b',
+					mid: '9c6a100d-8543-438e-9311-ce6a38e75cae',
+					job: 'demo_node_1',
+					tbname: 'YH',
+					T: 'add_yhsql',
+					level: 'A'
+				})
+				this.dangerData = res.data.data
+				// 隐患种类
+				const restype = await this.$http.get('/index/Hjob.ashx?type=sel', {
+					tabid: 'YH_liebiao08d2367f-618b-429c-bb8f-5c7634ad508b',
+					mid: '9c6a100d-8543-438e-9311-ce6a38e75cae',
+					job: 'demo_node_1',
+					tbname: 'YH',
+					T: 'app_yh_type_sql',
+					level: this.user.level
+				})
+				this.dangertypeAllData = restype.data.data
+				// 检查人
+				this.$http.get('/index/Hjob.ashx?type=sel', {
+					tabid: 'YH_liebiaodb6b3b20-139d-4200-84fd-66c3701ff6ee',
+					mid: '9c6a100d-8543-438e-9311-ce6a38e75cae',
+					job: 'demo_node_1',
+					tbname: 'YH',
+					T: 'app_select_user',
+					function_perms: this.user.function_perms,
+					department_code: this.user.department_code,
+					page: 1,
+					limit: 10
+				}).then(result => {
+					this.inspeople = result.data.data
+				})
+			},
+			async checkFunc() {
+				// 检查类别
+				const restype = await this.$http.get('/index/Hjob.ashx?type=sel', {
+					tabid: 'YH_liebiao08d2367f-618b-429c-bb8f-5c7634ad508b',
+					mid: '9c6a100d-8543-438e-9311-ce6a38e75cae',
+					job: 'demo_node_1',
+					tbname: 'YH',
+					T: 'app_checking',
+					department_id: this.user.department_id
+				})
+				this.checkingType = restype.data.data
+				console.log(this.checkingType)
+			},
+			checkingFunc(d) {
+				this.form.yh_zhuanxiang = d[0].value
+				this.form.yh_zhuanxiangLable = d[0].label
+			},
+			catchData() {
+				// 地点主体部门
+				this.pname = this.user.department_id
+				// 责任部门
+				this.form.bumen_name = this.user.department_name
+				this.form.responsibledepartme = this.user.department_id
+				// 检查人
+				this.form.inspeopleTitle = this.user.users_name
+				this.form.inspeople = this.user.users_name + '~' + this.userid + '~' + this.user.department_name + '~' +
+					this.user.department_id
+				// 班次
+				if (this.oldOfClass.length > 0) {
+					this.form.oldofclass = this.oldOfClass[0].dict_name
+				}
+				// 隐患等级
+				if (this.radioList.length > 0) {
+					let arr = this.radioList[0];
+					this.form.yh_level = arr.dict_name + '~' + arr.dict_text + '~' + arr.color
+				}
+				// 检查日期
+				this.form.inspectiondate = this.$u.timeFormat(new Date(), 'yyyy-mm-dd');
+			},
+			yhCentent() {
+				this.$u.route({
+					url: './select_yhcenter/select_yhcenter',
+					type: 'navigateTo',
+					animationType: 'pop-in',
+
+				})
+			},
+			anExamination() {
+				this.$u.route({
+					url: './select_address/select_address',
+					type: 'navigateTo',
+					animationType: 'pop-in',
+					params: {
+						pname: this.pname
+					}
+				})
+			},
 			zren() {
-				this.depart = true
+				this.depart = true;
 			},
 			// 补零函数
 			doHandleZero(zero) {
@@ -523,57 +498,11 @@
 				this.form.inspeople = d[0].value
 				this.form.inspeopleTitle = d[0].label
 			},
-
-			copyFunc(d) {
-				// 选中的部门数据
-				let sel = this.$refs.chasong.getCheckedNodes()
-				if (sel.length != 0) {
-					this.form.yh_copy = sel[0].bumen_name+'~'+sel[0].id;
-					this.form.yh_copyt = sel[0].bumen_name;
-					this.copy = false;
-				} else {
-					this.$refs.uToast.show({
-						title: '请选择抄送部门',
-						type: 'error',
-					})
-				}
-			},
-			recFunc(d) { // 接收部门
-				// 选中的部门数据
-				let sel = this.$refs.jieshou.getCheckedNodes()
-				if (sel.length != 0) {
-					this.form.yh_receive = sel[0].bumen_name+'~'+sel[0].id;
-					this.form.yh_receivet = sel[0].bumen_name;
-					this.rec = false;
-				} else {
-					this.$refs.uToast.show({
-						title: '请选择接收部门',
-						type: 'error',
-					})
-				}
-			},
 			dangertypeFunc(d) { // 隐患种类
-				// this.form.yh_kind = d[0].value;
-				// this.form.yh_kindt = d[0].label;
-				let sel = this.$refs.hiddenDanger.getCheckedNodes()
-				if (sel.length != 0) {
-					this.form.yh_kind = sel[0].dict_name;
-					this.form.yh_kindt = sel[0].dict_name;
-					this.dangertypeShow = false;
-				} else {
-					this.$refs.uToast.show({
-						title: '请选择部门',
-						type: 'error',
-					})
-				}
+				this.form.yh_kindt = d[0].label
+				this.form.yh_kind = d[0].label
 			},
-			termsFunc(d) { // 执行条款
-				this.form.yh_terms = JSON.stringify([{
-					value: d[0].value,
-					title: d[0].label
-				}])
-				this.form.yh_termst = d[0].label;
-			},
+
 			accFunc(d) {
 				this.form.accompany = d[0].value
 				this.form.accompanyTitle = d[0].label
@@ -595,9 +524,16 @@
 				// 选中的部门数据
 				let sel = this.$refs.tree.getCheckedNodes()
 				if (sel.length != 0) {
-					this.form.responsibledepartme = sel[0].id;
-					this.form.responsibledepartmeT = sel[0].bumen_name;
-					this.depart = false;
+					if(this.pin_number){
+						this.form.del_dept_id = sel[0].id;
+						this.form.del_dept = sel[0].bumen_name;
+						this.depart = false;
+					}else{
+						this.form.responsibledepartme = sel[0].id;
+						this.form.bumen_name = sel[0].bumen_name;
+						this.depart = false;
+					}
+					
 				} else {
 					this.$refs.uToast.show({
 						title: '请选择部门',
@@ -605,55 +541,33 @@
 					})
 				}
 			},
-			danger() { // 班次 - 隐患等级
-				const department = uni.getStorageSync('depart');
-				if (department) {
-					this.departmentData = department
-				} else {
-					this.$http.get('?type=sel', {
-						tabid: 'YH_liebiao178698a5-ccf0-439a-8cf1-f4d8dc8121d8',
-						mid: '9c6a100d-8543-438e-9311-ce6a38e75cae',
-						job: 'demo_node_1',
-						tbname: 'YH',
-						T: '部门管理sql',
-						level: 'A'
-					}).then(res => {
-						this.departmentData = res.data.data
-						uni.setStorageSync('depart', res.data.data)
-					})
+			load(node, resolve) {
+				let function_perms = ''
+				if (this.user.function_perms) {
+					function_perms = this.user.function_perms.split(",")
 				}
-
-				// 隐患等级
-				this.$http.get('?type=sel', {
-					tabid: 'YH_liebiao08d2367f-618b-429c-bb8f-5c7634ad508b',
+				let perms = {
+					permsid: function_perms.join("','")
+				}
+				if (node.key) {
+					perms = {}
+				}
+				let params = Object.assign({
+					tabid: 'YH_liebiao178698a5-ccf0-439a-8cf1-f4d8dc8121d8',
 					mid: '9c6a100d-8543-438e-9311-ce6a38e75cae',
 					job: 'demo_node_1',
 					tbname: 'YH',
-					T: 'add_yhsql',
-					level: 'A'
-				}).then(res => {
-
-					this.dangerData = res.data.data
-				})
-				// 执行条款
-				this.$http.get('?type=sel', {
-					tabid: 'YH_liebiaoeb3ca14d-7202-496b-9e10-5892d0b3c035',
-					mid: '9c6a100d-8543-438e-9311-ce6a38e75cae',
-					job: 'demo_node_1',
-					tbname: 'YH',
-					T: '执行条款sql'
-				}).then(result => {
-					this.terms = result.data.data
-				});
-				// 检查人
-				this.$http.get('?type=sel', {
-					tabid: 'YH_liebiaodb6b3b20-139d-4200-84fd-66c3701ff6ee',
-					mid: '9c6a100d-8543-438e-9311-ce6a38e75cae',
-					job: 'demo_node_1',
-					tbname: 'YH',
-					T: 'addpagesql'
-				}).then(result => {
-					this.inspeopleList = result.data.data
+					T: '部门管理sql',
+					level: 'A',
+					pid: node.key,
+				}, perms)
+				this.$http.get('/index/Hjob.ashx?type=sel', params).then(res => {
+					let array = res.data.data;
+					if (array) {
+						resolve(array)
+					} else {
+						resolve([])
+					}
 				})
 			},
 			formData() {
@@ -662,33 +576,62 @@
 					imgs.push(val.response.url)
 				})
 				this.form.filepath = [...this.video, ...imgs];
-
-				let lev = this.$store.state.user.level;
-
-				let prop = lev + this.form.yh_level.split('~')[1];
+				// 历史记录信息
+				let detailJson = this.form
+				detailJson.operating_json = null;
 				// 隐患流程
-				this.form.yh_circuit = JSON.stringify(this.json[prop]) || JSON.stringify(this.unding);
-				this.form.operating_json = JSON.stringify(this.form) // 隐患信息插入
+				this.form.operating_json = JSON.stringify(detailJson) // 隐患信息插入
 				// 录入人
-				this.form.yh_enroll = this.$store.state.user.jobnumber
-				this.$http.post(
-					'?type=ajaxaddup&mid=9c6a100d-8543-438e-9311-ce6a38e75cae&tabid=YH_liebiao178698a5-ccf0-439a-8cf1-f4d8dc8121d8&job=demo_node_1&tbname=YH&T=circuit',
-					this.form).then(res => {
+				this.form.yh_enroll = this.user.jobnumber
+				this.form.yh_enroll_id = this.userid
+				// 来源
+				this.form.yh_origin = this.user.department_name + '~' + this.user.department_id
+				this.form.level = this.user.level // 重点-有用
+				// 罚款 -- 废弃，为零
+				this.form.fine = 0
+				// 销号部门
+				this.form.del_dept = ''
+				this.form.del_dept_id = ''
+
+				//  带班领导
+				if (this.form.leaderv) {
+					this.form.leader = 'on';
+					if (this.form.yh_route == '') {
+						this.$refs.uToast.show({
+							title: '您是带班领导，请选择行走路线',
+							type: 'error',
+						})
+						return;
+					}
+				} else {
+					this.form.leader = ''
+				}
+				// 当天直接销号
+				if (this.form.yh_requesttime == this.form.inspectiondate) {
+					this.form.yh_state = 8; //隐患状态 --当班整改 直接销号 8
+				}
+				let objmerge = Object.assign(this.form, {
+					mid: '9c6a100d-8543-438e-9311-ce6a38e75cae',
+					tabid: 'YH_liebiao178698a5-ccf0-439a-8cf1-f4d8dc8121d8',
+					job: 'demo_node_1',
+					tbname: 'YH',
+					T: 'circuit'
+				})
+				this.$http.post('/index/Hjob.ashx?type=ajaxaddup',
+					objmerge).then(res => {
 					if (res.data.code == '200') {
+						this.successEmpty()
 						this.$refs.uToast.show({
 							title: '添加成功',
 							type: 'success',
-							url: '/pages/danger/danger'
-						})
-						this.$u.route({
-							type: 'tab',
-							url: '../danger/danger',
-							params: {
-
-							}
 						})
 					}
 				})
+			},
+			successEmpty() {
+				// 成功后清空部分
+				this.form.yh_content = '';
+				this.form.id = this.$u.guid(null);
 			},
 			save() {
 				this.$refs.uForm.validate(valid => {

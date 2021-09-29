@@ -2,31 +2,41 @@
 	import {
 		mapState,
 		mapMutations
-	} from 'vuex'
+	} from 'vuex';
+	import base from './config/baseUrl.js';
+	import socket from '@/config/socket';
+	// #ifdef APP-PLUS
+	import APPUpdate from '@/uni_modules/zhouWei-APPUpdate/js_sdk/appUpdate';
+	// #endif
 	export default {
-		components:{},
+		components: {},
+		computed: {
+			...mapState(['mesNum'])
+		},
+		methods: {
+			...mapMutations(['setUser', 'setMessage']),
+		},
 		onLaunch: function() {
 			console.log('App Launch')
-			let users = uni.getStorageSync('setUser')
-			if (users) {
-				uni.getStorage({
-					key: 'setUser',
-					success: (res) => {
-						this.setUser(JSON.parse(res.data))
-					}
-				})
-			}
+			uni.preloadPage({url: "/pages/home/home"});
+			uni.preloadPage({url: "/pages/danger/danger"});
+			uni.preloadPage({url: "/pages/risk/risk"});
+			uni.preloadPage({url: "/pages/add/add"});
+			// 升级
+			// #ifdef APP-PLUS
+			APPUpdate();
+			// #endif
+			socket.init();
 
-		}, 
+
+		},
 		onShow: function() {
 			console.log('App Show')
 		},
 		onHide: function() {
 			console.log('App Hide')
 		},
-		methods: {
-			...mapMutations(['setUser']),
-		}
+
 	}
 </script>
 
@@ -37,9 +47,16 @@
 	@import "uview-ui/index.scss";
 
 	body {
-		background-color: #f2f7fd;
+		background-color:#e5dee6;
 	}
-
+	.slot-wrap{
+		display: flex;
+		align-items: center;
+		/* 如果您想让slot内容占满整个导航栏的宽度 */
+		flex: 1;
+		/* 如果您想让slot内容与导航栏左右有空隙 */
+		padding: 0rpx 30rpx;
+	}
 	/* #ifndef APP-NVUE */
 	page {
 		height: 100%;

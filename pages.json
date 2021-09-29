@@ -13,6 +13,15 @@
 
 		},
 		{
+		    "path" : "pages/home/home",
+		    "style" :                                                                                    
+		    {
+		       "navigationBarTitleText": "首页",
+		       "enablePullDownRefresh": false
+		    }
+		    
+		},
+		{
 			"path": "pages/danger/danger",
 			"style": {
 				"navigationBarTitleText": "隐患",
@@ -47,69 +56,120 @@
 			"path": "pages/risk/risk",
 			"style": {
 				"navigationBarTitleText": "风险",
-				"enablePullDownRefresh": false
+				"enablePullDownRefresh": false,
+				"navigationStyle": "custom", // 隐藏系统导航栏
+				"navigationBarTextStyle": "white"
 			}
 
 		}, {
 			"path": "pages/analysis/analysis",
 			"style": {
-				"navigationBarTitleText": "分析",
+				"navigationBarTitleText": "风险分析",
 				"enablePullDownRefresh": false
 			}
 
 		}, {
 			"path": "pages/add/add",
 			"style": {
-				"navigationBarTitleText": "录入",
+				"navigationBarTitleText": "隐患录入",
 				"enablePullDownRefresh": false,
 				"navigationBarTextStyle": "black"
 
 			}
 
 		}
+		, {
+			"path": "pages/getDOWN/getDOWN",
+			"style": {
+				"navigationBarTitleText": "下达",
+				"enablePullDownRefresh": false
+			}
 
+		}, {
+			"path": "pages/zhengGai/zhengGai",
+			"style": {
+				"navigationBarTitleText": "整改",
+				"enablePullDownRefresh": false
+			}
 
-	    ,{
-            "path" : "pages/getDOWN/getDOWN",
+		}, {
+			"path": "pages/xiaohao/xiaohao",
+			"style": {
+				"navigationBarTitleText": "销号",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/choucha/choucha",
+			"style": {
+				"navigationBarTitleText": "抽查",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/paicha/paicha",
+			"style": {
+				"navigationBarTitleText": "排查",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/add/select_address/select_address",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/add/select_yhcenter/select_yhcenter",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+
+		}
+	  
+        ,{
+            "path" : "pages/messageList/messageList",
             "style" :                                                                                    
             {
-                "navigationBarTitleText": "下达",
+                "navigationBarTitleText": "消息",
                 "enablePullDownRefresh": false
             }
             
         }
         ,{
-            "path" : "pages/zhengGai/zhengGai",
+            "path" : "pages/index/setting/setting",
             "style" :                                                                                    
             {
-                "navigationBarTitleText": "整改",
+                "navigationBarTitleText": "设置",
                 "enablePullDownRefresh": false
             }
             
         }
         ,{
-            "path" : "pages/xiaohao/xiaohao",
+            "path" : "pages/risk/nd_risk/nd_risk",
             "style" :                                                                                    
             {
-                "navigationBarTitleText": "销号",
+                "navigationBarTitleText": "年度风险辨识",
                 "enablePullDownRefresh": false
             }
             
         }
         ,{
-            "path" : "pages/choucha/choucha",
+            "path" : "pages/risk/zx_risk/zx_risk",
             "style" :                                                                                    
             {
-                "navigationBarTitleText": "抽查",
+                "navigationBarTitleText": "专项风险辨识",
                 "enablePullDownRefresh": false
             }
             
         }
         ,{
-            "path" : "pages/paicha/paicha",
+            "path" : "pages/risk/risk_judgment/risk_judgment",
             "style" :                                                                                    
             {
-                "navigationBarTitleText": "排查",
+                "navigationBarTitleText": "风险研判",
                 "enablePullDownRefresh": false
             }
             
@@ -127,10 +187,23 @@
 		"backgroundColor": "#FFFFFF",
 		"borderStyle": "black",
 		"list": [{
+				"pagePath": "pages/home/home",
+				"iconPath": "/static/uview/example/home-fill.png",
+				"selectedIconPath": "/static/uview/example/home-select.png",
+				"text": "首页"
+			}, {
 				"pagePath": "pages/danger/danger",
 				"iconPath": "/static/uview/example/yinhuan1.png",
 				"selectedIconPath": "/static/uview/example/yinhuan1_select.png",
 				"text": "隐患"
+			},
+			{
+				"pagePath": "pages/add/add",
+				"iconPath": "/static/uview/example/min_button.png",
+				"selectedIconPath": "/static/uview/example/min_button_select.png",
+				"text": "录入",
+				"midButton": true,
+				"customIcon": false
 			},
 			{
 				"pagePath": "pages/risk/risk",
@@ -139,22 +212,9 @@
 				"text": "风险"
 			},
 			{
-				"pagePath": "pages/add/add",
-				"iconPath": "static/uview/example/min_button.png",
-				"selectedIconPath": "static/uview/example/min_button_select.png",
-				"text": "录入",
-				"midButton": true,
-				"customIcon": false
-			},
-			{
-				"pagePath": "pages/analysis/analysis",
-				"iconPath": "static/uview/example/fenx.png",
-				"selectedIconPath": "static/uview/example/fenxi_select.png",
-				"text": "分析"
-			}, {
 				"pagePath": "pages/index/index",
-				"iconPath": "static/uview/example/wodedangxuan.png",
-				"selectedIconPath": "static/uview/example/wodedangxuan_select.png",
+				"iconPath": "/static/uview/example/wodedangxuan.png",
+				"selectedIconPath": "/static/uview/example/wodedangxuan_select.png",
 				"text": "个人"
 			}
 		]

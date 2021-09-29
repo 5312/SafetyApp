@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import App from './App'
-
 //数据管理中心
 import store from '@/store'
 Vue.prototype.$store = store;

@@ -3,36 +3,32 @@
 		<!-- 隐患 -->
 		<u-navbar :is-back="true" title="" height="44">
 			<view class="slot-wrap">
-				<u-search placeholder="隐患查询"></u-search>
+				<u-search v-model="keyword" placeholder="隐患查询" @search="search" @custom="search"></u-search>
 			</view>
 		</u-navbar>
 		<view class="wrap">
 			<view class="u-tabs-box">
-				<u-tabs-swiper activeColor="#f29100" ref="tabs" :list="list" :current="current" @change="change"
-					:is-scroll="false" swiperWidth="750"></u-tabs-swiper>
+				<u-tabs-swiper activeColor="#1e76ef" inactive-color="#1e76ef" ref="tabs" :list="list" :current="current"
+					@change="change" :is-scroll="false" swiperWidth="750"></u-tabs-swiper>
 			</view>
+			<view class="u-tabs-box-shadow"></view>	
 			<swiper class="swiper-box" :current="swiperCurrent" @transition="transition"
 				@animationfinish="animationfinish">
-				<swiper-item class="swiper-item">
-					<scroll-view v-if="orderList[0].length!= 0" scroll-y style="height: 100%;width: 100%;"
+				<swiper-item class="swiper-item" v-for="(x,y) in tabar" :key='y'>
+					<scroll-view v-if="orderList[x].length!= 0" scroll-y style="height: 100%;width: 100%;"
 						@scrolltolower="reachBottom">
-						<view class="page-box">
-							<view class="order" v-for="(res, index) in orderList[0]" :key="res.id">
+						<!-- <view class="page-box"> -->
+							<view class="order" v-for="(res, index) in orderList[x]" :key="res.id">
 								<view class="top">
 									<view class="left">
 										<u-icon name="home" :size="30" color="rgb(94,94,94)"></u-icon>
 										<view class="store">{{ res.responsibledepartme }}</view>
-										<!-- <u-icon name="arrow-right" color="rgb(203,203,203)" :size="26"></u-icon> -->
 									</view>
-									<view class="right">{{ state(res.yh_state) }}</view>
+									<view class="right" :style="{color:stateColor(res.yh_state)}">
+										{{ state(res.yh_state) }}
+									</view>
 								</view>
-								<!-- <view class="item" v-for="(item, index) in res.goodsList" :key="index"> -->
 								<view class="item">
-									<view class="left">
-										<image
-											src='http://59.110.63.135:9010/index/layuiadmin/modules/fileChoose/img/doc.png'
-											mode="aspectFill"></image>
-									</view>
 									<view class="content">
 										<view class="title u-line-2">{{ res.yh_content }}</view>
 										<view class="type">{{ res.oldofclass }}</view>
@@ -46,27 +42,23 @@
 											<u-icon name="account-fill"></u-icon>{{ res.inspeople.split('~')[0] }}
 											<text class="decimal">{{ }}</text>
 										</view>
-										<!-- <view class="number">x{{ 5 }}</view> -->
 									</view>
 								</view>
 								<view class="total">
-									单位罚款：{{ res.fine }}￥&nbsp; 个人罚款
+									资金:
 									<text class="total-price">
-										￥{{ res.personalfine }}
-										<!-- <text class="decimal">{{ priceDecimal(totalPrice(res.goodsList)) }}</text> -->
+										￥{{ res.yh_fine==''?0:res.yh_fine }}
 									</text>
 								</view>
 								<view class="bottom">
 									<view class="more">
 										<u-icon name="more-dot-fill" color="rgb(203,203,203)"></u-icon>
 									</view>
-									<view class="logistics btn">查看详情</view>
-									<!-- <view class="exchange btn">卖了换钱</view> -->
-									<!-- <view class="evaluate btn">评价</view> -->
+									<view class="logistics btn" @click="showDetail">查看详情</view>
 								</view>
 							</view>
-							<u-loadmore :status="loadStatus[0]" bgColor="#f2f2f2"></u-loadmore>
-						</view>
+							<u-loadmore :status="loadStatus[x]" :load-text="loadText" bgColor="#f2f2f2"></u-loadmore>
+						<!-- </view> -->
 					</scroll-view>
 					<scroll-view v-else scroll-y style="height: 100%;width: 100%;">
 						<view class="page-box">
@@ -77,7 +69,6 @@
 									<view class="explain">
 										暂无数据
 										<view class="tips">
-											<!-- 可以去看看有那些想买的 -->
 										</view>
 									</view>
 									<view class="btn">查看其他</view>
@@ -86,225 +77,8 @@
 						</view>
 					</scroll-view>
 				</swiper-item>
-				<swiper-item class="swiper-item">
-					<scroll-view v-if="orderList[1].length!=0" scroll-y style="height: 100%;width: 100%;"
-						@scrolltolower="reachBottom">
-						<view class="page-box">
-							<view class="order" v-for="(res, index) in orderList[1]" :key="res.id">
-								<view class="top">
-									<view class="left">
-										<u-icon name="home" :size="30" color="rgb(94,94,94)"></u-icon>
-										<view class="store">{{ res.responsibledepartme }}</view>
-										<!-- <u-icon name="arrow-right" color="rgb(203,203,203)" :size="26"></u-icon> -->
-									</view>
-									<view class="right">{{ state(res.yh_state) }}</view>
-								</view>
-								<!-- <view class="item" v-for="(item, index) in res.goodsList" :key="index"> -->
-								<view class="item">
-									<view class="left">
-										<image
-											src='http://59.110.63.135:9010/index/layuiadmin/modules/fileChoose/img/doc.png'
-											mode="aspectFill"></image>
-									</view>
-									<view class="content">
-										<view class="title u-line-2">{{ res.yh_content }}</view>
-										<view class="type">{{ res.oldofclass }}</view>
-										<view class="type" :style="{color:res.yh_level.split('~')[2]}">
-											{{ res.yh_level.split('~')[0] }}
-										</view>
-										<view class="delivery-time">检查时间： {{ res.inspectiondate }}</view>
-									</view>
-									<view class="right">
-										<view class="price" style="white-space: nowrap;">
-											<u-icon name="account-fill"></u-icon>{{ res.inspeople.split('~')[0] }}
-											<text class="decimal">{{ }}</text>
-										</view>
-										<!-- <view class="number">x{{ 5 }}</view> -->
-									</view>
-								</view>
-								<view class="total">
-									单位罚款：{{ res.fine }}￥&nbsp; 个人罚款
-									<text class="total-price">
-										￥{{ res.personalfine }}
-										<!-- <text class="decimal">{{ priceDecimal(totalPrice(res.goodsList)) }}</text> -->
-									</text>
-								</view>
-								<view class="bottom">
-									<view class="more">
-										<u-icon name="more-dot-fill" color="rgb(203,203,203)"></u-icon>
-									</view>
-									<view class="logistics btn">查看详情</view>
-									<!-- <view class="exchange btn">卖了换钱</view> -->
-									<!-- <view class="evaluate btn">评价</view> -->
-								</view>
-							</view>
-							<u-loadmore :status="loadStatus[0]" bgColor="#f2f2f2"></u-loadmore>
-						</view>
-					</scroll-view>
-					<scroll-view v-else scroll-y style="height: 100%;width: 100%;">
-						<view class="page-box">
-							<view>
-								<view class="centre">
-									<image src="https://cdn.uviewui.com/uview/template/taobao-order.png" mode="">
-									</image>
-									<view class="explain">
-										暂无数据
-										<view class="tips">
-											<!-- 可以去看看有那些想买的 -->
-										</view>
-									</view>
-									<view class="btn">查看其他</view>
-								</view>
-							</view>
-						</view>
-					</scroll-view>
-				</swiper-item>
-				<swiper-item class="swiper-item">
-					<scroll-view v-if="orderList[2].length!=0" scroll-y style="height: 100%;width: 100%;"
-						@scrolltolower="reachBottom">
-						<view class="page-box">
-							<view class="order" v-for="(res, index) in orderList[2]" :key="res.id">
-								<view class="top">
-									<view class="left">
-										<u-icon name="home" :size="30" color="rgb(94,94,94)"></u-icon>
-										<view class="store">{{ res.responsibledepartme }}</view>
-										<!-- <u-icon name="arrow-right" color="rgb(203,203,203)" :size="26"></u-icon> -->
-									</view>
-									<view class="right">{{ state(res.yh_state) }}</view>
-								</view>
-								<!-- <view class="item" v-for="(item, index) in res.goodsList" :key="index"> -->
-								<view class="item">
-									<view class="left">
-										<image
-											src='http://59.110.63.135:9010/index/layuiadmin/modules/fileChoose/img/doc.png'
-											mode="aspectFill"></image>
-									</view>
-									<view class="content">
-										<view class="title u-line-2">{{ res.yh_content }}</view>
-										<view class="type">{{ res.oldofclass }}</view>
-										<view class="type" :style="{color:res.yh_level.split('~')[2]}">
-											{{ res.yh_level.split('~')[0] }}
-										</view>
-										<view class="delivery-time">检查时间： {{ res.inspectiondate }}</view>
-									</view>
-									<view class="right">
-										<view class="price" style="white-space: nowrap;">
-											<u-icon name="account-fill"></u-icon>{{ res.inspeople.split('~')[0] }}
-											<text class="decimal">{{ }}</text>
-										</view>
-										<!-- <view class="number">x{{ 5 }}</view> -->
-									</view>
-								</view>
-								<view class="total">
-									单位罚款：{{ res.fine }}￥&nbsp; 个人罚款
-									<text class="total-price">
-										￥{{ res.personalfine }}
-										<!-- <text class="decimal">{{ priceDecimal(totalPrice(res.goodsList)) }}</text> -->
-									</text>
-								</view>
-								<view class="bottom">
-									<view class="more">
-										<u-icon name="more-dot-fill" color="rgb(203,203,203)"></u-icon>
-									</view>
-									<view class="logistics btn">查看详情</view>
-									<!-- <view class="exchange btn">卖了换钱</view> -->
-									<!-- <view class="evaluate btn">评价</view> -->
-								</view>
-							</view>
-							<u-loadmore :status="loadStatus[0]" bgColor="#f2f2f2"></u-loadmore>
-						</view>
-					</scroll-view>
-					<scroll-view v-else scroll-y style="height: 100%;width: 100%;">
-						<view class="page-box">
-							<view>
-								<view class="centre">
-									<image src="https://cdn.uviewui.com/uview/template/taobao-order.png" mode="">
-									</image>
-									<view class="explain">
-										暂无数据
-										<view class="tips">
-											<!-- 可以去看看有那些想买的 -->
-										</view>
-									</view>
-									<view class="btn">查看其他</view>
-								</view>
-							</view>
-						</view>
-					</scroll-view>
-				</swiper-item>
-				<swiper-item class="swiper-item">
-					<scroll-view v-if="orderList[3]&&orderList[3].length!=0" scroll-y style="height: 100%;width: 100%;"
-						@scrolltolower="reachBottom">
-						<view class="page-box">
-							<view class="order" v-for="(res, index) in orderList[3]" :key="res.id">
-								<view class="top">
-									<view class="left">
-										<u-icon name="home" :size="30" color="rgb(94,94,94)"></u-icon>
-										<view class="store">{{ res.responsibledepartme }}</view>
-										<!-- <u-icon name="arrow-right" color="rgb(203,203,203)" :size="26"></u-icon> -->
-									</view>
-									<view class="right">{{ state(res.yh_state) }}</view>
-								</view>
-								<!-- <view class="item" v-for="(item, index) in res.goodsList" :key="index"> -->
-								<view class="item">
-									<view class="left">
-										<image
-											src='http://59.110.63.135:9010/index/layuiadmin/modules/fileChoose/img/doc.png'
-											mode="aspectFill"></image>
-									</view>
-									<view class="content">
-										<view class="title u-line-2">{{ res.yh_content }}</view>
-										<view class="type">{{ res.oldofclass }}</view>
-										<view class="type" :style="{color:res.yh_level.split('~')[2]}">
-											{{ res.yh_level.split('~')[0] }}
-										</view>
-										<view class="delivery-time">检查时间： {{ res.inspectiondate }}</view>
-									</view>
-									<view class="right">
-										<view class="price" style="white-space: nowrap;">
-											<u-icon name="account-fill"></u-icon>{{ res.inspeople.split('~')[0] }}
-											<text class="decimal">{{ }}</text>
-										</view>
-										<!-- <view class="number">x{{ 5 }}</view> -->
-									</view>
-								</view>
-								<view class="total">
-									单位罚款：{{ res.fine }}￥&nbsp; 个人罚款
-									<text class="total-price">
-										￥{{ res.personalfine }}
-										<!-- <text class="decimal">{{ priceDecimal(totalPrice(res.goodsList)) }}</text> -->
-									</text>
-								</view>
-								<view class="bottom">
-									<view class="more">
-										<u-icon name="more-dot-fill" color="rgb(203,203,203)"></u-icon>
-									</view>
-									<view class="logistics btn">查看详情</view>
-									<!-- <view class="exchange btn">卖了换钱</view> -->
-									<!-- <view class="evaluate btn">评价</view> -->
-								</view>
-							</view>
-							<u-loadmore :status="loadStatus[0]" bgColor="#f2f2f2"></u-loadmore>
-						</view>
-					</scroll-view>
-					<scroll-view v-else scroll-y style="height: 100%;width: 100%;">
-						<view class="page-box">
-							<view>
-								<view class="centre">
-									<image src="https://cdn.uviewui.com/uview/template/taobao-order.png" mode="">
-									</image>
-									<view class="explain">
-										暂无数据
-										<view class="tips">
-											<!-- 可以去看看有那些想买的 -->
-										</view>
-									</view>
-									<view class="btn">查看其他</view>
-								</view>
-							</view>
-						</view>
-					</scroll-view>
-				</swiper-item>
+
+
 			</swiper>
 		</view>
 	</view>
@@ -314,44 +88,56 @@
 	export default {
 		data() {
 			return {
-				orderList: [
-					[],
-					[],
-					[],
-					[]
-				],
+				tabar: [0, 1, 2],
+				reqData: [], // 每次请求后的数据
 				dataList: [],
-				list: [{
-						name: '我的'
-					}, {
-						name: '下达'
+				keyword: '', // 搜索
+				list: [
+
+					{
+						name: '待下达'
 					},
 					{
-						name: '整改'
+						name: '待整改'
 					},
 					{
-						name: '销号',
+						name: '待销号',
 						// count: 12
 					}
 				],
+
+				nomore: null,
 				current: 0,
 				swiperCurrent: 0,
 				tabsHeight: 0,
 				dx: 0,
-				page:1,
-				loadStatus: ['loadmore', 'loadmore', 'loadmore', 'loadmore'],
+				page: 1,
+
+				loadStatus: ['loadmore', 'loadmore', 'loadmore'],
+				loadText: {
+					loadmore: '轻轻上拉',
+					loading: '努力加载中',
+					nomore: '实在没有了'
+				}
 			};
 		},
 		onLoad() {
 			this.getOrderList(0);
-			// this.getOrderList(1);
-			// this.getOrderList(2);
-			// this.getOrderList(3);
+
 		},
 		computed: {
+			orderList() {
+				let twoArray = [
+					[],
+					[],
+					[],
+				]
+				twoArray.splice(this.swiperCurrent, 1, this.reqData)
+				return twoArray
+			},
 			state() {
 				const stateText = {
-					0: '新排查',
+					0: '已录入',
 					1: '已下达',
 					2: "复查不通过",
 					3: '分发',
@@ -366,65 +152,105 @@
 					return stateText[val]
 				}
 			},
+			stateColor() {
+				const stateColor = {
+					0: '#007aff',
+					1: '',
+					7: '#f0ad4e',
+					3: '',
+				}
+				return val => {
+					return stateColor[val]
+				}
+			}
 		},
 		methods: {
-			reachBottom() {// 下拉懒加载
+			reachBottom() { // 下拉懒加载
 				this.loadStatus.splice(this.current, 1, "loading")
-				this.page +=1;
-				this.getOrderList(this.current,true);
-				// 此tab为空数据
-				// if (this.current != 2) {
-				// 	setTimeout(() => {
-				// 		this.getOrderList(this.current);
-				// 	}, 1200);
-				// }
+				this.page += 1;
+				this.getOrderList(this.current, true);
+			},
+			// 查看详情
+			showDetail() {},
+			search() {
+				this.nomore = false;
+				this.getOrderList(this.current, false)
 			},
 			// 页面数据
-			async getOrderList(idx,ispush = true) {
+			async getOrderList(idx, ispush = true) {
 				const users = this.$store.state.user
 				let level = 'A';
-				let bind ='';
+				let bind = '';
 				if (users) {
 					level = users.level
 					bind = users.department_id;
 				}
-				let state ={
-					0:0,
-					1:0,
-					2:1,
-					3:7
-				} 
-				const result_yh = await this.$http.post('?type=sel', {
-					tabid: "YH_liebiao5d9ca720-e8d5-42b1-a4c7-2505c224f7ca",
-					mid: " 9c6a100d-8543-438e-9311-ce6a38e75cae",
-					job: "demo_node_1",
-					tbname: "YH",
-					bind: bind,// 本部门 查看条件
+				let state = {
+					0: 0,
+					1: 1,
+					2: 7
+				}
+				if (this.nomore) {
+					this.loadStatus.splice(this.current, 1, "nomore")
+					return
+				}
+				const result_yh = await this.$http.post('/index/Hjob.ashx?type=sel', {
+					tabid: 'YH_liebiao79ea742c-4e27-4267-960d-0d1296ee608a',
+					mid: '9c6a100d-8543-438e-9311-ce6a38e75cae',
+					job: 'demo_node_1',
+					tbname: 'YH',
+					bind: bind, // 本部门 查看条件
 					level: level,
-					T: "隐患列表sql",
-					state:state[idx],// 条件
+					T: "隐患列表_无cookie_sql",
+					department_id: users.department_id,
+					state: state[idx], // 条件
 					page: this.page,
-					limit: 10
+					limit: 10,
+					keyword: this.keyword,
 				})
-				if(!result_yh.data.data)return;
+
+				if (!result_yh.data.data) {
+					// 没有下一页时
+					this.nomore = true;
+					this.loadStatus.splice(this.current, 1, "nomore")
+					return
+				};
+				let array = this.reqData;
 				for (let i = 0; i < result_yh.data.data.length; i++) {
 					const data1 = result_yh.data.data[i]
-					if(ispush){
-						this.orderList[idx].push(data1);
-					}else{
-						this.orderList[idx] = [];
-						this.orderList[idx].push(data1);
+					if (ispush) {
+						array.push(data1)
+					} else {
+						array = result_yh.data.data
 					}
 				}
+				this.reqData = array
 				this.loadStatus.splice(this.current, 1, "loadmore")
 			},
 
 			// tab栏切换
 			change(index) {
-				this.page = 1;// 页数重置
+				this.page = 1; // 页数重置
+				this.nomore = false; // 下一页
+				this.getOrderList(index, false);
+				// 清空req
+				this.reqData = [];
+				// 请求后，跳转
 				this.swiperCurrent = index;
-				this.getOrderList(index,false);
 			},
+			// // swiper-item左右移动，通知tabs的滑块跟随移动
+			// transition(e) {
+			// 	let dx = e.detail.dx;
+			// 	this.$refs.uTabs.setDx(dx);
+			// },
+			// // 由于swiper的内部机制问题，快速切换swiper不会触发dx的连续变化，需要在结束时重置状态
+			// // swiper滑动结束，分别设置tabs和swiper的状态
+			// animationfinish(e) {
+			// 	let current = e.detail.current;
+			// 	this.$refs.uTabs.setFinishCurrent(current);
+			// 	this.swiperCurrent = current;
+			// 	this.current = current;
+			// },
 			transition({
 				detail: {
 					dx
@@ -456,6 +282,16 @@
 </style>
 
 <style lang="scss" scoped>
+	.u-tabs-box {
+		position: fixed;
+		width: 100%;
+		z-index: 99;
+	}
+
+	.u-tabs-box-shadow {
+		height: 80rpx;
+	}
+
 	.slot-wrap {
 		display: flex;
 		align-items: center;
@@ -490,7 +326,7 @@
 			}
 
 			.right {
-				color: $u-type-warning-dark;
+				// color:$uni-color-primary; 
 			}
 		}
 
@@ -521,7 +357,7 @@
 				}
 
 				.delivery-time {
-					color: #e5d001;
+					color: $uni-text-color-grey; //#e5d001;
 					font-size: 24rpx;
 				}
 			}
@@ -609,15 +445,17 @@
 	.wrap {
 		display: flex;
 		flex-direction: column;
-		height: calc(100vh - var(--window-top));
+		height: calc(100vh - var(--window-top) - 44px);
 		width: 100%;
 	}
 
+
 	.swiper-box {
 		flex: 1;
+		padding-bottom: 20rpx;
 	}
 
 	.swiper-item {
-		height: 100%;
+		padding-bottom: 20rpx;
 	}
 </style>

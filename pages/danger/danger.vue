@@ -3,21 +3,23 @@
 		<!-- 隐患 -->
 		<u-navbar :is-back="false" title="" height="44">
 			<view class="slot-wrap">
-				<u-search placeholder="隐患查询"></u-search>
+				<u-search placeholder="隐患查询" :disabled='true' @click='goList'></u-search>
 			</view>
 		</u-navbar>
-		<view class="u-wrap" @click="goList">
-			<view class="wrap-top">
-				<view>隐患排查</view>
-				<u-icon name='more-dot-fill'></u-icon>
-			</view>
-			<!-- 统计数据 -->
-			<view class="wrap-content">
-				<view>{{topNum}}</view>
+		<view class="u-wrap-padding">
+			<view class="u-wrap" @click="goList">
+				<view class="wrap-top">
+					<view>隐患管理</view>
+					<u-icon name='more-dot-fill'></u-icon>
+				</view>
+				<!-- 统计数据 -->
+				<view class="wrap-content">
+					<view>{{topNum}}</view>
+				</view>
 			</view>
 		</view>
 		<view class="card">
-			<u-row gutter="30" align="center" justify='center'>
+			<u-row gutter="30">
 				<u-col span="6" v-for="(item,i) in cardList" :key="i">
 					<view class="item" @click="routes(item.event)">
 						<view class="item-top-row">
@@ -33,7 +35,7 @@
 
 			</u-row>
 		</view>
-		<u-tabbar :before-switch="beforeSwitch" :list="tabbar" :mid-button="true"></u-tabbar>
+		<u-tabbar :before-switch="beforeSwitch" :list="list" :mid-button="true"></u-tabbar>
 	</view>
 </template>
 
@@ -49,15 +51,20 @@
 				tabbar: "",
 				topNum: 0,
 				data: [],
+				get: 0,
+				zg: 0,
+				xh: 0,
+				cc: 0,
+				ph: 0
 			}
-		}, 
-		computed:{
-			...mapState(['mesNum','message']),
-			cardList(){
-				return  [{
+		},
+		computed: {
+			...mapState(['mesNum', 'message', 'userid','user', 'list']),
+			cardList() {
+				return [{
 						icon: 'xiada--release_circle',
 						text: '下达',
-						number: '0',
+						number: this.get,
 						color: '#1296db',
 						de: '下达',
 						bg: 'xiada--release_circle.png',
@@ -67,44 +74,51 @@
 						icon: 'zhenggai',
 						text: '整改',
 						color: '#f4ea2a',
-						number: '0',
+						number: this.zg,
 						de: '整改',
 						event: '../zhengGai/zhengGai'
 					}, {
 						icon: 'xiaohaoshenqing_xiaohaoshenqing',
 						text: '复查销号',
 						color: 'red',
-						number: '0',
+						number: this.xh,
 						de: '销号',
 						event: '../xiaohao/xiaohao'
-					}, {
-						icon: 'choucha1',
-						text: '抽查',
-						number: '0',
-						color: '#d4237a',
-						de: '抽查',
-						event: '../choucha/choucha'
-					}, {
-						icon: 'paichaxiang',
-						text: '排查',
-						number: '0',
-						color: '#d81e06',
-						de: '排查',
-						event: '../paicha/paicha'
 					},
+					// {
+					// 	icon: 'choucha1',
+					// 	text: '抽查',
+					// 	number: this.cc,
+					// 	color: '#d4237a',
+					// 	de: '抽查',
+					// 	event: '../choucha/choucha'
+					// },
+					// {
+					// 	icon: 'paichaxiang',
+					// 	text: '排查',
+					// 	number:this.ph,
+					// 	color: '#d81e06',
+					// 	de: '排查',
+					// 	event: '../paicha/paicha'
+					// },
 					{
 						icon: 'xiaoxi3',
 						text: '消息',
 						number: this.mesNum,
 						color: '#8a8a8a',
 						de: this.message,
-						event: ''
+						event: '../messageList/messageList'
 					}
 				]
 			}
 		},
- 
+		onLoad() {
+			console.log('show')
+			this.getYhCount()
+			this.getMessage();
+		},
 		methods: {
+			...mapMutations(['setMessageNum']),
 			routes(event) {
 				this.$u.route({
 					type: "to",
@@ -119,117 +133,108 @@
 					url: './dangerList',
 				})
 			},
+			async getMessage(){
+				const mes = await this.$http.get('/index/Hjob.ashx?type=sel', {
+					type: 'sel',
+					userid:this.userid,
+					tabid: 'xx_newc6a24ebc-c69f-4799-9cc5-2ea1db9da957',
+					mid: 'f53bc1eb-762e-43bc-9a87-1a676ad577ea',
+					job: 'demo_node_1',
+					tbname: 'xx_news',
+					T: '新消息sql',
+					page: 1,
+					limit: 10
+				})
+				this.setMessageNum(mes.data.count)
+			},
 			async getYhCount() {
 				const users = this.$store.state.user
-				let level = 'A';
-				let bind ='';
-				if (users) {
-					level = users.level
-					bind = users.department_id;
-				}
-				const paicah = await this.$http.get('?type=sel', {
+
+				const paicah = await this.$http.get('/index/Hjob.ashx?type=sel', {
 					type: 'sel',
 					tabid: 'checkd2d28edd-d60d-4466-8263-aa37a5771b19',
 					mid: '93a04587-debd-43f3-8901-a70eb4faf0a5',
 					job: 'demo_node_2',
 					tbname: 'yh_check',
 					T: 'yh_check_sql',
-					menu_type: 'check'
+					menu_type: 'check',
+					page: 1,
+					limit: 1
 				})
-				this.cardList[4].number = paicah.data.count;
-				const result = await this.$http.get('?type=sel', {
-					type: 'sel',
-					tabid: 'YH_liebiao61c11f22-1a18-4562-a4d7-03237c9ba6f6',
+				this.ph = paicah.data.count;
+				const result = await this.$http.get('/index/Hjob.ashx?type=sel', {
+					tabid: 'YH_liebiao79ea742c-4e27-4267-960d-0d1296ee608a',
 					mid: '9c6a100d-8543-438e-9311-ce6a38e75cae',
 					job: 'demo_node_1',
 					tbname: 'YH',
-					bind: bind,
-					level:level,
-					T: '隐患列表sql',
-					page: 1,
-					limit: 10
+					department_id: this.user.department_id,
+					T: 'app_danger_list_num',
 				})
 				this.topNum = result.data.count;
 				let alldata = result.data.data
-				let get = 0; // 已下达
-				let n = 0;
-				let x = 0;
-				if(!alldata) return;
-				for (let i = 0; i < alldata.length; i++) {
-					const obj = alldata[i]
-					// 已下达
-					if (obj.yh_state == '0') {
-						get += 1
-					}
-					if (obj.yh_state == '7') {
-						n += 1;
-					}
-					if (obj.yh_state == '8') {
-						x += 1;
-					}
-				}
-				this.cardList[0].number = get
-				this.cardList[1].number = n
-				this.cardList[2].number = x
-				this.cardList[3].number = n
+				let get = alldata[1].count; // 已下达
+				let n = alldata[2].count;
+				let x = alldata[3].count;
+				this.get = get;
+				this.zg = n;
+				this.xh = x;
+				this.cc = n;
 			}
 		},
-		onLoad() {
-			this.tabbar = this.$store.state.list;
-			this.getYhCount() //数据
-			this.$store.commit('setMessage', '99+')
-		}
+
 	}
 </script>
-<style lang="scss">
-	.slot-wrap {
-		display: flex;
-		align-items: center;
-		/* 如果您想让slot内容占满整个导航栏的宽度 */
-		flex: 1;
-		/* 如果您想让slot内容与导航栏左右有空隙 */
-		padding: 0rpx 30rpx;
-	}
-
+<style lang="scss" scoped>
 	.content {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
-		padding: 20rpx;
+		padding: 10rpx;
 
-		.u-wrap {
+		.u-wrap-padding {
 			width: 100%;
-			height: 250rpx;
-			border-radius: 10rpx;
-			background-color: $uni-bg-color-card;
-			padding: 0 20rpx;
+			padding: 14rpx;
 
-			.wrap-top {
-				color: #fff;
-				display: flex;
-				align-items: center;
-				padding: 20rpx 0;
-				justify-content: space-between;
-			}
+			.u-wrap {
+				width: 100%;
+				height: 250rpx;
+				border-radius: 30rpx;
+				background-color: $uni-bg-color-card;
+				padding: 0 20rpx;
 
-			.wrap-content {
-				color: #fff;
-				font-size: 80rpx;
+				.wrap-top {
+					color: #fff;
+					display: flex;
+					align-items: center;
+					padding: 20rpx 0;
+					justify-content: space-between;
+				}
+
+				.wrap-content {
+					color: #fff;
+					font-size: 80rpx;
+				}
 			}
 		}
 
+
 		.card {
 			width: 100%;
-			padding-top: 30rpx;
 
 			.item {
 				background: #fff;
-				height: 300rpx;
-				border-radius: 20rpx;
-				margin: 20rpx 0;
+				height: 400rpx;
+				border-radius: 60rpx;
+				margin: 10rpx 0;
 				box-shadow: -1px 4px 12px 0px #f8f8f8;
-				padding: 0 20rpx;
+				padding: 10rpx 30rpx;
+				display: flex;
+				flex-wrap: nowrap;
+				align-content: space-between;
+				justify-content: space-between;
+				align-items: stretch;
+				flex-direction: column;
 
 				&-top-row {
 					padding: 20rpx 0;
@@ -239,7 +244,7 @@
 				}
 
 				&-content-row {
-					margin-top: 30px;
+					// margin-top: 100px;
 					display: flex;
 					align-items: flex-start;
 					justify-content: space-evenly;

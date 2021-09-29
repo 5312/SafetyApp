@@ -2,14 +2,12 @@ let baseUrl = "";
 let socketUrl = "";
 if (process.env.NODE_ENV === 'development') {
 	// 开发环境
-	// baseUrl = "http://localhost:7001/";
-	// socketUrl = "ws://localhost:6001/";
-	baseUrl = "http://59.110.63.135:9010/index/Hjob.ashx";
-	// socketUrl = "ws://8.129.186.35:6001/";
+	socketUrl = "ws://210.76.0.70:15449/handlers/websocket-connect.ashx";
+	baseUrl = "http://210.76.0.70:15449";
 } else if (process.env.NODE_ENV === 'production') {
 	// 生产环境
-	baseUrl = "http://59.110.63.135:9010/index/Hjob.ashx";
-	// socketUrl = "ws://twin-ui.com:6001/";
+	baseUrl = "http://210.76.0.70:15459";
+	socketUrl = "ws://210.76.0.70:15459/handlers/websocket-connect.ashx";
 }
 const courtConfig = {
 	//微信公众号APPID
@@ -18,10 +16,11 @@ const courtConfig = {
 	baseUrl: baseUrl,
 	//webSocket地址
 	socketUrl: socketUrl,
+	// 文件上传
 	//平台名称
 	platformName: "SafetyApp",
 	//项目logo
-	logoUrl: "https://qn.kemean.cn/upload/201906/19/3f3b4751f3ed4a97be804450c3ec4c79",
+	logoUrl: "http://210.76.0.70:15459/favicon.png",
 
 };
 //手机号验证正则表达式

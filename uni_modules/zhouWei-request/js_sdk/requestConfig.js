@@ -3,6 +3,7 @@ import request from "./request";
 let baseUrl = "http://www.xxx.com/api/";
 //可以new多个request来支持多个域名请求
 let $http = new request({
+	withCredentials:true,
 	//接口请求地址
 	baseUrl: baseUrl,
 	//服务器本地上传文件地址
