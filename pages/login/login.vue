@@ -1,8 +1,9 @@
 <template>
 	<view class="login wrap">
 		<view class="content">
-			<!-- <u-gap height="80" bg-color="#f5f5f5"></u-gap> -->
 			<!-- 头部logo -->
+			<!-- <u-gap height="200" bg-color="#f5f5f5"></u-gap> -->
+			<view class="height">	</view>
 			<view class="header">
 				<image :src="logoImage"></image>
 			</view>
@@ -205,11 +206,13 @@
 
 	.wrap {
 		font-size: 28rpx;
-
+		padding-bottom: 20rpx;
 		.content {
 			width: 100%;
 			margin: auto;
-
+			.height{
+				height: 200rpx;
+			}
 			.title {
 				text-align: left;
 				font-size: 60rpx;

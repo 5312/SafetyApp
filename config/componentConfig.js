@@ -35,7 +35,6 @@ export default {
 		$http.get("/index/Hjob.ashx?type=sel&t=app_update",{
 			isPrompt: isPrompt
 		}).then(result => {
-			console.log(result.data.data[0])
 			let toTA =  result.data.data[0]
 			let res = {
 				versionCode:toTA.versioncode,
@@ -44,7 +43,7 @@ export default {
 				updateType:toTA.updatetype,
 				downloadUrl:base.baseUrl+toTA.downloadurl
 			}
-			
+			console.log(res.downloadUrl)
 			/* res的数据说明
 			 * | 参数名称	     | 一定返回 	| 类型	    | 描述
 			 * | -------------|--------- | --------- | ------------- |

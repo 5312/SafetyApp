@@ -3,7 +3,7 @@
 		<view class="u-m-t-20">
 			<u-cell-group>
 				<!-- <u-cell-item  title="个人设置"></u-cell-item> -->
-				<u-cell-item  title="关于" value="新版本" @click="onAPPUpdate"></u-cell-item>
+				<u-cell-item  title="关于" :value="version" @click="onAPPUpdate"></u-cell-item>
 			</u-cell-group>
 			<view class="u-m-t-20">
 				<u-cell-group>

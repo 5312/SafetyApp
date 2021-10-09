@@ -29,12 +29,12 @@
 			</u-cell-group>
 		</view>
 		
-		<view class="u-m-t-20">
+		<!-- <view class="u-m-t-20">
 			<u-cell-group>
 				<u-cell-item icon="star" title="考核管理        "></u-cell-item>
 				<u-cell-item icon="photo" title="日报"></u-cell-item>
 			</u-cell-group>
-		</view>
+		</view> -->
 		
 		<view class="u-m-t-20">
 			<u-cell-group>
@@ -60,7 +60,7 @@
 		},
 		onLoad() {
 			this.name = this.user.users_name
-			this.pic =base.baseUrl+ this.user.headportrait;
+			this.pic =base.baseUrl + this.user.headportrait;
 			
 			uni.setTabBarBadge({
 				index:1,
