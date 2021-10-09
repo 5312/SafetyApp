@@ -42,6 +42,7 @@
 				</view>
 			</u-card>
 		</view>
+		<u-loadmore :status="loadStatus" :load-text="loadText" bgColor="#f2f2f2"></u-loadmore>
 		<u-popup v-model="show" mode="center" border-radius="14" width='80%'>
 			<u-card :title="form.responsibledepartme">
 				<view class="" slot="body">
@@ -86,10 +87,15 @@
 		data() {
 			return {
 				show: false,
-
 				form: {},
-
-
+				loadStatus: 'loadmore',
+				loadText: {
+					loadmore: '轻轻上拉',
+					loading: '努力加载中',
+					nomore: '实在没有了'
+				},
+				nomore: false,
+				page: 1,
 				get_data: [],
 			}
 		},
@@ -98,6 +104,13 @@
 		},
 		computed: {
 			...mapState(['user']),
+		},
+		onReachBottom(){
+			if(!this.nomore){
+				this.loadStatus = "loading"
+				this.page += 1;
+				this.getRquest(true);
+			}
 		},
 		methods: {
 			levelColor(d) {
@@ -125,8 +138,8 @@
 						tbname: 'YH',
 						T: 'updatesql',
 						yh_review: this.form.yh_review,
-						yh_review_time:this.$u.timeFormat(new Date(), 'yyyy-mm-dd'),
-						yh_review_state:this.form.yh_review_state,
+						yh_review_time: this.$u.timeFormat(new Date(), 'yyyy-mm-dd'),
+						yh_review_state: this.form.yh_review_state,
 						yh_state: this.form.yh_state
 					}).then(res => {
 						this.show = false;
@@ -173,10 +186,10 @@
 				this.form.yh_state = 8
 				this.form.yh_review = this.user.users_name; // 复查人
 				this.form.yh_review_state = '已完成'; // 复查人
-				
+
 				this.show = true
 			},
-			async getRquest() {
+			async getRquest(isPush = false) {
 				const users = this.$store.state.user
 				let bind = '';
 				if (users) {
@@ -184,12 +197,21 @@
 				}
 				const get_data = await this.$http.post('/index/Hjob.ashx?type=sel', {
 					T: "app_xh_sql",
+					page: this.page,
+					limit: 10,
 					department_id: bind
 				})
 				if (get_data.data.data) {
-					this.get_data = get_data.data.data;
+					// this.get_data = get_data.data.data;
+					this.loadStatus = "loadmore"
+					if(isPush){
+						this.get_data.push(...get_data.data.data)
+					}else{
+						this.get_data = get_data.data.data;
+					}
 				} else {
-					this.get_data = []
+					this.loadStatus = "nomore";
+					this.nomore = true;
 				}
 			}
 		}
@@ -197,9 +219,10 @@
 </script>
 
 <style lang="scss">
-	.u-wrap{
+	.u-wrap {
 		padding-bottom: 20rpx;
 	}
+
 	.itempadding {
 		padding: 10rpx 0;
 	}

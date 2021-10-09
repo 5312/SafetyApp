@@ -63,13 +63,24 @@
 		methods: {
 			async set(item) {
 				let obj = {};
-				obj[this.paramstype] = item.name
-				let params = Object.assign( {
-					type: 'add',
+				obj[this.paramstype] = item.name;
+				let urlType = {
 					mid: '52b091bc-c0bf-48fd-b03a-785500f08db0',
 					tabid: 'nd_fx_detaila7da660c-3527-419e-94a1-d45e851759f5',
 					job: 'demo_node_1',
 					tbname: 'nd_fx_detail',
+				}
+				if(this.paramstype == 'yp_level'){
+					urlType = {
+						tabid: 'fx_zyanpan8d3e0a67-b4d7-42c5-8bb0-bafb0356699a',
+						mid: 'fde20747-4d22-4c71-82ed-816479412fe4',
+						job: 'demo_node_1',
+						tbname: 'fx_yp',
+					}
+				}
+				let params = Object.assign( {
+					type: 'add',
+					...urlType,
 					add: this.paramstype,
 					id: this.ids
 				},obj)

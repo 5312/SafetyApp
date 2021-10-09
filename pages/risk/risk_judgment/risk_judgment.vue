@@ -1,6 +1,14 @@
 <template>
 	<view class="u-wrap">
-		<u-card v-for="(item,index) in acticeList"  :key="index" :title="'研判时间：'+item.yp_month" @click="judgment_detail(item)">
+		<u-navbar title="风险研判">
+			<view class="navbar-right" slot="right">
+				<view class="dot-box right-item">
+					<u-icon name="plus" size="38" @click="add_judgment"></u-icon>
+				</view>
+			</view>
+		</u-navbar>
+		<u-card v-for="(item,index) in acticeList" :key="index" :title="'研判时间：'+item.yp_month"
+			@click="judgment_detail(item)">
 			<view class="" slot="body">
 				<view class="u-body-item u-flex u-border-bottom u-col-between u-p-t-0">
 					<view class="u-body-item-title u-line-2">{{'研判地点：'+item.yp_address}}</view>
@@ -24,11 +32,12 @@
 				acticeList: []
 			}
 		},
-		onLoad() {
+		onLoad() {},
+		onShow() {
 			this.index()
 		},
 		computed: {
-			...mapState(['user', 'list']),
+			...mapState(['user']),
 		},
 		methods: {
 			async index() {
@@ -41,12 +50,17 @@
 				})
 				this.acticeList = result.data.data;
 			},
-			judgment_detail(item){
+			judgment_detail(item) {
 				this.$u.route({
-					url:'./risk_judgment_detail/risk_judgment_detail',
-					params:{
-						hd_id:item.ids
+					url: './risk_judgment_detail/risk_judgment_detail',
+					params: {
+						hd_id: item.ids
 					}
+				})
+			},
+			add_judgment() {
+				this.$u.route({
+					url: './add_judgment/add_judgment'
 				})
 			}
 		}
@@ -54,22 +68,30 @@
 </script>
 
 <style scoped lang="scss">
-.u-card-wrap { 
+	.u-wrap{
+		padding-bottom: 20rpx;
+	}
+	.u-card-wrap {
 		background-color: $u-bg-color;
 		padding: 1px;
 	}
-	
+
 	.u-body-item {
 		font-size: 32rpx;
 		color: #333;
 		padding: 20rpx 10rpx;
 	}
-		
+
 	.u-body-item image {
 		width: 120rpx;
 		flex: 0 0 120rpx;
 		height: 120rpx;
 		border-radius: 8rpx;
 		margin-left: 12rpx;
+	}
+
+	.navbar-right {
+		margin-right: 24rpx;
+		display: flex;
 	}
 </style>

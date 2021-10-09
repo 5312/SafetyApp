@@ -162,7 +162,9 @@
 			"path": "pages/risk/risk_judgment/risk_judgment",
 			"style": {
 				"navigationBarTitleText": "风险研判",
-				"enablePullDownRefresh": false
+				"enablePullDownRefresh": false,
+				"navigationBarTextStyle": "white",
+				"navigationStyle": "custom" // 隐藏系统导航栏
 			}
 
 		}, {
@@ -178,7 +180,9 @@
 			"path": "pages/risk/risk_judgment/risk_judgment_detail/risk_judgment_detail",
 			"style": {
 				"navigationBarTitleText": "研判详表",
-				"enablePullDownRefresh": false
+				"enablePullDownRefresh": false,
+				"navigationBarTextStyle": "white",
+				"navigationStyle": "custom" // 隐藏系统导航栏
 			}
 
 		}
@@ -205,6 +209,24 @@
             "style" :                                                                                    
             {
                 "navigationBarTitleText": "添加专项风险辨识",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/risk/risk_judgment/add_judgment/add_judgment",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "添加研判活动",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/risk/risk_judgment/risk_judgment_detail/add_judgment_detail/add_judgment_detail",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "添加研判详表",
                 "enablePullDownRefresh": false
             }
             

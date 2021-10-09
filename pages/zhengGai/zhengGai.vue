@@ -135,7 +135,7 @@
 				this.form.yh_rectify_step = '已完成'
 				this.form.rectify_state = '已完成'
 			},
-			async getRquest() {
+			async getRquest(isPush = false) {
 				const users = this.$store.state.user
 				let level = 'A';
 				let bind = '';
@@ -155,9 +155,15 @@
 					limit: 10
 				})
 				if (zhengai.data.data) {
-					this.rectify_data = zhengai.data.data;
+					this.loadStatus = "loadmore"
+					if(isPush){
+						this.rectify_data.push(...zhengai.data.data)
+					}else{
+						this.rectify_data = zhengai.data.data;
+					}
 				} else {
-					this.rectify_data = [];
+					this.loadStatus = "nomore";
+					this.nomore = true;
 				}
 				this.show = false;
 			},
