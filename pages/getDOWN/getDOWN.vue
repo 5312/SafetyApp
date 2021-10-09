@@ -41,6 +41,7 @@
 				</view>
 			</u-card>
 		</view>
+		<u-loadmore :status="loadStatus" :load-text="loadText" bgColor="#f2f2f2"></u-loadmore>
 		<u-popup v-model="show" mode="center" border-radius="14" width='80%'>
 			<u-card :title="form.responsibledepartme">
 				<view class="" slot="body">
@@ -110,11 +111,26 @@
 				},
 				rangeKey: 'bumen_name',
 				get_data: [],
+				page:1,
+				nomore:false,
+				loadStatus: 'loadmore',
+				loadText: {
+					loadmore: '轻轻上拉',
+					loading: '努力加载中',
+					nomore: '实在没有了'
+				}
 			}
 		},
 		onLoad() {
 			this.getRquest();
 			// this.bumenTree();
+		},
+		onReachBottom(){
+			if(!this.nomore){
+				this.loadStatus = "loading"
+				this.page += 1;
+				this.getRquest(true);
+			}
 		},
 		computed: {
 
@@ -162,7 +178,7 @@
 			},
 			copyFunc() {
 				// 抄送
-				console.log('抄送')
+				// console.log('抄送')
 				// 选中的部门数据
 				let sel = this.$refs.chasong.getCheckedNodes()
 				if (sel.length != 0) {
@@ -179,7 +195,7 @@
 			},
 			receiveFunc() {
 				// 接收
-				console.log(' 接收')
+				// console.log(' 接收')
 				// 选中的部门数据
 				let sel = this.$refs.jieshou.getCheckedNodes()
 				if (sel.length != 0) {
@@ -195,7 +211,7 @@
 				}
 			},
 			submit() {
-				console.log('下达', this.form)
+				// console.log('下达', this.form)
 				if (true) {
 					this.$http.post('/index/Hjob.ashx?type=ajaxaddup', {
 						id: this.form.ids,
@@ -213,6 +229,7 @@
 							title: '下达成功',
 							type: 'success',
 						})
+						// this.get_data = []
 						this.getRquest()
 					})
 				}
@@ -228,7 +245,7 @@
 				this.yh_receive = this.split(obj.yh_receive)
 				this.show = true
 			},
-			async getRquest() {
+			async getRquest(isPush = false) {
 				const users = this.$store.state.user
 				let level = 'A';
 				let bind = '';
@@ -241,14 +258,20 @@
 					level: level,
 					department_id: bind,
 					state: 0,
-					state: 0,
-					page: 1,
+					page: this.page,
 					limit: 10
 				})
 				if (get_data.data.data) {
-					this.get_data = get_data.data.data;
+					this.loadStatus = "loadmore"
+					if(isPush){
+						this.get_data.push(...get_data.data.data)
+					}else{
+						this.get_data = get_data.data.data;	
+					}
 				} else {
-					this.get_data = []
+					this.loadStatus = "nomore";
+					this.nomore = true;
+					// this.get_data = []
 				}
 			}
 		}

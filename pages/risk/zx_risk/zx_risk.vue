@@ -1,6 +1,13 @@
 <template>
 	<view class="u-wrap">
-		<u-card v-for="(item,index) in acticeList" :title="item.zx_time">
+		<u-navbar title="专项风险辨识">
+			<view  class="navbar-right" slot="right">
+				<view  class="dot-box right-item">
+					<u-icon name="plus" size="38" @click="addZxRisk"></u-icon>
+				</view>
+			</view>
+		</u-navbar>
+		<u-card v-for="(item,index) in acticeList"  :key="index" :title="item.zx_time" @click="zx_detail(item)">
 			<view class="" slot="body">
 				<view class="u-body-item u-flex u-border-bottom u-col-between u-p-t-0">
 					<view class="u-body-item-title u-line-2">{{item.zx_address_list}}</view>
@@ -8,9 +15,6 @@
 				<view class="u-body-item u-flex u-row-between u-p-b-0">
 					<view class="u-body-item-title u-line-2">{{item.zx_resp_bumenid}}</view>
 				</view>
-			</view>
-			<view class="" slot="foot">
-				<u-icon name="chat-fill" size="34" color="" label=""></u-icon>
 			</view>
 		</u-card>
 	</view>
@@ -28,6 +32,8 @@
 			}
 		},
 		onLoad() {
+		},
+		onShow(){
 			this.index()
 		},
 		computed: {
@@ -43,6 +49,20 @@
 					department_id: this.user.department_id
 				})
 				this.acticeList = result.data.data;
+			},
+			// 跳转 详情
+			zx_detail(item){
+				this.$u.route({
+					url:'../nd_detail/nd_detail',
+					params:{
+						ndid:item.ids,
+					}
+				})
+			},
+			addZxRisk(){
+				this.$u.route({
+					url:'./add_zx_risk/add_zx_risk'
+				})
 			}
 		}
 	}
@@ -66,5 +86,9 @@
 		height: 120rpx;
 		border-radius: 8rpx;
 		margin-left: 12rpx;
+	}
+	.navbar-right {
+		margin-right: 24rpx;
+		display: flex;
 	}
 </style>

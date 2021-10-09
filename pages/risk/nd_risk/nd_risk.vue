@@ -1,6 +1,15 @@
 <template>
 	<view class="u-wrap">
-		<u-card v-for="(item,index) in acticeList" :title="item.nd_list_nae">
+		<u-navbar title="年度风险辨识">
+			<view  class="navbar-right" slot="right">
+				<view  class="dot-box right-item">
+					<u-icon name="plus" size="38" @click="addNdRisk"></u-icon>
+					<!-- <u-badge size="mini" :is-dot="true" :offset="[-6, -6]"></u-badge> -->
+				</view>
+			</view>
+			
+		</u-navbar>
+		<u-card v-for="(item,index) in acticeList" :key="index" :title="item.nd_list_nae" @click="nd_detail(item)">
 			<view class="" slot="body">
 				<view class="u-body-item u-flex u-border-bottom u-col-between u-p-t-0">
 					<view class="u-body-item-title u-line-2">{{item.address_list}}</view>
@@ -9,10 +18,10 @@
 					<view class="u-body-item-title u-line-2">{{item.nd_resp_bumenname}}</view>
 				</view>
 			</view>
-			<view class="" slot="foot">
+			<!-- view class="" slot="foot">
 				<u-icon name="chat-fill" size="34" color="" label=""></u-icon>
-			</view>
-		</u-card>
+	</view> -->
+	</u-card>
 	</view>
 </template>
 
@@ -28,6 +37,9 @@
 			}
 		},
 		onLoad() {
+			// this.index()
+		},
+		onShow(){
 			this.index()
 		},
 		computed: {
@@ -47,27 +59,47 @@
 					department_id: this.user.department_id
 				})
 				this.acticeList = result.data.data;
+			},
+			// 跳转年度详情
+			nd_detail(item) {
+				this.$u.route({
+					url: '../nd_detail/nd_detail',
+					params: {
+						ndid: item.ids
+					}
+				})
+			},
+			addNdRisk(){
+				//
+				this.$u.route({
+					url:'./add_nd_risk/add_nd_risk'
+				})
 			}
 		}
 	}
 </script>
 <style scoped lang="scss">
-.u-card-wrap { 
+	.u-card-wrap {
 		background-color: $u-bg-color;
 		padding: 1px;
 	}
-	
+
 	.u-body-item {
 		font-size: 32rpx;
 		color: #333;
 		padding: 20rpx 10rpx;
 	}
-		
+
 	.u-body-item image {
 		width: 120rpx;
 		flex: 0 0 120rpx;
 		height: 120rpx;
 		border-radius: 8rpx;
 		margin-left: 12rpx;
+	}
+
+	.navbar-right {
+		margin-right: 24rpx;
+		display: flex;
 	}
 </style>

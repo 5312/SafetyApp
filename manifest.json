@@ -1,9 +1,9 @@
 {
-    "name" : "SafetyApp",
+    "name" : "安管平台",
     "appid" : "__UNI__69C57C9",
     "description" : "安全信息管理平台",
-    "versionName" : "1.0.0",
-    "versionCode" : "100",
+    "versionName" : "2.0.0",
+    "versionCode" : 200,
     "transformPx" : false,
     /* 5+App特有相关 */
     "h5" : {
@@ -104,6 +104,9 @@
                     }
                 }
             }
+        },
+        "uniStatistics" : {
+            "enable" : true
         }
     },
     /* 快应用特有相关 */
@@ -127,5 +130,10 @@
     },
     "uniStatistics" : {
         "enable" : false
+    },
+    "mp-kuaishou" : {
+        "uniStatistics" : {
+            "enable" : true
+        }
     }
 }

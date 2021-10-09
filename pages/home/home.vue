@@ -7,7 +7,6 @@
 				</view>
 			</u-card>
 		</view>
-		<u-tabbar :list="list" :mid-button="true"></u-tabbar>
 	</view>
 </template>
 
@@ -20,12 +19,11 @@
 		data() {
 			return {
 				title: '',
-				tabbar: "",
 				lineDataBase:[],
 			}
 		},
 		computed:{
-			...mapState(['user','list']),
+			...mapState(['user','mesNum']),
 			chartData(){
 				return {
 					"categories": [
@@ -50,7 +48,12 @@
 			}
 		},
 		onLoad() {
-			this.index()
+			this.index();
+			
+			uni.setTabBarBadge({
+				index:1,
+				text:String(this.mesNum),
+			})
 		},
 		methods: {
 			async index(){

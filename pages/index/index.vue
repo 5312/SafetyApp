@@ -41,7 +41,6 @@
 				<u-cell-item icon="setting" title="设置" @click="navUrl('./setting/setting')"></u-cell-item>
 			</u-cell-group>
 		</view>
-		<u-tabbar :list="list" :mid-button="true"></u-tabbar>
 	</view>
 </template>
 
@@ -60,19 +59,20 @@
 			}
 		},
 		onLoad() {
-			this.tabbar = this.$store.state.list;
 			this.name = this.user.users_name
 			this.pic =base.baseUrl+ this.user.headportrait;
-			console.log(this.pic)
+			
+			uni.setTabBarBadge({
+				index:1,
+				text:String(this.mesNum),
+			})
 		},
 		computed:{
-				...mapState([ 'user','list']),
+				...mapState([ 'user','mesNum']),
 		},
 		methods: {
 			personalDetail(){
-				// this.$http.get('?',{
-					
-				// })
+				
 			},
 			navUrl(url){
 				this.$u.route({

@@ -12,15 +12,9 @@
 					<u-badge :count="item.count" :offset="[20, 20]"></u-badge>
 					<u-icon :name="item.icon" :size="46"></u-icon>
 					<view class="grid-text">{{item.name}}</view>
-					<!-- <view class="grid-text-subititle">{{item.subtitle}}</view> -->
 				</u-grid-item>
 
 			</u-grid>
-			<!-- <u-card :show-head="false" title="风险分析" @click="listRouter({router:'../analysis/analysis'})">
-				<view class="charts-box" slot="body" v-if="lineDataBase.length >0">
-					<qiun-data-charts :loadingType="2" type="line" :chartData="chartData" />
-				</view>
-			</u-card> -->
 		</view>
 		<!-- 风险 -->
 		<view class="u-content">
@@ -30,10 +24,9 @@
 				</view>
 			</view>
 		</view>
-		<u-tabbar :list="list" :mid-button="true"></u-tabbar>
 	</view>
 </template>
-
+  
 <script>
 	import {
 		mapState,
@@ -47,28 +40,28 @@
 				type_list: [{
 						name: '重大风险',
 						icon: "warning",
-						count:'1',
+						count:'0',
 						color:'#dc143c',
 						subtitle:'极其危险，高度关注，重点防控'
 					},
 					{
 						name: '较大风险',
 						icon: "warning",
-						count:'1',
+						count:'0',
 						color:'#fa8f4d',
 						subtitle:'高度危险，应采取严密防控措施'
 					},
 					{
 						name: '一般风险',
 						icon: "warning",
-						count:'1',
+						count:'0',
 						color:'#d5d505',
 						subtitle:'一般危险，应采取有效防控措施'
 					},
 					{
 						name: '低风险',
 						icon: "warning",
-						count:'1',
+						count:'0',
 						color:'#007dff',
 						subtitle:'危险，需严格按章正规操作'
 					}
@@ -91,7 +84,7 @@
 			}
 		},
 		computed: {
-			...mapState(['user', 'list']),
+			...mapState(['user','mesNum']),
 			chartData() {
 				return {
 					"categories": [
@@ -116,8 +109,12 @@
 			}
 		},
 		onLoad() {
-			this.tabbar = this.$store.state.list;
 			this.index()
+			// 
+			uni.setTabBarBadge({
+				index:1,
+				text:String(this.mesNum),
+			})
 		},
 		methods: {
 			async index() {

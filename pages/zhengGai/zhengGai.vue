@@ -27,17 +27,13 @@
 								</view>
 							</view>
 						</view>
-						<!-- 	<image
-							src="https://img11.360buyimg.com/n7/jfs/t1/94448/29/2734/524808/5dd4cc16E990dfb6b/59c256f85a8c3757.jpg"
-							mode="aspectFill"></image> -->
+						 
 					</view>
 					<view class="u-body-item u-flex u-row-between u-p-b-0 itempadding">
 						<view class="u-body-item-title u-line-2">检查地点：<view class="u-span color">{{item.address}}</view>
 						</view>
 					</view>
-					<!-- <view class="u-body-item u-flex u-row-between u-p-b-0 itempadding">
-						<view class="u-body-item-title u-line-2">详细地点：{{item.address}}</view>
-					</view> -->
+					 
 				</view>
 				<view class="" slot="foot">
 					<view class="u-body-item u-flex u-row-between u-p-b-0">
@@ -49,6 +45,7 @@
 				</view>
 			</u-card>
 		</view>
+		<u-loadmore :status="loadStatus" :load-text="loadText" bgColor="#f2f2f2"></u-loadmore>
 		<u-popup v-model="show" mode="center" border-radius="14" width='80%'>
 			<u-card :title="form.responsibledepartme">
 				<view class="" slot="body">
@@ -89,10 +86,17 @@
 					rectify_time: new Date(),
 					yh_rectify_step: '已完成',
 					rectify_state: '已完成',
-					rectify_man: ''
+					rectify_man: '',
 				},
+				nomore:false,
+				page:1,
 				rectify_data: [],
-
+				loadStatus: 'loadmore',
+				loadText: {
+					loadmore: '轻轻上拉',
+					loading: '努力加载中',
+					nomore: '实在没有了'
+				}
 			}
 		},
 		onLoad() {
@@ -100,6 +104,13 @@
 		},
 		computed: {
 			...mapState(['user']),
+		},
+		onReachBottom(){
+			if(!this.nomore){
+				this.loadStatus = "loading"
+				this.page += 1;
+				this.getRquest(true);
+			}
 		},
 		methods: {
 			split(v) {
@@ -140,7 +151,7 @@
 					T: "app_yhzg_sql",
 					level: level,
 					department_id: bind,
-					page: 1,
+					page: this.page,
 					limit: 10
 				})
 				if (zhengai.data.data) {

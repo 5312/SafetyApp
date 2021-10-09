@@ -5,15 +5,20 @@
 			<u-form :model="form" ref="uForm" :error-type="errorType">
 				<u-form-item label-width='150rpx' :required='true' prop="responsibledepartme" label="责任部门">
 					<u-popup v-model="depart" mode="center" border-radius='14' width='90%' height="90%">
-						<ly-tree v-if="isReady" ref="tree" :props="props" :showRadio='true' :ready="ready"
-							:checkOnClickNode='true' :lazy="true" :load='load' @node-expand="handleNodeExpand"
-							@node-click="handleNodeClick" node-key="id">
-						</ly-tree>
-						<view class="btngroup">
-							<u-button size="medium" :ripple="true" shape="square" type="primary" @click="treeSelect">确定
-							</u-button>
-							<u-button size="medium" :ripple="true" shape="square" type="info" @click="depart=false">取消
-							</u-button>
+						<view class="p_content">
+							<scroll-view scroll-y="true" style="height: 90%;">
+								<ly-tree v-if="isReady" ref="tree" :props="props" :showRadio='true' :ready="ready"
+									:checkOnClickNode='true' :lazy="true" :load='load' node-key="id">
+								</ly-tree>
+							</scroll-view>
+							<view class="btngroup">
+								<u-button size="medium" :ripple="true" shape="square" type="primary"
+									@click="treeSelect">确定
+								</u-button>
+								<u-button size="medium" :ripple="true" shape="square" type="info" @click="depart=false">
+									取消
+								</u-button>
+							</view>
 						</view>
 					</u-popup>
 					<u-input v-model="form.bumen_name" :select-open='depart' type="select" @click='depart = true' />
@@ -129,7 +134,7 @@
 			</u-form>
 		</view>
 		<u-toast ref="uToast" />
-		<u-tabbar :list="list" :mid-button="true"></u-tabbar>
+		<!-- <u-tabbar :list="list" :mid-button="true"></u-tabbar> -->
 	</view>
 </template>
 
@@ -247,7 +252,7 @@
 						required: true,
 						message: '请输入隐患种类',
 					}],
-					del_dept:[{
+					del_dept: [{
 						required: true,
 						message: '请选择销号部门',
 					}],
@@ -279,7 +284,7 @@
 			}
 		},
 		computed: {
-			...mapState(['user', 'userid','list']),
+			...mapState(['user', 'userid', 'list']),
 			treeData() {
 				const childrenData = util.toTreeData(this.departmentData, 'id', 'pid', 'children', '')
 				return childrenData
@@ -318,7 +323,6 @@
 			this.$refs.uForm.setRules(this.rules);
 		},
 		onLoad(option) {
-			// this.tabbar = this.$store.state.list
 			this.isReady = true;
 			// 请求数据
 			this.checkFunc();
@@ -328,7 +332,7 @@
 			})
 			// 监听事件 地点 
 			uni.$on('backAddress', (res) => {
-				// console.log(res)
+				console.log(res)
 				this.form.address = res.address;
 				this.form.address_name = res.address_name;
 				this.form.depart_pname = res.depart_pname;
@@ -392,7 +396,7 @@
 					department_id: this.user.department_id
 				})
 				this.checkingType = restype.data.data
-				console.log(this.checkingType)
+				// console.log(this.checkingType)
 			},
 			checkingFunc(d) {
 				this.form.yh_zhuanxiang = d[0].value
@@ -514,26 +518,21 @@
 				// 删除文件
 				this.video.splice(index, 1)
 			},
-			handleNodeExpand() {
 
-			},
-			handleNodeClick() {
-
-			},
 			treeSelect() { // 责任部门
 				// 选中的部门数据
 				let sel = this.$refs.tree.getCheckedNodes()
 				if (sel.length != 0) {
-					if(this.pin_number){
+					if (this.pin_number) {
 						this.form.del_dept_id = sel[0].id;
 						this.form.del_dept = sel[0].bumen_name;
 						this.depart = false;
-					}else{
+					} else {
 						this.form.responsibledepartme = sel[0].id;
 						this.form.bumen_name = sel[0].bumen_name;
 						this.depart = false;
 					}
-					
+
 				} else {
 					this.$refs.uToast.show({
 						title: '请选择部门',
@@ -725,19 +724,20 @@
 	}
 
 	.btngroup {
-		position: fixed;
-		z-index: 2;
 		background: #fff;
-		bottom: 68rpx;
-		padding: 15rpx;
-		width: 80%;
+		bottom: 10rpx;
 		left: 0;
 		text-align: center;
 		right: 0;
 		margin: auto;
-
 		button {
 			margin: 10rpx;
 		}
+	}
+
+	.p_content {
+		padding: 24rpx;
+		height:100%;
+		overflow: hidden;
 	}
 </style>

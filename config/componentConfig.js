@@ -1,4 +1,5 @@
-import $http from '@/config/requestConfig'
+import $http from '@/config/requestConfig';
+import base from '@/config/baseUrl';
 const platform = uni.getSystemInfoSync().platform;
 export default {
 	/****************以下是z-nav-bar插件配置*******************/
@@ -31,9 +32,19 @@ export default {
 		 */
 		/****************以下是示例*******************/
 		// 可以用自己项目的请求方法
-		$http.get("?type=sel", httpData,{
+		$http.get("/index/Hjob.ashx?type=sel&t=app_update",{
 			isPrompt: isPrompt
-		}).then(res => {
+		}).then(result => {
+			console.log(result.data.data[0])
+			let toTA =  result.data.data[0]
+			let res = {
+				versionCode:toTA.versioncode,
+				versionName:toTA.versionname,
+				versionInfo:toTA.versioninfo,
+				updateType:toTA.updatetype,
+				downloadUrl:base.baseUrl+toTA.downloadurl
+			}
+			
 			/* res的数据说明
 			 * | 参数名称	     | 一定返回 	| 类型	    | 描述
 			 * | -------------|--------- | --------- | ------------- |

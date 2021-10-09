@@ -35,7 +35,6 @@
 
 			</u-row>
 		</view>
-		<u-tabbar :before-switch="beforeSwitch" :list="list" :mid-button="true"></u-tabbar>
 	</view>
 </template>
 
@@ -85,22 +84,6 @@
 						de: '销号',
 						event: '../xiaohao/xiaohao'
 					},
-					// {
-					// 	icon: 'choucha1',
-					// 	text: '抽查',
-					// 	number: this.cc,
-					// 	color: '#d4237a',
-					// 	de: '抽查',
-					// 	event: '../choucha/choucha'
-					// },
-					// {
-					// 	icon: 'paichaxiang',
-					// 	text: '排查',
-					// 	number:this.ph,
-					// 	color: '#d81e06',
-					// 	de: '排查',
-					// 	event: '../paicha/paicha'
-					// },
 					{
 						icon: 'xiaoxi3',
 						text: '消息',
@@ -113,9 +96,9 @@
 			}
 		},
 		onLoad() {
-			console.log('show')
 			this.getYhCount()
 			this.getMessage();
+
 		},
 		methods: {
 			...mapMutations(['setMessageNum']),
@@ -124,9 +107,6 @@
 					type: "to",
 					url: event
 				})
-			},
-			beforeSwitch() {
-				return true
 			},
 			goList() {
 				this.$u.route({
@@ -150,18 +130,18 @@
 			async getYhCount() {
 				const users = this.$store.state.user
 
-				const paicah = await this.$http.get('/index/Hjob.ashx?type=sel', {
-					type: 'sel',
-					tabid: 'checkd2d28edd-d60d-4466-8263-aa37a5771b19',
-					mid: '93a04587-debd-43f3-8901-a70eb4faf0a5',
-					job: 'demo_node_2',
-					tbname: 'yh_check',
-					T: 'yh_check_sql',
-					menu_type: 'check',
-					page: 1,
-					limit: 1
-				})
-				this.ph = paicah.data.count;
+				// const paicah = await this.$http.get('/index/Hjob.ashx?type=sel', {
+				// 	type: 'sel',
+				// 	tabid: 'checkd2d28edd-d60d-4466-8263-aa37a5771b19',
+				// 	mid: '93a04587-debd-43f3-8901-a70eb4faf0a5',
+				// 	job: 'demo_node_2',
+				// 	tbname: 'yh_check',
+				// 	T: 'yh_check_sql',
+				// 	menu_type: 'check',
+				// 	page: 1,
+				// 	limit: 1
+				// })
+				// this.ph = paicah.data.count;
 				const result = await this.$http.get('/index/Hjob.ashx?type=sel', {
 					tabid: 'YH_liebiao79ea742c-4e27-4267-960d-0d1296ee608a',
 					mid: '9c6a100d-8543-438e-9311-ce6a38e75cae',

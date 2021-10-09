@@ -18,16 +18,19 @@
 		},
 		onLaunch: function() {
 			console.log('App Launch')
-			uni.preloadPage({url: "/pages/home/home"});
-			uni.preloadPage({url: "/pages/danger/danger"});
-			uni.preloadPage({url: "/pages/risk/risk"});
-			uni.preloadPage({url: "/pages/add/add"});
+		
 			// 升级
 			// #ifdef APP-PLUS
-			APPUpdate();
+			APPUpdate()
 			// #endif
-			socket.init();
-
+			socket.init()
+			
+			uni.onTabBarMidButtonTap(()=>{
+				this.$u.route({
+					url:'/pages/add/add'
+				})
+			});
+			
 
 		},
 		onShow: function() {
@@ -39,7 +42,6 @@
 
 	}
 </script>
-
 
 <style lang="scss">
 	/* 此处为style标签内容的最前面 */

@@ -13,13 +13,12 @@
 
 		},
 		{
-		    "path" : "pages/home/home",
-		    "style" :                                                                                    
-		    {
-		       "navigationBarTitleText": "首页",
-		       "enablePullDownRefresh": false
-		    }
-		    
+			"path": "pages/home/home",
+			"style": {
+				"navigationBarTitleText": "首页",
+				"enablePullDownRefresh": false
+			}
+
 		},
 		{
 			"path": "pages/danger/danger",
@@ -74,11 +73,9 @@
 				"navigationBarTitleText": "隐患录入",
 				"enablePullDownRefresh": false,
 				"navigationBarTextStyle": "black"
-
 			}
 
-		}
-		, {
+		}, {
 			"path": "pages/getDOWN/getDOWN",
 			"style": {
 				"navigationBarTitleText": "下达",
@@ -128,48 +125,86 @@
 			}
 
 		}
-	  
-        ,{
-            "path" : "pages/messageList/messageList",
+
+		, {
+			"path": "pages/messageList/messageList",
+			"style": {
+				"navigationBarTitleText": "消息",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/index/setting/setting",
+			"style": {
+				"navigationBarTitleText": "设置",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/risk/nd_risk/nd_risk",
+			"style": {
+				"navigationBarTitleText": "年度风险辨识",
+				"enablePullDownRefresh": false,
+				"navigationBarTextStyle": "white",
+				"navigationStyle": "custom" // 隐藏系统导航栏
+			}
+
+		}, {
+			"path": "pages/risk/zx_risk/zx_risk",
+			"style": {
+				"navigationBarTitleText": "专项风险辨识",
+				"enablePullDownRefresh": false,
+				"navigationBarTextStyle": "white",
+				"navigationStyle": "custom" // 隐藏系统导航栏
+			}
+
+		}, {
+			"path": "pages/risk/risk_judgment/risk_judgment",
+			"style": {
+				"navigationBarTitleText": "风险研判",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/risk/nd_detail/nd_detail",
+			"style": {
+				"navigationBarTitleText": "评估详表",
+				"enablePullDownRefresh": false,
+				"navigationBarTextStyle": "white",
+				"navigationStyle": "custom" // 隐藏系统导航栏
+			}
+
+		}, {
+			"path": "pages/risk/risk_judgment/risk_judgment_detail/risk_judgment_detail",
+			"style": {
+				"navigationBarTitleText": "研判详表",
+				"enablePullDownRefresh": false
+			}
+
+		}
+	    ,{
+            "path" : "pages/risk/nd_risk/add_nd_risk/add_nd_risk",
             "style" :                                                                                    
             {
-                "navigationBarTitleText": "消息",
+                "navigationBarTitleText": "添加年度风险辨识",
                 "enablePullDownRefresh": false
             }
             
         }
         ,{
-            "path" : "pages/index/setting/setting",
+            "path" : "pages/risk/nd_detail/ad_detail/ad_detail",
             "style" :                                                                                    
             {
-                "navigationBarTitleText": "设置",
+                "navigationBarTitleText": "添加",
                 "enablePullDownRefresh": false
             }
             
         }
         ,{
-            "path" : "pages/risk/nd_risk/nd_risk",
+            "path" : "pages/risk/zx_risk/add_zx_risk/add_zx_risk",
             "style" :                                                                                    
             {
-                "navigationBarTitleText": "年度风险辨识",
-                "enablePullDownRefresh": false
-            }
-            
-        }
-        ,{
-            "path" : "pages/risk/zx_risk/zx_risk",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "专项风险辨识",
-                "enablePullDownRefresh": false
-            }
-            
-        }
-        ,{
-            "path" : "pages/risk/risk_judgment/risk_judgment",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "风险研判",
+                "navigationBarTitleText": "添加专项风险辨识",
                 "enablePullDownRefresh": false
             }
             
@@ -185,7 +220,9 @@
 		"color": "#909399",
 		"selectedColor": "#303133",
 		"backgroundColor": "#FFFFFF",
-		"borderStyle": "black",
+		"borderStyle": "white",
+		"height": "50px",
+		"blurEffect":"light",
 		"list": [{
 				"pagePath": "pages/home/home",
 				"iconPath": "/static/uview/example/home-fill.png",
@@ -196,14 +233,6 @@
 				"iconPath": "/static/uview/example/yinhuan1.png",
 				"selectedIconPath": "/static/uview/example/yinhuan1_select.png",
 				"text": "隐患"
-			},
-			{
-				"pagePath": "pages/add/add",
-				"iconPath": "/static/uview/example/min_button.png",
-				"selectedIconPath": "/static/uview/example/min_button_select.png",
-				"text": "录入",
-				"midButton": true,
-				"customIcon": false
 			},
 			{
 				"pagePath": "pages/risk/risk",
@@ -217,6 +246,13 @@
 				"selectedIconPath": "/static/uview/example/wodedangxuan_select.png",
 				"text": "个人"
 			}
-		]
+		],
+		"midButton": {
+			"width": "80px",
+			"height": "60px",
+			"text": "录入",
+			"iconPath": "/static/uview/example/min_button.png",
+			"iconWidth": "40px"
+		}
 	}
 }

@@ -93,7 +93,7 @@
 			},
 			click(e) {
 				let _this = this
-				uni.switchTab({
+				uni.navigateBack({
 					url: '../add',
 					success: function() {
 						uni.$emit('yhLibContent', {
