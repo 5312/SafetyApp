@@ -17,6 +17,8 @@
 							</view>
 							<view class="u-body-item-title u-line-2 itempadding ">隐患内容：<text
 									class="content">{{item.yh_content}}</text></view>
+							<view class="u-body-item-title u-line-2 itempadding ">隐患状态：<text
+									class="content">{{state(item.yh_state) }}</text></view>
 							<view class="u-body-item-title u-line-2 itempadding">隐患等级：
 
 								<view class='u-span' :style="{color:item.yh_level.split('~')[2]}">
@@ -42,7 +44,7 @@
 				</view>
 			</u-card>
 		</view>
-		<u-loadmore :status="loadStatus" :load-text="loadText" bgColor="#f2f2f2"></u-loadmore>
+		<u-loadmore v-if="get_data.length >0" :status="loadStatus" :load-text="loadText" bgColor="#f2f2f2"></u-loadmore>
 		<u-popup v-model="show" mode="center" border-radius="14" width='80%'>
 			<u-card :title="form.responsibledepartme">
 				<view class="" slot="body">
@@ -104,9 +106,26 @@
 		},
 		computed: {
 			...mapState(['user']),
+			state() {
+				const stateText = {
+					0: '已录入',
+					1: '已下达',
+					2: "复查不通过",
+					3: '分发',
+					4: '整改',
+					5: '待验收',
+					6: '签字',
+					7: '已整改',
+					8: '已销号',
+					9: '合格',
+				}
+				return val => {
+					return stateText[val]
+				}
+			},
 		},
-		onReachBottom(){
-			if(!this.nomore){
+		onReachBottom() {
+			if (!this.nomore) {
 				this.loadStatus = "loading"
 				this.page += 1;
 				this.getRquest(true);
@@ -204,9 +223,9 @@
 				if (get_data.data.data) {
 					// this.get_data = get_data.data.data;
 					this.loadStatus = "loadmore"
-					if(isPush){
+					if (isPush) {
 						this.get_data.push(...get_data.data.data)
-					}else{
+					} else {
 						this.get_data = get_data.data.data;
 					}
 				} else {

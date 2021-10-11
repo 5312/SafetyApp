@@ -14,7 +14,7 @@ import {
 
 setTimeout(() => {
 	getCurrentNo(function(res) {
-		console.log("版本号", res);
+		// console.log("版本号", res);
 		version_code = res.versionCode;
 	});
 }, 200);

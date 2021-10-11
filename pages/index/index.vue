@@ -58,14 +58,17 @@
 				name:''
 			}
 		},
-		onLoad() {
+		onShow(){
 			this.name = this.user.users_name
 			this.pic =base.baseUrl + this.user.headportrait;
 			
 			uni.setTabBarBadge({
 				index:1,
 				text:String(this.mesNum),
-			})
+			})	
+		},
+		onLoad() {
+			
 		},
 		computed:{
 				...mapState([ 'user','mesNum']),

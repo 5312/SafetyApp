@@ -38,10 +38,11 @@
 			...mapState(['mesNum', 'message', 'user']),
 		},
 		onLoad() {
+			let _this = this;
 			// #ifdef APP-PLUS
 			getCurrentNo(res => {
 				// 进页面获取当前APP版本号（用于页面显示）
-				this.version = res.version;
+				 _this.version = res.versionName;
 			});
 			// #endif
 		},

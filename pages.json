@@ -16,6 +16,8 @@
 			"path": "pages/home/home",
 			"style": {
 				"navigationBarTitleText": "首页",
+				"enablePullDownRefresh": false,
+				"navigationStyle": "custom", // 隐藏系统导航栏
 				"enablePullDownRefresh": false
 			}
 
@@ -227,6 +229,24 @@
             "style" :                                                                                    
             {
                 "navigationBarTitleText": "添加研判详表",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/danger/dangerold/dangerold",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/message/message",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
                 "enablePullDownRefresh": false
             }
             

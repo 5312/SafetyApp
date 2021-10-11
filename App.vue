@@ -14,11 +14,40 @@
 			...mapState(['mesNum'])
 		},
 		methods: {
-			...mapMutations(['setUser', 'setMessage']),
+			...mapMutations(['setUser', 'setUserId', 'setMessageNum', 'setMessage']),
+			isLogin() {
+				//判断缓存中是否登录过，直接登录
+				try {
+					let value = this.user;
+					// 第一次登录后，后面不在登录
+					try {
+						const cookie = uni.getStorageSync('login_user');
+						if (cookie) {
+							// console.log('1',cookie)
+							value = cookie.us;
+							this.setUser(cookie.us)
+							this.setUserId(cookie.usid)
+							this.setMessageNum(cookie.unread_msg_count) //存入消息数量
+						}
+					} catch (e) {
+						// error
+					}
+					if (value) {
+						//有登录信息
+						this.$u.route({
+							type: 'tab',
+							url: './pages/home/home',
+						})
+					}
+				} catch (e) {
+					// error
+					console.log(e)
+				}
+			},
 		},
 		onLaunch: function() {
-			console.log('App Launch')
-		
+			// console.log('App Launch')
+			this.isLogin()
 			// 升级
 			// #ifdef APP-PLUS
 			APPUpdate()
@@ -34,10 +63,10 @@
 
 		},
 		onShow: function() {
-			console.log('App Show')
+			// console.log('App Show')
 		},
 		onHide: function() {
-			console.log('App Hide')
+			// console.log('App Hide')
 		},
 
 	}

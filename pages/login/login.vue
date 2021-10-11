@@ -2,15 +2,24 @@
 	<view class="login wrap">
 		<view class="content">
 			<!-- 头部logo -->
-			<!-- <u-gap height="200" bg-color="#f5f5f5"></u-gap> -->
-			<view class="height">	</view>
-			<view class="header">
-				<image :src="logoImage"></image>
+			<view class="topbg">
+				<image  width="100%" height="400rpx" :src="logoImage" mode="widthFix"></image>
 			</view>
 			<!-- 主体表单 -->
 			<view class="main">
-				<wInput v-model="tel" type="text" placeholder="用户名/电话" :focus="isFocus"></wInput>
-				<wInput v-model="password" type="password" placeholder="密码"></wInput>
+					
+				<u-field  v-model="tel" label-width="0" placeholder="请输入账号">
+					<view slot="icon">
+						<u-icon  name="phone"></u-icon>
+					</view>
+				</u-field>
+				<!-- <wInput v-model="tel" type="text" leftIcon="phone" placeholder="用户名/电话" :focus="isFocus"></wInput> -->
+				<u-field  v-model="password" type="password" label-width="0" placeholder="请输入密码">
+					<view slot="icon">
+						<u-icon  name="lock-open"></u-icon>
+					</view>
+				</u-field>
+				<!-- <wInput v-model="password" type="password" placeholder="密码"></wInput> -->
 			</view>
 			<wButton class="wbutton" text="登 录" :rotate="isRotate" @click="startLogin"></wButton>
 
@@ -19,20 +28,14 @@
 				<view class="login_icon">
 					<view class="cuIcon-weixin" @tap="login_weixin"></view>
 				</view>
-				<!-- <view class="login_icon">
-					<view class="cuIcon-weixin" @tap="login_weibo"></view>
-				</view>
-				<view class="login_icon">
-					<view class="cuIcon-weixin" @tap="login_github"></view>
-				</view> -->
 			</view>
 
 			<!-- 底部信息 -->
-			<view class="footer">
+			<!-- <view class="footer">
 				<navigator url="forget" open-type="navigate">找回密码</navigator>
 				<text>|</text>
 				<navigator url="register" open-type="navigate">注册账号</navigator>
-			</view>
+			</view> -->
 			<!-- <view class="buttom">
 				<view class="hint">
 					登录代表同意
@@ -63,14 +66,14 @@
 				password: '',
 				// #endif
 				// #ifndef APP-PLUS
-				tel: '正-十矿管理员',
+				tel: 'shk-范典玉',
 				password: '123456',
 				// #endif
 				isRotate: false, //是否加载旋转
 				isFocus: true, // 是否聚焦
 				//logo图片 base64
 			
-				logoImage: '../../static/app-logo.png'
+				logoImage: '../../static/bg/login_bg.png'
 			}
 		},
 		components: {
@@ -89,7 +92,7 @@
 			}
 		},
 		onLoad() {
-			this.isLogin();
+			// this.isLogin();
 		},
 		methods: {
 			...mapMutations(['setUser', 'setUserId', 'setMessageNum', 'setMessage']),
@@ -203,15 +206,20 @@
 <style lang="scss" scoped>
 	@import url("../../components/watch-login/css/icon.css");
 	@import url("./css/main.css");
-
+	page{
+		background-color: #fff;
+	}
 	.wrap {
 		font-size: 28rpx;
 		padding-bottom: 20rpx;
 		.content {
 			width: 100%;
 			margin: auto;
-			.height{
-				height: 200rpx;
+			 
+			.topbg{
+				image{
+					width:100%;
+				}
 			}
 			.title {
 				text-align: left;

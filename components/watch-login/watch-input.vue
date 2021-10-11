@@ -9,6 +9,7 @@
 			:maxlength="maxlength" 
 			:placeholder="placeholder" 
 			:password="type==='password'&&!showPassword" 
+			:left-icon = "leftIcon"
 			
 			@input="$emit('input', $event.detail.value)"
 			@blur="$emit('blur', $event)"
@@ -52,6 +53,7 @@
 		props:{
 			type: String, //类型
 			value: String, //值
+			leftIcon:String,
 			placeholder: String, //框内提示
 			maxlength: {
 				//最大长度
@@ -211,8 +213,9 @@
 	}
 	.oBorder{
 	    border: none;
-	    border-radius: 2.5rem ;
-	    -webkit-box-shadow: 0 0 60rpx 0 rgba(43,86,112,.1) ;
-	    box-shadow: 0 0 60rpx 0 rgba(43,86,112,.1) ;
+		border-bottom: 2rpx solid rgba(43,86,112,.1);
+	    /* border-radius: 2.5rem ; */
+	 /*   -webkit-box-shadow: 0 0 60rpx 0 rgba(43,86,112,.1) ;
+	    box-shadow: 0 0 60rpx 0 rgba(43,86,112,.1) ; */
 	}
 </style>

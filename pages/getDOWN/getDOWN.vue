@@ -1,7 +1,7 @@
 <template>
 	<view class="u-wrap">
 		<view v-if="get_data.length <=0">
-			<u-empty text="暂无待下达隐患" mode="list"></u-empty>
+			<u-empty text="暂无待下达隐患" mode="list" bg-color="#e5dee6"></u-empty>
 		</view>
 		<view v-for="(item,i) in get_data" :key='item.ids'>
 			<u-card :title="item.responsibledepartme" :sub-title="item.createdate" padding="30"
@@ -16,7 +16,9 @@
 								</view>
 							</view>
 							<view class="u-body-item-title u-line-2 itempadding ">隐患内容：<text
-									class="content">{{item.yh_content}}</text></view>
+									class="content">{{ item.yh_content }}</text></view>
+							<view class="u-body-item-title u-line-2 itempadding ">隐患状态：<text
+									class="content">{{state(item.yh_state) }}</text></view>
 							<view class="u-body-item-title u-line-2 itempadding">隐患等级：
 								<view class='u-span' :style="{color:item.yh_level.split('~')[2]}">
 									{{split(item.yh_level)}}
@@ -27,12 +29,9 @@
 					<view class="u-body-item u-flex u-row-between u-p-b-0 itempadding">
 						<view class="u-body-item-title u-line-2">检查地点：{{item.address}}</view>
 					</view>
-					<!-- 		<view class="u-body-item u-flex u-row-between u-p-b-0 itempadding">
-						<view class="u-body-item-title u-line-2">详细地点：{{item.address}}</view>
-					</view> -->
+					 
 				</view>
 				<view class="" slot="foot">
-					<!-- <u-icon name="chat-fill" size="34" color="" label="30评论"></u-icon> -->
 					<view class="u-body-item u-flex u-row-between u-p-b-0">
 						<view class="u-body-item-title u-line-2">要求完成时间：
 							<view class="u-span timecolor">{{item.yh_requesttime}}</view>
@@ -41,7 +40,7 @@
 				</view>
 			</u-card>
 		</view>
-		<u-loadmore :status="loadStatus" :load-text="loadText" bgColor="#f2f2f2"></u-loadmore>
+		<u-loadmore v-if="get_data.length >0" :status="loadStatus" :load-text="loadText" bgColor="#f2f2f2"></u-loadmore>
 		<u-popup v-model="show" mode="center" border-radius="14" width='80%'>
 			<u-card :title="form.responsibledepartme">
 				<view class="" slot="body">
@@ -49,7 +48,7 @@
 						<u-form-item label="隐患详情:" label-width='150' prop="yh_content">
 							<u-input type="textarea" :disabled='true' v-model="form.yh_content" />
 						</u-form-item>
-						 
+
 
 					</u-form>
 				</view>
@@ -111,8 +110,8 @@
 				},
 				rangeKey: 'bumen_name',
 				get_data: [],
-				page:1,
-				nomore:false,
+				page: 1,
+				nomore: false,
 				loadStatus: 'loadmore',
 				loadText: {
 					loadmore: '轻轻上拉',
@@ -125,15 +124,31 @@
 			this.getRquest();
 			// this.bumenTree();
 		},
-		onReachBottom(){
-			if(!this.nomore){
+		onReachBottom() {
+			if (!this.nomore) {
 				this.loadStatus = "loading"
 				this.page += 1;
 				this.getRquest(true);
 			}
 		},
 		computed: {
-
+			state() {
+				const stateText = {
+					0: '已录入',
+					1: '已下达',
+					2: "复查不通过",
+					3: '分发',
+					4: '整改',
+					5: '待验收',
+					6: '签字',
+					7: '已整改',
+					8: '已销号',
+					9: '合格',
+				}
+				return val => {
+					return stateText[val]
+				}
+			},
 			treeData() {
 				const childrenData = util.toTreeData(this.departmentData, 'id', 'pid', 'children', '')
 				return childrenData
@@ -263,10 +278,10 @@
 				})
 				if (get_data.data.data) {
 					this.loadStatus = "loadmore"
-					if(isPush){
+					if (isPush) {
 						this.get_data.push(...get_data.data.data)
-					}else{
-						this.get_data = get_data.data.data;	
+					} else {
+						this.get_data = get_data.data.data;
 					}
 				} else {
 					this.loadStatus = "nomore";
@@ -279,9 +294,10 @@
 </script>
 
 <style lang="scss">
-	.u-wrap{
+	.u-wrap {
 		padding-bottom: 20rpx;
 	}
+
 	.itempadding {
 		padding: 10rpx 0;
 	}
@@ -303,6 +319,7 @@
 	.timecolor {
 		color: $uni-text-color-grey;
 	}
+
 	$width:170rpx;
 
 	.u-body-item {

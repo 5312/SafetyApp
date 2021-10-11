@@ -19,7 +19,7 @@
 'use strict';
 
 var config = {
-  version: 'v2.2.1-20210603',
+  version: 'v2.3.3-20210706',
   yAxisWidth: 15,
   yAxisSplit: 5,
   xAxisHeight: 22,
@@ -471,7 +471,7 @@ function getDataRange(minData, maxData) {
 function measureText(text, fontSize, context) {
   var width = 0;
   text = String(text);
-  // #ifdef MP-ALIPAY || MP-BAIDU
+  // #ifdef MP-ALIPAY || MP-BAIDU || APP-NVUE
   context = false;
   // #endif
   if (context !== false && context !== undefined && context.setFontSize && context.measureText) {
@@ -1278,6 +1278,7 @@ function getRadarDataPoints(angleList, center, radius, series, opts) {
       let tmp = {};
       tmp.angle = angleList[index];
       tmp.proportion = item / maxData;
+      tmp.value = item;
       tmp.position = convertCoordinateOrigin(radius * tmp.proportion * process * Math.cos(tmp.angle), radius * tmp.proportion * process * Math.sin(tmp.angle), center);
       listItem.data.push(tmp);
     });
@@ -1822,8 +1823,8 @@ function getYAxisTextList(series, opts, config, stack, yData) {
     maxData += rangeSpan;
   }
   var dataRange = getDataRange(minData, maxData);
-  var minRange = yData.min === undefined ? dataRange.minRange : yData.min;
-  var maxRange = yData.max === undefined ? dataRange.maxRange : yData.max;
+  var minRange = yData.min === undefined || yData.min === null ? dataRange.minRange : yData.min;
+  var maxRange = yData.max === undefined || yData.min === null ? dataRange.maxRange : yData.max;
   var range = [];
   var eachRange = (maxRange - minRange) / opts.yAxis.splitNumber;
   for (var i = 0; i <= opts.yAxis.splitNumber; i++) {
@@ -1951,7 +1952,7 @@ function calTooltipYAxisData(point, series, opts, config, eachSpacing) {
     let maxVal = ranges[i].shift();
     let minVal = ranges[i].pop();
     let item = maxVal - (maxVal - minVal) * (point - minAxis) / spacingValid;
-    item = opts.yAxis.data[i].formatter ? opts.yAxis.data[i].formatter(Number(item)) : item.toFixed(0);
+    item = opts.yAxis.data[i].formatter ? opts.yAxis.data[i].formatter(item) : item.toFixed(0);
     items.push(String(item))
   }
   return items;
@@ -2359,7 +2360,7 @@ function drawMarkLine(opts, config, context) {
     context.stroke();
     context.setLineDash([]);
     if (item.showLabel) {
-      let labelText = opts.yAxis.formatter ? opts.yAxis.formatter(Number(item.value)) : item.value;
+      let labelText = opts.yAxis.formatter ? opts.yAxis.formatter(item.value) : item.value;
       context.setFontSize(config.fontSize);
       let textWidth = measureText(labelText, config.fontSize, context);
       let yAxisWidth = opts.chartData.yAxisData.yAxisWidth[0].width;
@@ -2668,18 +2669,11 @@ function drawColumnDataPoints(series, opts, config, context) {
                 columnOption.barBorderRadius = [width / 2, width / 2, 0, 0];
               }
               let [r0, r1, r2, r3] = columnOption.barBorderRadius;
-              if (r0 + r2 > height) {
-                r0 = height;
-                r2 = 0;
-                r1 = height;
-                r3 = 0;
-              }
-              if (r0 + r2 > width / 2) {
-                r0 = width / 2;
-                r2 = 0;
-                r1 = width / 2;
-                r3 = 0;
-              }
+              let minRadius = Math.min(width/2,height/2);
+              r0 = r0 > minRadius ? minRadius : r0;
+              r1 = r1 > minRadius ? minRadius : r1;
+              r2 = r2 > minRadius ? minRadius : r2;
+              r3 = r3 > minRadius ? minRadius : r3;
               r0 = r0 < 0 ? 0 : r0;
               r1 = r1 < 0 ? 0 : r1;
               r2 = r2 < 0 ? 0 : r2;
@@ -3663,18 +3657,11 @@ function drawMixDataPoints(series, opts, config, context) {
               columnOption.barBorderRadius = [width / 2, width / 2, 0, 0];
             }
             let [r0, r1, r2, r3] = columnOption.barBorderRadius;
-            if (r0 + r2 > height) {
-              r0 = height;
-              r2 = 0;
-              r1 = height;
-              r3 = 0;
-            }
-            if (r0 + r2 > width / 2) {
-              r0 = width / 2;
-              r2 = 0;
-              r1 = width / 2;
-              r3 = 0;
-            }
+            let minRadius = Math.min(width/2,height/2);
+            r0 = r0 > minRadius ? minRadius : r0;
+            r1 = r1 > minRadius ? minRadius : r1;
+            r2 = r2 > minRadius ? minRadius : r2;
+            r3 = r3 > minRadius ? minRadius : r3;
             r0 = r0 < 0 ? 0 : r0;
             r1 = r1 < 0 ? 0 : r1;
             r2 = r2 < 0 ? 0 : r2;
@@ -3981,7 +3968,7 @@ function drawXAxis(categories, opts, config, context) {
       });
     } else {
       newCategories.forEach(function(item, index) {
-        var xitem = opts.xAxis.formatter ? opts.xAxis.formatter(Number(item)) : item;
+        var xitem = opts.xAxis.formatter ? opts.xAxis.formatter(item) : item;
         context.save();
         context.beginPath();
         context.setFontSize(xAxisFontSize);
@@ -4901,6 +4888,42 @@ function drawRadarDataPoints(series, opts, config, context) {
   });
   // draw label text
   drawRadarLabel(coordinateAngle, radius, centerPosition, opts, config, context);
+  
+  // draw dataLabel
+  if (opts.dataLabel !== false && process === 1) {
+    radarDataPoints.forEach(function(eachSeries, seriesIndex) {
+      context.beginPath();
+      var fontSize = eachSeries.textSize * opts.pix || config.fontSize;
+      context.setFontSize(fontSize);
+      context.setFillStyle(eachSeries.textColor || opts.fontColor);
+      eachSeries.data.forEach(function(item, index) {
+        //如果是中心点垂直的上下点位
+        if(Math.abs(item.position.x - centerPosition.x)<2){
+          //如果在上面
+          if(item.position.y < centerPosition.y){
+            context.setTextAlign('center');
+            context.fillText(item.value, item.position.x, item.position.y - 4);
+          }else{
+            context.setTextAlign('center');
+            context.fillText(item.value, item.position.x, item.position.y + fontSize + 2);
+          }
+        }else{
+          //如果在左侧
+          if(item.position.x < centerPosition.x){
+            context.setTextAlign('right');
+            context.fillText(item.value, item.position.x - 4, item.position.y + fontSize / 2 - 2);
+          }else{
+            context.setTextAlign('left');
+            context.fillText(item.value, item.position.x + 4, item.position.y + fontSize / 2 - 2);
+          }
+        }
+      });
+      context.closePath();
+      context.stroke();
+    });
+    context.setTextAlign('left');
+  }
+  
   return {
     center: centerPosition,
     radius: radius,
@@ -6304,6 +6327,10 @@ var uCharts = function uCharts(opts) {
       return this.textAlign = e;
     }
     this.context.draw = function() {}
+  }
+  //兼容NVUEsetLineDash
+  if(!this.context.setLineDash){
+    this.context.setLineDash = function(e) {}
   }
   opts.chartData = {};
   this.uevent = new uChartsEvent();

@@ -53,7 +53,7 @@ export default {
 			 * | updateType	     | y	    | String	| forcibly = 强制更新, solicit = 弹窗确认更新, silent = 静默更新 |
 			 * | downloadUrl	 | y	    | String	| 版本下载链接（IOS安装包更新请放跳转store应用商店链接,安卓apk和wgt文件放文件下载链接）  |
 			 */
-			if (res && res.downloadUrl) {
+			if (res && res.downloadUrl && res.versionCode> version.versionCode) {
 				// 兼容之前的版本（updateType是新版才有的参数）
 				if(res.updateType){
 					callback && callback(res);

@@ -1,12 +1,13 @@
 ## [uCharts官方网站](https://www.ucharts.cn)
 ## [DEMO演示及在线生成工具（v2.0文档）https://demo.ucharts.cn](https://demo.ucharts.cn)
+## [优秀的nvue全端组件与模版库nPro](https://ext.dcloud.net.cn/plugin?id=5169)
 ## [图表组件在项目中的应用 UReport数据报表](https://ext.dcloud.net.cn/plugin?id=4651) 
 ### [v1.0文档（将在9月30日作废，请尽快转v2.0）](http://doc.ucharts.cn)
 ## [如何安装、更新 uni_modules 插件点这里，必看，必看，必看](https://uniapp.dcloud.io/uni_modules?id=%e4%bd%bf%e7%94%a8-uni_modules-%e6%8f%92%e4%bb%b6)
 ## 点击右侧绿色【使用HBuilderX导入插件】即可使用，示例项目请点击右侧蓝色按钮【使用HBuilderX导入示例项目】。
 ## 初次使用不显示问题详见[常见问题选项卡](https://demo.ucharts.cn)
 ## <font color=#FF0000> 新手请先完整阅读【帮助文档】及【常见问题】3遍，右侧蓝色按钮【示例项目】请看2遍！ </font> 
-## <font color=#FF0000> 关于NVUE兼容的说明： </font> 建议NVUE使用图表的页面改为vue页面，在App端，从性能来讲，由于通讯阻塞的问题，nvue的canvas性能不可能达到使用renderjs的vue页面的canvas。在App端，推荐使用vue的canvas。[详见uni-app官方说明](https://uniapp.dcloud.io/component/canvas?id=canvas)
+## <font color=#FF0000> 关于NVUE兼容的说明： </font> uCharts.js从2.3.0开始支持nuve（暂时只能通过原生canvas写法调用uCharts，nuve版本组件请见码云示例项目[uCharts-demo-nvue](https://gitee.com/uCharts/uCharts)），因其渲染方式是通过nvue的gcanvas组件来渲染，理论上性能不及renderjs的qiun-data-charts组件性能。官方仍然建议NVUE使用图表的页面改为vue页面，在App端，从性能来讲，由于通讯阻塞的问题，nvue的canvas性能不可能达到使用renderjs的vue页面的canvas。在App端，仍然推荐使用qiun-data-charts组件。[详见uni-app官方说明](https://uniapp.dcloud.io/component/canvas?id=canvas)
 
 [![uCharts/uCharts](https://gitee.com/uCharts/uCharts/widgets/widget_card.svg?colors=393222,ebdfc1,fffae5,d8ca9f,393222,a28b40)](https://gitee.com/uCharts/uCharts)
 
@@ -239,7 +240,8 @@ localdata:[
 |ontap|Boolean|true|否|是否监听@tap@cilck事件，禁用后不会触发组件点击事件|
 |ontouch|Boolean|false|否|（仅uCharts）是否监听@touchstart@touchmove@touchend事件（赋值为true时，非PC端在图表区域内无法拖动页面滚动）|
 |onmouse|Boolean|true|否|是否监听@mousedown@mousemove@mouseup事件，禁用后鼠标经过图表上方不会显示tooltip|
-|`onmovetip`|Boolean|false|否|（仅uCharts）是否开启跟手显示tooltip功能（前提条件，1、需要开启touch功能，即:ontouch="true"；2、并且opts.enableScroll=false即关闭图表的滚动条功能）（建议微信小程序开启canvas2d功能，否则原生canvas组件会很卡）|
+|on movetip|Boolean|false|否|（仅uCharts）是否开启跟手显示tooltip功能（前提条件，1、需要开启touch功能，即:ontouch="true"；2、并且opts.enableScroll=false即关闭图表的滚动条功能）（建议微信小程序开启canvas2d功能，否则原生canvas组件会很卡）|
+|tapLegend|Boolean|true|否|（仅uCharts）是否开启图例点击交互事件 |
 
 ## 组件事件及方法
 
