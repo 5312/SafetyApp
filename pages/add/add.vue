@@ -141,6 +141,7 @@
 	import base from '@/config/baseUrl.js';
 	import LyTree from '@/components/ly-tree/ly-tree.vue'
 	import util from '@/config/utils.js'
+	import Qs from 'qs'
 	export default {
 		components: {
 			LyTree
@@ -201,7 +202,6 @@
 					yh_terms: '',
 					leaderv: false,
 					yh_content: '',
-					// 
 					address_name: '',
 					responsibledepartme: '',
 					filepath: [],
@@ -585,7 +585,7 @@
 					}
 				})
 			},
-			formData() {
+			formData(mes = false) {
 				let imgs = [];
 				this.$refs.uUpload.lists.filter(val => {
 					imgs.push(val.response.url)
@@ -635,12 +635,29 @@
 				this.$http.post('/index/Hjob.ashx?type=ajaxaddup',
 					objmerge).then(res => {
 					if (res.data.code == '200') {
-						this.successEmpty()
 						this.$refs.uToast.show({
 							title: '添加成功',
 							type: 'success',
 						})
+						if(mes){
+							let content = this.form
+							content.sendName = this.user.users_name
+							this.message({
+								deptId: objmerge.responsibledepartme,
+								title: '隐患下达通知',
+								content: JSON.stringify([content])
+							})
+						}else{
+							this.successEmpty()
+						}
 					}
+				})
+			},
+			message(option) {
+				this.$http.post('/api/SendMessage',
+					Qs.stringify(option)
+				).then(() => {
+					this.successEmpty()
 				})
 			},
 			successEmpty() {
@@ -662,7 +679,7 @@
 				this.$refs.uForm.validate(valid => {
 					this.form.yh_state = 1;
 					if (valid) {
-						this.formData();
+						this.formData(true);
 					} else {
 						console.log('验证失败');
 					}

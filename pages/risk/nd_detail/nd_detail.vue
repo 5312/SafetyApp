@@ -1,26 +1,47 @@
 <template>
 	<view class="u-wrap">
-		<u-navbar title="评估详表">
+		<!-- <u-navbar title="评估详表">
 			<view  class="navbar-right" slot="right">
 				<view  class="dot-box right-item">
 					<u-icon name="plus" size="38" @click="addDetailRisk"></u-icon>
 				</view>
 			</view>
-		</u-navbar>
+		</u-navbar> -->
 		<!--  -->
-		<u-card v-for="(item,index) in acticeList" 
-		:key="index" 
-		:title="item.nd_d_ps_detp" 
-		@click="setLevel(item)">
-			<view class="" slot="body">
-				<view class="u-body-item u-flex u-border-bottom u-col-between u-p-t-0">
-					<view class="u-body-item-title u-line-2">{{item.nd_d_address}}</view>
+		<view v-if='acticeList'>
+			<u-card  v-for="(item,index) in acticeList"
+			:key="index" 
+			:title="'辨识部门：'+item.nd_d_ps_detp" 
+			@click="setLevel(item)">
+				<view class="" slot="body">
+					<view class="u-body-item u-flex u-border-bottom u-col-between u-p-t-0">
+						<view class="u-body-item-title u-line-2">一水平：{{item.nd_d_address}}</view>
+					</view>
+					<view class="u-body-item u-flex u-row-between u-p-b-0">
+						<view class="u-body-item-title u-line-2">风险类型：{{item.nd_d_type}}</view>
+					</view>
+					<view class="u-body-item u-flex u-row-between u-p-b-0">
+						<view class="u-body-item-title u-line-2">评估结果：{{item.nd_d_result}}</view>
+					</view>
+					
 				</view>
-				<view class="u-body-item u-flex u-row-between u-p-b-0">
-					<view class="u-body-item-title u-line-2">{{item.nd_d_result}}</view>
+			</u-card>
+			<u-gap height="40" bg-color=""></u-gap>
+		</view>
+		<view v-else class="page-box">
+			<view>
+				<view class="centre">
+					<image src="https://cdn.uviewui.com/uview/template/taobao-order.png" mode="">
+					</image>
+					<view class="explain">
+						暂无数据
+						<view class="tips">
+						</view>
+					</view>
+					<view class="btn">查看其他</view>
 				</view>
 			</view>
-		</u-card>
+		</view>
 		<u-popup v-model="show" width="80%" mode="center"  border-radius="20">
 			<setLevel :ids="ids" :paramstype="paramstype" @close_setlevel='closeSetLevel'></setLevel>
 		</u-popup>
@@ -37,7 +58,7 @@
 			return {
 				show:false,
 				ids:'',
-				acticeList: [],
+				acticeList:null,
 				ndid:'', // 上级评估类型 id
 				paramstype:'nd_d_result'
 			}
@@ -106,5 +127,33 @@
 	.navbar-right {
 		margin-right: 24rpx;
 		display: flex;
+	}
+	.centre {
+		text-align: center;
+		margin: 200rpx auto;
+		font-size: 32rpx;
+	
+		image {
+			width: 164rpx;
+			height: 164rpx;
+			border-radius: 50%;
+			margin-bottom: 20rpx;
+		}
+	
+		.tips {
+			font-size: 24rpx;
+			color: #999999;
+			margin-top: 20rpx;
+		}
+	
+		.btn {
+			margin: 80rpx auto;
+			width: 200rpx;
+			border-radius: 32rpx;
+			line-height: 64rpx;
+			color: #ffffff;
+			font-size: 26rpx;
+			background: linear-gradient(270deg, rgba(249, 116, 90, 1) 0%, rgba(255, 158, 1, 1) 100%);
+		}
 	}
 </style>

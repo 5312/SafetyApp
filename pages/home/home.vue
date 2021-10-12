@@ -69,6 +69,7 @@
 					</u-cell-group>
 				</view>
 			</u-card>
+			<u-gap height="40" bg-color=""></u-gap>
 		</view>
 	</view>
 </template>
@@ -225,6 +226,12 @@
 				index: 1,
 				text: String(this.mesNum),
 			})
+		
+		},
+		onUnload(){
+			
+		},
+		onShow(){
 			// #ifdef APP-PLUS
 			plus.navigator.setFullscreen(true);
 			// #endif
@@ -234,7 +241,6 @@
 			plus.navigator.setFullscreen(false);
 			// #endif
 		},
-	
 		methods: {
 			...mapMutations(['setMessageNum']),
 			async index() {
@@ -327,13 +333,10 @@
 	}
 
 	page {
-		// height: 100%;
-		// overflow: hidden;
-
+		height: 100%;
 		.content {
 			padding-bottom: 20rpx;
 			height: 100%;
-
 			.u-wrap {
 				.scroll-Y {
 					margin-top: 20rpx;
@@ -414,7 +417,9 @@
 				.header {
 					height: 40rpx;
 				}
-
+				.mesbody{
+					// margin-bottom: 80rpx;
+				}
 
 			}
 		}

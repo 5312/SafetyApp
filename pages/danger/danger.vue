@@ -105,6 +105,16 @@
 				text: String(this.mesNum),
 			})
 		},
+		onShow(){
+			// #ifdef APP-PLUS
+			plus.navigator.setFullscreen(true);
+			// #endif
+		},
+		onHide() {
+			// #ifdef APP-PLUS
+			plus.navigator.setFullscreen(false);
+			// #endif
+		},
 		methods: {
 			...mapMutations(['setMessageNum']),
 			async index() {

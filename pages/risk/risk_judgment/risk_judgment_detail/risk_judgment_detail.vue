@@ -1,12 +1,12 @@
 <template>
 	<view class="u-wrap">
-		<u-navbar title="研判详表">
+		<!-- <u-navbar title="研判详表">
 			<view class="navbar-right" slot="right">
 				<view class="dot-box right-item">
 					<u-icon name="plus" size="38" @click="add_judgment"></u-icon>
 				</view>
 			</view>
-		</u-navbar>
+		</u-navbar> -->
 		<u-card @click="setLevel(item)" v-for="(item,index) in acticeList"  :key="index" :title="'责任部门：'+item.yp_resp_depname">
 			<view class="" slot="body">
 				<view class="u-body-item u-flex u-border-bottom u-col-between u-p-t-0">
@@ -16,6 +16,7 @@
 					<view class="u-body-item-title u-line-2">{{item.yp_level}}</view>
 				</view>
 			</view>
+			<u-gap height="40" bg-color=""></u-gap>
 		</u-card>
 		<u-popup v-model="show" width="80%" mode="center"  border-radius="20">
 			<setLevel :ids="ids" :paramstype="paramstype" @close_setlevel='closeSetLevel'></setLevel>
