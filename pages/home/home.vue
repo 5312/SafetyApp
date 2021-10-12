@@ -5,16 +5,19 @@
 				<view class="title">安全数据概况</view>
 				<view class="top-card-box">
 					<view class="numbox">
-						<view>{{yhall}}</view>
-						<view>隐患数量</view>
+						<u-count-to class="uicon-bag" color="#fff" :start-val="0" separator="," :end-val="yhall">
+						</u-count-to>
+						<view class="gray">隐患数量</view>
 					</view>
 					<view class="numbox">
-						<view>{{fxall}}</view>
-						<view>风险数量</view>
+						<u-count-to class="uicon-bag" color="#fff" :start-val="0" separator="," :end-val="fxall">
+						</u-count-to>
+						<view class="gray">风险数量</view>
 					</view>
 					<view class="numbox">
-						<view>{{fkall}}</view>
-						<view>罚款数量</view>
+						<u-count-to class="uicon-bag" color="#fff" :start-val="0" separator="," :end-val="fkall">
+						</u-count-to>
+						<view class="gray">罚款数量</view>
 					</view>
 				</view>
 			</view>
@@ -33,26 +36,34 @@
 				</view>
 			</u-card>
 			<u-card margin="20rpx" title="风险分析">
-				<view class="charts-box" slot="body"  >
+				<view class="charts-box" slot="body">
 					<qiun-data-charts :errorShow="true" :errorReload="false" :opts="opts" :loadingType="2" type="column"
-						:chartData="chartData"  />
+						:chartData="chartData" />
 				</view>
-				<view class="charts-box" slot="body"  >
-					<qiun-data-charts :errorShow="true" :errorReload="false" :opts="opts2" :loadingType="1" type="ring" :chartData="perdata"  />
+				<view class="charts-box" slot="body">
+					<qiun-data-charts :errorShow="true" :errorReload="false" :opts="opts2" :loadingType="1" type="ring"
+						:chartData="perdata" />
 				</view>
+			</u-card>
+			<u-card margin="20rpx" title="考核分析">
+				<view class="charts-box" slot="body">
+					<qiun-data-charts :errorShow="true" :errorReload="false" :opts="opts3" :loadingType="1"
+						type="column" :localdata="khDataBase" />
+				</view>
+
 			</u-card>
 			<u-card margin="20rpx">
 				<view class="u-flex header" slot="head">
-					<view>通知公告</view>
+					<view>消息通知</view>
 					<view @click="meslist">
 						<text>查看更多</text>
 						<u-icon name="arrow-right"></u-icon>
 					</view>
-				</view> 
+				</view>
 				<view class="mesbody" slot="body">
-					<u-cell-group>
+					<u-cell-group :border="false">
 						<u-cell-item @click="meslist" v-for="x,y in message" :key="y" :title="x.xx_title"
-							:label="x.createdate" :arrow="false">
+							:label="x.createdate" :arrow="false" :border-bottom="false" :border-top="false">
 							<u-icon slot="right-icon" size="32" name="more-dot-fill"></u-icon>
 						</u-cell-item>
 					</u-cell-group>
@@ -70,12 +81,17 @@
 	export default {
 		data() {
 			return {
+				scrollTop: 0,
+				old: {
+					scrollTop: 0
+				},
 				yhall: 0,
 				fkall: 0,
 				fxall: 0,
 				title: '',
 				lineDataBase: [],
 				perDataBase: [],
+				khDataBase: [],
 				opts: {
 					"padding": [
 						0,
@@ -89,8 +105,13 @@
 					},
 					"yAxis": {
 						"gridType": "dash",
-						"splitNumber": 3
-					}
+						"splitNumber": 4
+					},
+					"legend": {
+						"show": true,
+						"position": "bottom",
+						"lineHeight": 20,
+					},
 				},
 				opts2: {
 					"padding": [
@@ -111,8 +132,8 @@
 					},
 					"legend": {
 						"show": true,
-						"position": "right",
-						"lineHeight": 25,
+						"position": "bottom",
+						"lineHeight": 20,
 					},
 					"extra": {
 						"ring": {
@@ -120,6 +141,24 @@
 
 						},
 					},
+				},
+				opts3: {
+
+					"xAxis": {
+						"disableGrid": true
+					},
+					"yAxis": {
+						"gridType": "dash",
+						"splitNumber": 3
+					},
+					"legend": {
+						"show": false,
+						"position": "bottom",
+						"lineHeight": 20,
+					},
+					"tooltip": {
+
+					}
 				},
 				message: [],
 				yh_glist: [{
@@ -143,7 +182,7 @@
 				],
 
 			}
-		},  
+		},
 		computed: {
 			...mapState(['user', 'mesNum', 'userid']),
 			chartData() {
@@ -163,7 +202,7 @@
 						"12",
 					],
 					"series": [{
-						"name": "月",
+						"name": "风险",
 						"data": this.lineDataBase
 					}]
 				}
@@ -174,12 +213,11 @@
 						"data": this.perDataBase
 					}]
 				}
-			}
+			},
+			 
 		},
 		onLoad() {
-			// this.$nextTick(() => {
 			this.index();
-			// })
 			this.getYhCount();
 			// 消息
 			this.getMessage()
@@ -187,8 +225,16 @@
 				index: 1,
 				text: String(this.mesNum),
 			})
+			// #ifdef APP-PLUS
+			plus.navigator.setFullscreen(true);
+			// #endif
 		},
-
+		onHide() {
+			// #ifdef APP-PLUS
+			plus.navigator.setFullscreen(false);
+			// #endif
+		},
+	
 		methods: {
 			...mapMutations(['setMessageNum']),
 			async index() {
@@ -202,11 +248,21 @@
 				})
 
 				const index = await this.$http.get('/index/Hjob.ashx?type=sel', {
-					T: 'app_home_chart',
+					T: '每月数据',
 					function_perms: this.user.function_perms
 				})
 				if (index.data.data) {
-					this.lineDataBase = index.data.data[0].databases.split(',')
+					this.lineDataBase = index.data.data[0].replace.split(',')
+
+				}
+
+				const kh_statistics = await this.$http.get('/index/Hjob.ashx?type=sel', {
+					T: 'app_kh_statistics',
+					function_perms: this.user.function_perms
+				})
+				if (kh_statistics.data.data) {
+					this.khDataBase = kh_statistics.data.data
+					// console.log(kh_statistics.data.data)
 
 				}
 			},
@@ -267,80 +323,99 @@
 	/* 请根据需求修改图表容器尺寸，如果父容器没有高度图表则会显示异常 */
 	.charts-box {
 		width: 100%;
-		height: 300rpx;
+		height: 400rpx;
 	}
 
-	.content {
-		padding-bottom: 20rpx;
-		.u-wrap {
+	page {
+		// height: 100%;
+		// overflow: hidden;
 
-			// padding:20rpx;
-			.home-top-bg {
-				margin-top: 80rpx;
-				height: 300rpx;
-				// background: url('../../static/bg/index_TopBg.png') 50% 100% /104% 100% no-repeat;
-				background: url('../../static/bg/index_TopBg.png') 100% 100% /100% 100% no-repeat;
-			}
+		.content {
+			padding-bottom: 20rpx;
+			height: 100%;
 
-			.title {
-				text-align: center;
-				font-size: 36rpx;
-				line-height: 70rpx;
-				padding: 10rpx;
-				height: 90rpx;
-			}
-
-			.top-card-box {
-				display: flex;
-				justify-content: space-around;
-				align-items: center;
-				padding: 20rpx;
-				text-align: center;
-				flex-direction: row;
-				flex-wrap: nowrap;
-				height: calc(100% - 90rpx);
-
-				.numbox {
-					color: #fff;
+			.u-wrap {
+				.scroll-Y {
+					margin-top: 20rpx;
+					height: 800rpx;
+					overflow: hidden;
 				}
-			}
 
-			.u-flex {
-				height: 250rpx;
-				flex-direction: row;
-				align-items: center;
-				flex-wrap: nowrap;
-				align-content: center;
-				justify-content: space-between;
+				.home-top-bg {
+					margin-top: 80rpx;
+					width: 100%;
+					z-index: 2;
+					height: 300rpx;
+					background: url('../../static/bg/index_TopBg.png') 100% 100% /100% 100% no-repeat;
+				}
 
-				.itembox {
-					height: 100%;
-					width: 25%;
-					background-size: 100% 100%;
-					background-position: 100% 100%;
-					position: relative;
+				.title {
+					text-align: center;
+					font-size: 36rpx;
+					line-height: 70rpx;
+					padding: 10rpx;
+					height: 90rpx;
+				}
 
-					.textn {
-						position: absolute;
-						bottom: 30rpx;
+				.top-card-box {
+					display: flex;
+					justify-content: space-around;
+					align-items: center;
+					padding: 20rpx;
+					text-align: center;
+					flex-direction: row;
+					flex-wrap: nowrap;
+					height: calc(100% - 90rpx);
+
+					.numbox {
 						color: #fff;
-						text-align: center;
-						width: 100%;
-						margin: auto;
 
-						.gury {
-							color: $uni-text-color-disable;
+						.uicon-bag {
+
+							font-size: 50rpx;
+						}
+
+						.gray {
+							color: #90B6FF;
 						}
 					}
 				}
-			}
 
-			.header {
-				height: 40rpx;
-			}
+				.u-flex {
+					height: 290rpx;
+					flex-direction: row;
+					align-items: center;
+					flex-wrap: nowrap;
+					align-content: center;
+					justify-content: space-between;
 
-			.mesbody {
-				// height:200rpx;
+					.itembox {
+						height: 100%;
+						width: 29%;
+						background-size: 100% 100%;
+						background-position: 100% 100%;
+						position: relative;
+
+						.textn {
+							position: absolute;
+							bottom: 30rpx;
+							color: #fff;
+							text-align: center;
+							width: 100%;
+							margin: auto;
+
+							.gury {
+								color: #90B6FF;
+							}
+						}
+					}
+				}
+
+				.header {
+					height: 40rpx;
+				}
+
+
 			}
 		}
 	}

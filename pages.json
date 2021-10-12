@@ -17,8 +17,11 @@
 			"style": {
 				"navigationBarTitleText": "首页",
 				"enablePullDownRefresh": false,
-				"navigationStyle": "custom", // 隐藏系统导航栏
-				"enablePullDownRefresh": false
+				"navigationStyle": "custom",
+				"app-plus": {
+					//app平台
+					"bounce": "none" //禁止滚动
+				}
 			}
 
 		},
@@ -27,8 +30,7 @@
 			"style": {
 				"navigationBarTitleText": "隐患",
 				"enablePullDownRefresh": false,
-				"navigationStyle": "custom", // 隐藏系统导航栏
-				"navigationBarTextStyle": "white" // 状态栏字体为白色，只能为 white-白色，black-黑色 二选一
+				"navigationStyle": "custom" // 隐藏系统导航栏
 			}
 
 		}, {
@@ -187,71 +189,65 @@
 				"navigationStyle": "custom" // 隐藏系统导航栏
 			}
 
+		}, {
+			"path": "pages/risk/nd_risk/add_nd_risk/add_nd_risk",
+			"style": {
+				"navigationBarTitleText": "添加年度风险辨识",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/risk/nd_detail/ad_detail/ad_detail",
+			"style": {
+				"navigationBarTitleText": "添加",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/risk/zx_risk/add_zx_risk/add_zx_risk",
+			"style": {
+				"navigationBarTitleText": "添加专项风险辨识",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/risk/risk_judgment/add_judgment/add_judgment",
+			"style": {
+				"navigationBarTitleText": "添加研判活动",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/risk/risk_judgment/risk_judgment_detail/add_judgment_detail/add_judgment_detail",
+			"style": {
+				"navigationBarTitleText": "添加研判详表",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/danger/dangerold/dangerold",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false,
+				"navigationStyle": "custom"
+			}
+
+		}, {
+			"path": "pages/message/message",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/listOfPeople/listOfPeople",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+
 		}
-	    ,{
-            "path" : "pages/risk/nd_risk/add_nd_risk/add_nd_risk",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "添加年度风险辨识",
-                "enablePullDownRefresh": false
-            }
-            
-        }
-        ,{
-            "path" : "pages/risk/nd_detail/ad_detail/ad_detail",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "添加",
-                "enablePullDownRefresh": false
-            }
-            
-        }
-        ,{
-            "path" : "pages/risk/zx_risk/add_zx_risk/add_zx_risk",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "添加专项风险辨识",
-                "enablePullDownRefresh": false
-            }
-            
-        }
-        ,{
-            "path" : "pages/risk/risk_judgment/add_judgment/add_judgment",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "添加研判活动",
-                "enablePullDownRefresh": false
-            }
-            
-        }
-        ,{
-            "path" : "pages/risk/risk_judgment/risk_judgment_detail/add_judgment_detail/add_judgment_detail",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "添加研判详表",
-                "enablePullDownRefresh": false
-            }
-            
-        }
-        ,{
-            "path" : "pages/danger/dangerold/dangerold",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "",
-                "enablePullDownRefresh": false
-            }
-            
-        }
-        ,{
-            "path" : "pages/message/message",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "",
-                "enablePullDownRefresh": false
-            }
-            
-        }
-    ],
+	],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "Safety",
@@ -264,7 +260,7 @@
 		"backgroundColor": "#FFFFFF",
 		"borderStyle": "white",
 		"height": "50px",
-		"blurEffect":"light",
+		"blurEffect": "light",
 		"list": [{
 				"pagePath": "pages/home/home",
 				"iconPath": "/static/uview/example/home-fill.png",

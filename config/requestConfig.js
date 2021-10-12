@@ -26,7 +26,7 @@ let $http = new request({
 	//接口请求地址
 	baseUrl: base.baseUrl,
 	//服务器本地上传文件地址
-	fileUrl: base.baseUrl + "/root/HandlerUpload.ashx?type=3",
+	fileUrl: base.baseUrl + "",
 	// 服务器上传图片默认url
 	defaultUploadUrl:"/root/HandlerUpload.ashx?type=3",
 	// 服务器上传文件名称

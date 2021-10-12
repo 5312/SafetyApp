@@ -1,8 +1,8 @@
 <template>
 	<view class="content">
 		<view class="wrap">
-			<u-search placeholder="" v-model="keyword" :animation="true" :show-action="true" action-text="搜索"
-				@search="search" @custom="search"></u-search>
+			<u-search placeholder="" v-model="keyword" :animation="true" :show-action="true" action-text="添加"
+				@search="addsearch" @custom="addsearch"></u-search>
 		</view>
 		<view class="address_list">
 			<u-cell-group>
@@ -91,6 +91,17 @@
 					}
 				})
 			},
+			addsearch(){
+				let _this = this
+				uni.navigateBack({
+					url: '../add',
+					success: function() {
+						uni.$emit('yhLibContent', {
+							yh_lib_content: _this.keyword,
+						});
+					}
+				})
+			},
 			click(e) {
 				let _this = this
 				uni.navigateBack({
@@ -107,7 +118,7 @@
 	}
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 	page {
 		height: 100%;
 	}
@@ -116,7 +127,7 @@
 		height: 100%;
 
 		.wrap {
-			height: 100%;
+			// height: 100%;
 			background-color: #FFF;
 			padding: 20rpx;
 		}

@@ -44,7 +44,8 @@
 			this.index(option).then(() => {
 				this.getAddress()
 			})
-
+			// this.pname_id = option.pname;
+			// this.getAddress()
 
 		},
 		onReachBottom() {
@@ -63,7 +64,7 @@
 					job: 'demo_node_1',
 					tbname: 'YH',
 					T: 'app_get_panem',
-					bumen_id: this.user.department_id
+					bumen_id: option.pname
 				})
 				if (pname.data.code != 0) {
 					return
@@ -130,7 +131,7 @@
 	}
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 	page {
 		height: 100%;
 	}
@@ -139,7 +140,7 @@
 		height: 100%;
 
 		.wrap {
-			height: 100%;
+			// height: 100%;
 			background-color: #FFF;
 			padding: 20rpx;
 		}

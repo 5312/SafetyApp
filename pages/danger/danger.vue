@@ -32,28 +32,24 @@
 					</view>
 				</view>
 			</u-card>
-			<!-- <u-card margin="20rpx" title="风险分析">
-				<view class="charts-box" slot="body" v-if="lineDataBase.length >0">
-					<qiun-data-charts :loadingType="2" type="column" :chartData="chartData" background="none" />
-				</view>
-				<view class="charts-box" slot="body" v-if="perDataBase.length >0">
-					<qiun-data-charts :loadingType="2" type="ring" :chartData="perdata" background="none" />
-				</view>
-			</u-card> -->
+
 			<u-card margin="20rpx">
 				<view class="u-flex header" slot="head">
 					<view>通知公告</view>
-					<view>
+					<view  @click="meslist">
 						<text>查看更多</text>
 						<u-icon name="arrow-right"></u-icon>
 					</view>
 				</view>
 				<view class="mesbody" slot="body">
-					<u-cell-group>
+					<u-cell-group :border="false">
 						<u-cell-item
 						  v-for="x,y in message"
 						  :key="y"
-						  :title="x.xx_title" :label="x.createdate" :arrow="false">
+						  :title="x.xx_title" 
+						  :label="x.createdate" 
+						  :arrow="false"
+						  @click="meslist">
 						  <u-icon slot="right-icon" size="32" name="more-dot-fill"></u-icon>
 						  </u-cell-item>
 					</u-cell-group>
@@ -75,8 +71,6 @@
 				fkall: 0,
 				fxall: 0,
 				title: '',
-				lineDataBase: [],
-				perDataBase: [],
 				message:[],
 				yh_glist: [{
 						url: '../../static/bg/index_YhBg1.png',
@@ -101,44 +95,8 @@
 		},
 		computed: {
 			...mapState(['user', 'mesNum','userid']),
-			chartData() {
-				if(this.lineDataBase.length<=0){
-					return []
-				}
-				return {
-					"categories": [
-						"1",
-						"2",
-						"3",
-						"4",
-						"5",
-						"6",
-						"7",
-						"8",
-						"9",
-						"10",
-						"11",
-						"12",
-					],
-					"series": [{
-						"name": "月",
-						"data": this.lineDataBase
-					}]
-				}
-			}, 
-			perdata() {
-				if(this.perDataBase.length<=0){
-					return []
-				}
-				return {
-					"series": [{
-						"data": this.perDataBase
-					}]
-				}
-			}
 		},
 		onLoad() {
-			// this.index();
 			this.getYhCount();
 			// 消息
 			this.getMessage()
@@ -202,6 +160,12 @@
 				})
 				this.message = mes.data.data
 				this.setMessageNum(mes.data.count)
+			},
+			meslist() {
+				this.$u.route({
+					type: "to",
+					url: '../message/message'
+				})
 			},
 			routes(event) {
 				this.$u.route({

@@ -1,11 +1,11 @@
 let baseUrl = "";
 let socketUrl = "";
 if (process.env.NODE_ENV === 'development') {
-	baseUrl = "http://210.76.0.70:15459";
-	socketUrl = "ws://210.76.0.70:15459/handlers/websocket-connect.ashx";
+	// baseUrl = "http://210.76.0.70:15459";
+	// socketUrl = "ws://210.76.0.70:15459/handlers/websocket-connect.ashx";
 	// 开发环境
-	// socketUrl = "ws://210.76.0.70:15449/handlers/websocket-connect.ashx";
-	// baseUrl = "http://210.76.0.70:15449";
+	socketUrl = "ws://210.76.0.70:15449/handlers/websocket-connect.ashx";
+	baseUrl = "http://210.76.0.70:15449";
 } else if (process.env.NODE_ENV === 'production') {
 	// 生产环境
 	baseUrl = "http://210.76.0.70:15459";

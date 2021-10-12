@@ -46,8 +46,9 @@
 			},
 		},
 		onLaunch: function() {
-			// console.log('App Launch')
+			// #ifdef APP-PLUS
 			this.isLogin()
+			// #endif
 			// 升级
 			// #ifdef APP-PLUS
 			APPUpdate()
