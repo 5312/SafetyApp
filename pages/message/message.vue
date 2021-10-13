@@ -6,7 +6,6 @@
 				  v-for="x,y in message"
 				  :key="y"
 				  :title="x.xx_title" :label="x.createdate" :arrow="false">
-				 <!-- <u-icon slot="right-icon" size="32" name="more-dot-fill"></u-icon> -->
 				  </u-cell-item>
 			</u-cell-group>
 		</view>

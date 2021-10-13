@@ -228,7 +228,7 @@
 		}, {
 			"path": "pages/message/message",
 			"style": {
-				"navigationBarTitleText": "",
+				"navigationBarTitleText": "消息",
 				"enablePullDownRefresh": false
 			}
 

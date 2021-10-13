@@ -35,7 +35,7 @@
 
 			<u-card margin="20rpx">
 				<view class="u-flex header" slot="head">
-					<view>通知公告</view>
+					<view>消息通知</view>
 					<view  @click="meslist">
 						<text>查看更多</text>
 						<u-icon name="arrow-right"></u-icon>
