@@ -282,6 +282,7 @@
 					job: 'demo_node_1',
 					tbname: 'YH',
 					department_id: this.user.department_id,
+					function_perms:this.user.function_perms,
 					T: 'app_danger_list_num',
 				})
 				let alldata = result.data.data
