@@ -10,57 +10,127 @@
 	// #endif
 	export default {
 		components: {},
+		data() {
+			return {
+				dangertypeAllData: '',
+				dangerData: '',
+				checkingType: ''
+			}
+		},
 		computed: {
-			...mapState(['mesNum'])
+			...mapState(['mesNum', 'user'])
 		},
 		methods: {
 			...mapMutations(['setUser', 'setUserId', 'setMessageNum', 'setMessage']),
 			isLogin() {
 				//判断缓存中是否登录过，直接登录
+				let value = this.user;
+				// 第一次登录后，后面不在登录
 				try {
-					let value = this.user;
-					// 第一次登录后，后面不在登录
-					try {
-						const cookie = uni.getStorageSync('login_user');
-						if (cookie) {
-							// console.log('1',cookie)
-							value = cookie.us;
-							this.setUser(cookie.us)
-							this.setUserId(cookie.usid)
-							this.setMessageNum(cookie.unread_msg_count) //存入消息数量
-						}
-					} catch (e) {
-						// error
-					}
-					if (value) {
-						//有登录信息
-						this.$u.route({
-							type: 'tab',
-							url: './pages/home/home',
-						})
+					const cookie = uni.getStorageSync('login_user');
+					if (cookie) {
+						value = cookie.us;
+						this.setUser(cookie.us)
+						this.setUserId(cookie.usid)
+						this.setMessageNum(cookie.unread_msg_count) //存入消息数量
 					}
 				} catch (e) {
 					// error
-					console.log(e)
 				}
+				if (!value) {
+					//无登录信息
+					this.$u.route({
+						type: 'reLaunch',
+						url: './pages/login/login',
+					})
+				}
+			},
+			async indexAddCatch(update = false) {
+				if (!this.$cache.get('_dangerData') || update ) {
+					// 隐患等级
+					this.$http.get('/index/Hjob.ashx?type=sel', {
+						tabid: 'YH_liebiao08d2367f-618b-429c-bb8f-5c7634ad508b',
+						mid: '9c6a100d-8543-438e-9311-ce6a38e75cae',
+						job: 'demo_node_1',
+						tbname: 'YH',
+						T: 'add_yhsql',
+						level: 'A'
+					}, {
+						load: false
+					}).then(res => {
+						this.$cache.set('_dangerData', res.data.data, 0)
+					})
+				}
+				if (!this.$cache.get('_dangertypeAllData') || update ) {
+					// 隐患种类
+					this.$http.get('/index/Hjob.ashx?type=sel', {
+						tabid: 'YH_liebiao08d2367f-618b-429c-bb8f-5c7634ad508b',
+						mid: '9c6a100d-8543-438e-9311-ce6a38e75cae',
+						job: 'demo_node_1',
+						tbname: 'YH',
+						T: 'app_yh_type_sql',
+						level: this.user.level
+					}, {
+						load: false
+					}).then(res => {
+						this.$cache.set('_dangertypeAllData', res.data.data, 0)
+					})
+				}
+				if (!this.$cache.get('_checkingType') || update ) {
+					// 检查类别
+					this.$http.get('/index/Hjob.ashx?type=sel', {
+						tabid: 'YH_liebiao08d2367f-618b-429c-bb8f-5c7634ad508b',
+						mid: '9c6a100d-8543-438e-9311-ce6a38e75cae',
+						job: 'demo_node_1',
+						tbname: 'YH',
+						T: 'app_checking',
+						department_id: this.user.department_id
+					}, {
+						load: false
+					}).then(res => {
+						this.$cache.set('_checkingType', res.data.data, 0)
+					})
+				}
+				if (update ) {
+					let function_perms = ''
+					if (this.user.function_perms) {
+						function_perms = this.user.function_perms.split(",")
+					}
+					let perms = {
+						permsid: function_perms.join("','")
+					}
+					let params = Object.assign({
+						tabid: 'YH_liebiao178698a5-ccf0-439a-8cf1-f4d8dc8121d8',
+						mid: '9c6a100d-8543-438e-9311-ce6a38e75cae',
+						job: 'demo_node_1',
+						tbname: 'YH',
+						T: '部门管理sql',
+						zr: 1,
+					}, perms)
+					this.$http.get('/index/Hjob.ashx?type=sel', params).then(res => {
+						let array = res.data.data;
+						// console.log(array)
+					})
+				}
+
 			},
 		},
 		onLaunch: function() {
-			// #ifdef APP-PLUS
+			console.log('onlauch')
 			this.isLogin()
-			// #endif
 			// 升级
 			// #ifdef APP-PLUS
 			APPUpdate()
 			// #endif
 			socket.init()
-			
-			uni.onTabBarMidButtonTap(()=>{
+
+			uni.onTabBarMidButtonTap(() => {
 				this.$u.route({
-					url:'/pages/add/add'
+					url: '/pages/add/add'
 				})
 			});
-			
+			// 离线缓存数据
+			this.indexAddCatch()
 
 		},
 		onShow: function() {
@@ -79,9 +149,10 @@
 	@import "uview-ui/index.scss";
 
 	body {
-		background-color:#e5dee6;
+		background-color: #e5dee6;
 	}
-	.slot-wrap{
+
+	.slot-wrap {
 		display: flex;
 		align-items: center;
 		/* 如果您想让slot内容占满整个导航栏的宽度 */
@@ -89,13 +160,11 @@
 		/* 如果您想让slot内容与导航栏左右有空隙 */
 		padding: 0rpx 30rpx;
 	}
-	/* #ifndef APP-NVUE */
 	page {
 		height: 100%;
 		background-color: #f5f5f5;
 	}
 
-	/* #endif */
 
 	/* #ifdef H5 */
 	//修复H5底部导航挡住内容bug

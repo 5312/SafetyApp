@@ -3,7 +3,10 @@
 		<view class="u-m-t-20">
 			<u-cell-group>
 				<!-- <u-cell-item  title="个人设置"></u-cell-item> -->
-				<u-cell-item  title="关于" :value="version" @click="onAPPUpdate"></u-cell-item>
+				<u-cell-item title="关于" :value="version" @click="onAPPUpdate"></u-cell-item>
+				<u-cell-item title="更新缓存" :arrow="false"  @click="updateSqlite">
+					<!-- <u-icon slot="right-icon" name="info"></u-icon> -->
+				</u-cell-item>
 			</u-cell-group>
 			<view class="u-m-t-20">
 				<u-cell-group>
@@ -13,6 +16,7 @@
 		</view>
 		<u-modal v-model="show" :content="content" :show-title='false' :show-cancel-button='true' @confirm='siginup'>
 		</u-modal>
+		<u-toast ref="uToast" />
 	</view>
 </template>
 
@@ -42,7 +46,7 @@
 			// #ifdef APP-PLUS
 			getCurrentNo(res => {
 				// 进页面获取当前APP版本号（用于页面显示）
-				 _this.version = res.versionName;
+				_this.version = res.versionName;
 			});
 			// #endif
 		},
@@ -55,11 +59,6 @@
 				APPUpdate(true);
 				// #endif
 			},
-			personalDetail() {
-				this.$http.get('?', {
-
-				})
-			},
 			back() {
 				this.show = true
 			},
@@ -70,10 +69,19 @@
 				this.setMessageNum('')
 				this.setMessage('暂无消息')
 				try {
-					uni.setStorageSync('login_user','');
+					uni.setStorageSync('login_user', '');
 				} catch (e) {}
 				this.$u.route({
+					type: 'reLaunch',
 					url: '../../login/login',
+				})
+			},
+			updateSqlite() {
+				// this.$cache.clear()
+				console.log(getApp().indexAddCatch(true))
+				this.$refs.uToast.show({
+					title: '清理成功',
+					type: 'success',
 				})
 			}
 		}
@@ -90,7 +98,8 @@
 		margin: auto;
 		padding: 20rpx;
 		font-size: 30rpx;
-		width: 100%
+		width: 100%;
+		color:red;
 	}
 
 	.camera {

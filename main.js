@@ -6,6 +6,9 @@ Vue.prototype.$store = store;
 //挂载全局http请求
 import $http from '@/config/requestConfig'
 Vue.prototype.$http = $http;
+//缓存中心
+import MinCache from '@/config/catch'
+Vue.use(MinCache)
 
 Vue.config.productionTip = false
 

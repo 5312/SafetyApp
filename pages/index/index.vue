@@ -2,12 +2,10 @@
 	<view>
 		<u-navbar :is-back="false" title="　" :border-bottom="false">
 			<view class="u-flex u-row-right" style="width: 100%;">
-				<!-- <view class="camera u-flex u-row-center">
-					<u-icon name="camera-fill" color="#000000" size="48"></u-icon>
-				</view> -->
+
 			</view>
 		</u-navbar>
-		<view class="u-flex user-box u-p-l-30 u-p-r-20 u-p-b-30">
+		<view class="u-flex user-box u-p-l-30 u-p-r-20 u-p-b-30" @click="gomy">
 			<view class="u-m-r-10">
 				<u-avatar :src="pic" size="140"></u-avatar>
 			</view>
@@ -22,20 +20,7 @@
 				<u-icon name="arrow-right" color="#969799" size="28"></u-icon>
 			</view>
 		</view>
-		
-		<view class="u-m-t-20">
-			<u-cell-group>
-				<!-- <u-cell-item icon="chat" title="消息"></u-cell-item> -->
-			</u-cell-group>
-		</view>
-		
-		<!-- <view class="u-m-t-20">
-			<u-cell-group>
-				<u-cell-item icon="star" title="考核管理        "></u-cell-item>
-				<u-cell-item icon="photo" title="日报"></u-cell-item>
-			</u-cell-group>
-		</view> -->
-		
+
 		<view class="u-m-t-20">
 			<u-cell-group>
 				<u-cell-item icon="setting" title="设置" @click="navUrl('./setting/setting')"></u-cell-item>
@@ -53,53 +38,62 @@
 	export default {
 		data() {
 			return {
-				pic:'',
-				show:true,
-				name:''
+				pic: '',
+				show: true,
+				name: ''
 			}
 		},
-		onShow(){
+		onShow() {
 			this.name = this.user.users_name
-			this.pic =base.baseUrl + this.user.headportrait;
-			
+			this.pic = base.baseUrl + this.user.headportrait;
+
 			uni.setTabBarBadge({
-				index:1,
-				text:String(this.mesNum),
-			})	
+				index: 1,
+				text: String(this.mesNum),
+			})
 		},
 		onLoad() {
-			
+
 		},
-		computed:{
-				...mapState([ 'user','mesNum']),
+		computed: {
+			...mapState(['user', 'mesNum']),
 		},
 		methods: {
-			personalDetail(){
-				
-			},
-			navUrl(url){
+			gomy() {
 				this.$u.route({
-					url:url
+					url: './my/my'
 				})
-			}
+			},
+			navUrl(url) {
+				this.$u.route({
+					url: url
+				})
+			},
+			navto() {
+				this.$u.route({
+					type: "to",
+					url: '../assessment/assessment'
+				})
+			},
 		}
 	}
 </script>
 
-<style lang="scss">
-page{
-	background-color: #ededed;
-}
-
-.camera{
-	width: 54px;
-	height: 44px;
-	
-	&:active{
+<style lang="scss" scoped>
+	page {
 		background-color: #ededed;
 	}
-}
-.user-box{
-	background-color: #fff;
-}
+
+	.camera {
+		width: 54px;
+		height: 44px;
+
+		&:active {
+			background-color: #ededed;
+		}
+	}
+
+	.user-box {
+		background-color: #fff;
+	}
 </style>

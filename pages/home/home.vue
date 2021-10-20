@@ -45,7 +45,7 @@
 						:chartData="perdata" />
 				</view>
 			</u-card>
-			<u-card margin="20rpx" title="考核分析">
+			<u-card margin="20rpx" title="考核分析" @click="navto">
 				<view class="charts-box" slot="body">
 					<qiun-data-charts :errorShow="true" :errorReload="false" :opts="opts3" :loadingType="1"
 						type="column" :localdata="khDataBase" />
@@ -95,16 +95,18 @@
 				khDataBase: [],
 				opts: {
 					"padding": [
-						0,
+						20,
 						0,
 						0,
 						0
 					],
 					"xAxis": {
-						"disabled": true,
+						"name": "月",
+						"disabled": false,
 						"disableGrid": true
 					},
 					"yAxis": {
+						"name": "条",
 						"gridType": "dash",
 						"splitNumber": 4
 					},
@@ -116,10 +118,10 @@
 				},
 				opts2: {
 					"padding": [
+						20,
 						0,
 						0,
-						0,
-						0
+						20,
 					],
 					"title": {
 						"name": "",
@@ -144,7 +146,12 @@
 					},
 				},
 				opts3: {
-
+					"padding": [
+						20,
+						0,
+						0,
+						20,
+					],
 					"xAxis": {
 						"disableGrid": true
 					},
@@ -215,23 +222,26 @@
 					}]
 				}
 			},
-			 
+
 		},
 		onLoad() {
 			this.index();
 			this.getYhCount();
 			// 消息
 			this.getMessage()
-			uni.setTabBarBadge({
-				index: 1,
-				text: String(this.mesNum),
+			console.log('load')
+		},
+		onPullDownRefresh() {
+			this.index();
+			this.getYhCount().then(res => {
+				uni.stopPullDownRefresh()
 			})
-		
+			// 消息
+			this.getMessage()
+
 		},
-		onUnload(){
-			
-		},
-		onShow(){
+		onShow() {
+
 			// #ifdef APP-PLUS
 			plus.navigator.setFullscreen(true);
 			// #endif
@@ -269,7 +279,6 @@
 				if (kh_statistics.data.data) {
 					this.khDataBase = kh_statistics.data.data
 					// console.log(kh_statistics.data.data)
-
 				}
 			},
 			async getYhCount() {
@@ -282,11 +291,12 @@
 					job: 'demo_node_1',
 					tbname: 'YH',
 					department_id: this.user.department_id,
-					function_perms:this.user.function_perms,
+					function_perms: this.user.function_perms,
 					T: 'app_danger_list_num',
 				})
 				let alldata = result.data.data
 				this.yhall = result.data.count
+				//  专项风险数量
 				this.fxall = alldata[0].fx
 				this.fkall = alldata[0].fk;
 				this.yh_glist[0].num = alldata[0].xd
@@ -307,7 +317,18 @@
 					limit: 3
 				})
 				this.message = mes.data.data
-				this.setMessageNum(mes.data.count)
+				this.setMessageNum(mes.data.count);
+
+				uni.setTabBarBadge({
+					index: 1,
+					text: String(this.mesNum),
+				})
+			},
+			navto(){
+				this.$u.route({
+					type: "to",
+					url: '../assessment/assessment'
+				})
 			},
 			routes(event) {
 				this.$u.route({
@@ -335,9 +356,11 @@
 
 	page {
 		height: 100%;
+
 		.content {
 			padding-bottom: 20rpx;
 			height: 100%;
+
 			.u-wrap {
 				.scroll-Y {
 					margin-top: 20rpx;
@@ -418,7 +441,8 @@
 				.header {
 					height: 40rpx;
 				}
-				.mesbody{
+
+				.mesbody {
 					// margin-bottom: 80rpx;
 				}
 

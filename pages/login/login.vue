@@ -3,20 +3,20 @@
 		<view class="content">
 			<!-- 头部logo -->
 			<view class="topbg">
-				<image  width="100%" height="400rpx" :src="logoImage" mode="widthFix"></image>
+				<image width="100%" height="400rpx" :src="logoImage" mode="widthFix"></image>
 			</view>
 			<!-- 主体表单 -->
 			<view class="main">
-					
-				<u-field  v-model="tel" label-width="0" placeholder="请输入账号">
+
+				<u-field v-model="tel" label-width="0" placeholder="请输入账号">
 					<view slot="icon">
-						<u-icon  name="phone"></u-icon>
+						<u-icon name="phone"></u-icon>
 					</view>
 				</u-field>
 				<!-- <wInput v-model="tel" type="text" leftIcon="phone" placeholder="用户名/电话" :focus="isFocus"></wInput> -->
-				<u-field  v-model="password" type="password" label-width="0" placeholder="请输入密码">
+				<u-field v-model="password" type="password" label-width="0" placeholder="请输入密码">
 					<view slot="icon">
-						<u-icon  name="lock-open"></u-icon>
+						<u-icon name="lock-open"></u-icon>
 					</view>
 				</u-field>
 				<!-- <wInput v-model="password" type="password" placeholder="密码"></wInput> -->
@@ -72,7 +72,7 @@
 				isRotate: false, //是否加载旋转
 				isFocus: true, // 是否聚焦
 				//logo图片 base64
-			
+
 				logoImage: '../../static/bg/login_bg.png'
 			}
 		},
@@ -156,11 +156,13 @@
 				this.$http.post('/api/userlogin', {
 					name: this.tel,
 					pwd: this.password,
+				}, {
+					load: false
 				}).then(res => {
 					setTimeout(() => {
 						if (res.data.code == '0') {
 							try {
-								uni.setStorageSync('login_user',res.data.data);
+								uni.setStorageSync('login_user', res.data.data);
 							} catch (e) {}
 
 							let loginData = res.data.data;
@@ -206,21 +208,25 @@
 <style lang="scss" scoped>
 	@import url("../../components/watch-login/css/icon.css");
 	@import url("./css/main.css");
-	page{
+
+	page {
 		background-color: #fff;
 	}
+
 	.wrap {
 		font-size: 28rpx;
 		padding-bottom: 20rpx;
+
 		.content {
 			width: 100%;
 			margin: auto;
-			 
-			.topbg{
-				image{
-					width:100%;
+
+			.topbg {
+				image {
+					width: 100%;
 				}
 			}
+
 			.title {
 				text-align: left;
 				font-size: 60rpx;

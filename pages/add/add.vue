@@ -37,7 +37,8 @@
 					<u-input v-model="form.accompanyTitle" @click="listOfPeople('pj')" />
 				</u-form-item>
 				<u-form-item label-width='150rpx' :required='true' prop="inspectiondate" label="检查日期">
-					<u-calendar v-model="dateShow" mode="date" @change='inspectiondateFunc'></u-calendar>
+					<u-calendar v-model="dateShow" :min-date="mindate" mode="date" @change='inspectiondateFunc'>
+					</u-calendar>
 					<u-input v-model="form.inspectiondate" :select-open='dateShow' type="select"
 						@click='dateShow = true' />
 				</u-form-item>
@@ -155,7 +156,9 @@
 				props: {
 					label: 'bumen_name',
 					isleaf: 'havechild',
-					disabled: 'disabled'
+					disabled: function(data, node) {
+						return data.disabled = data.radiodisabled
+					}
 				},
 				propsType: {
 					label: 'dict_name',
@@ -303,6 +306,11 @@
 					}
 				})
 			},
+			mindate() {
+				let td = 60 * 60 * 24 * 2 * 1000;
+				let time = this.$u.timeFormat(new Date() - td, 'yyyy-mm-dd');
+				return time
+			}
 
 		},
 		// 必须要在onReady生命周期，因为onLoad生命周期组件可能尚未创建完毕
@@ -353,40 +361,53 @@
 		},
 		methods: {
 			async danger() {
-				// 隐患等级
-				const res = await this.$http.get('/index/Hjob.ashx?type=sel', {
-					tabid: 'YH_liebiao08d2367f-618b-429c-bb8f-5c7634ad508b',
-					mid: '9c6a100d-8543-438e-9311-ce6a38e75cae',
-					job: 'demo_node_1',
-					tbname: 'YH',
-					T: 'add_yhsql',
-					level: 'A'
-				})
-				this.dangerData = res.data.data
-				// 隐患种类
-				const restype = await this.$http.get('/index/Hjob.ashx?type=sel', {
-					tabid: 'YH_liebiao08d2367f-618b-429c-bb8f-5c7634ad508b',
-					mid: '9c6a100d-8543-438e-9311-ce6a38e75cae',
-					job: 'demo_node_1',
-					tbname: 'YH',
-					T: 'app_yh_type_sql',
-					level: this.user.level
-				})
-				this.dangertypeAllData = restype.data.data
-
+				if (!this.$cache.get('_dangerData')) {
+					// 隐患等级
+					const res = await this.$http.get('/index/Hjob.ashx?type=sel', {
+						tabid: 'YH_liebiao08d2367f-618b-429c-bb8f-5c7634ad508b',
+						mid: '9c6a100d-8543-438e-9311-ce6a38e75cae',
+						job: 'demo_node_1',
+						tbname: 'YH',
+						T: 'add_yhsql',
+						level: 'A'
+					})
+					this.dangerData = res.data.data
+				} else {
+					this.dangerData = this.$cache.get('_dangerData')
+				}
+				
+				if (!this.$cache.get('_dangertypeAllData')) {
+					// 隐患种类
+					const restype = await this.$http.get('/index/Hjob.ashx?type=sel', {
+						tabid: 'YH_liebiao08d2367f-618b-429c-bb8f-5c7634ad508b',
+						mid: '9c6a100d-8543-438e-9311-ce6a38e75cae',
+						job: 'demo_node_1',
+						tbname: 'YH',
+						T: 'app_yh_type_sql',
+						level: this.user.level
+					})
+					this.dangertypeAllData = restype.data.data
+				} else {
+					this.dangertypeAllData = this.$cache.get('_dangertypeAllData')
+				}
 			},
 			async checkFunc() {
-				// 检查类别
-				const restype = await this.$http.get('/index/Hjob.ashx?type=sel', {
-					tabid: 'YH_liebiao08d2367f-618b-429c-bb8f-5c7634ad508b',
-					mid: '9c6a100d-8543-438e-9311-ce6a38e75cae',
-					job: 'demo_node_1',
-					tbname: 'YH',
-					T: 'app_checking',
-					department_id: this.user.department_id
-				})
-				this.checkingType = restype.data.data
-				// console.log(this.checkingType)
+				if (!this.$cache.get('_checkingType')) {
+					// 检查类别
+					const restype = await this.$http.get('/index/Hjob.ashx?type=sel', {
+						tabid: 'YH_liebiao08d2367f-618b-429c-bb8f-5c7634ad508b',
+						mid: '9c6a100d-8543-438e-9311-ce6a38e75cae',
+						job: 'demo_node_1',
+						tbname: 'YH',
+						T: 'app_checking',
+						department_id: this.user.department_id
+					})
+					this.checkingType = restype.data.data
+
+				} else {
+					this.checkingType = this.$cache.get('_checkingType')
+				}
+
 			},
 			checkingFunc(d) {
 				this.form.yh_zhuanxiang = d[0].value
@@ -508,8 +529,7 @@
 			// 图片上传成功
 			uploadChange(res, index, lists, name) {
 				if (res.statusCode == '200') {
-					// let fileUploadUrl = JSON.parse(res.data).url
-					// this.imgs.push(fileUploadUrl)
+
 				}
 			},
 			insFunc(d) {
@@ -574,6 +594,7 @@
 					tbname: 'YH',
 					T: '部门管理sql',
 					level: 'A',
+					zr: 1,
 					pid: node.key,
 				}, perms)
 				this.$http.get('/index/Hjob.ashx?type=sel', params).then(res => {
@@ -604,9 +625,6 @@
 				this.form.level = this.user.level // 重点-有用
 				// 罚款 -- 废弃，为零
 				this.form.fine = 0
-				// 销号部门
-				// this.form.del_dept = ''
-				// this.form.del_dept_id = ''
 
 				//  带班领导
 				if (this.form.leaderv) {
@@ -639,7 +657,7 @@
 							title: '添加成功',
 							type: 'success',
 						})
-						if(mes){
+						if (mes) {
 							let content = this.form
 							content.sendName = this.user.users_name
 							this.message({
@@ -647,7 +665,7 @@
 								title: '隐患下达通知',
 								content: JSON.stringify([content])
 							})
-						}else{
+						} else {
 							this.successEmpty()
 						}
 					}

@@ -1,7 +1,7 @@
 <template>
 	<view class="content">
 		<view class="wrap">
-			<u-search placeholder="" v-model="keyword" :animation="true" :show-action="true" action-text="添加"
+			<u-search placeholder="" v-model="keyword" :animation="true" :show-action="true" action-text="添加" placeholder="请入搜素的内容或者添加的内容"
 				@search="addsearch" @custom="addsearch"></u-search>
 		</view>
 		<view class="address_list">
@@ -81,7 +81,7 @@
 					page: 1,
 					limit: 10,
 					keyword: this.keyword,
-				}).then(result_address => {
+				},{load:false}).then(result_address => {
 					if (result_address.data.code == 0) {
 						if (result_address.data.data && result_address.data.data.length > 0) {
 							this.address = result_address.data.data;

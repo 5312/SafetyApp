@@ -105,14 +105,19 @@
 		},
 		onLoad() {
 			this.getOrderList(0);
-			
+
 			uni.setTabBarBadge({
-				index:1,
-				text:String(this.mesNum),
-			})	
+				index: 1,
+				text: String(this.mesNum),
+			})
+		},
+		onPullDownRefresh() {
+			this.getOrderList(this.current, false).then(res => {
+				uni.stopPullDownRefresh()
+			})
 		},
 		computed: {
-			...mapState(['user','mesNum']),
+			...mapState(['user', 'mesNum']),
 			orderList() {
 				let twoArray = [
 					[],
@@ -176,8 +181,8 @@
 							hd_id: item.ids
 						}
 					})
-					
-					
+
+
 				}
 
 			},

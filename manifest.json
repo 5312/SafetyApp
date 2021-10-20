@@ -2,8 +2,8 @@
     "name" : "安管平台",
     "appid" : "__UNI__69C57C9",
     "description" : "安全信息管理平台",
-    "versionName" : "2.2.3",
-    "versionCode" : 223,
+    "versionName" : "5.1.0",
+    "versionCode" : 510,
     "transformPx" : false,
     /* 5+App特有相关 */
     "h5" : {
@@ -31,7 +31,8 @@
         },
         /* 模块配置 */
         "modules" : {
-            "VideoPlayer" : {}
+            "VideoPlayer" : {},
+            "SQLite" : {}
         },
         /* 应用发布信息 */
         "distribute" : {
@@ -67,7 +68,8 @@
             },
             /* SDK配置 */
             "sdkConfigs" : {
-                "ad" : {}
+                "ad" : {},
+                "push" : {}
             },
             "splashscreen" : {
                 "androidStyle" : "common"

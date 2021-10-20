@@ -35,6 +35,36 @@ export default {
 		return result;
 	},
 	/**
+	 * children 性式转化成pid 
+	 * @param data 需要遍历的数组
+	 * @param id id字段名
+	 * @param pid pid字段名
+	 * @param children 生成的children字段名
+	 */
+	childrenToPid(data, id = 'id', pid = 'pid', children = 'children') {
+		let array = [];
+
+		const getObj = function(list) {
+
+			list.forEach(row => {
+				if (row[children]) {
+					getObj(row[children])
+					// 清空children在push
+					// row[children] = null;
+					// delete row[children]
+					array.push(row)
+				} else {
+					array.push(row)
+				}
+			});
+		};
+		let ar = JSON.stringify(data);
+
+		getObj(JSON.parse(ar));
+
+		return array
+	},
+	/**
 	 * 遍历children形式数据
 	 * @param data 需要遍历的数组
 	 * @param callback 回调

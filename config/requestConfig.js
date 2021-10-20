@@ -14,7 +14,6 @@ import {
 
 setTimeout(() => {
 	getCurrentNo(function(res) {
-		// console.log("版本号", res);
 		version_code = res.versionCode;
 	});
 }, 200);
@@ -28,7 +27,7 @@ let $http = new request({
 	//服务器本地上传文件地址
 	fileUrl: base.baseUrl + "",
 	// 服务器上传图片默认url
-	defaultUploadUrl:"/root/HandlerUpload.ashx?type=3",
+	defaultUploadUrl: "/root/HandlerUpload.ashx?type=3",
 	// 服务器上传文件名称
 	// defaultFileName: "file",
 	withCredentials: true,
@@ -93,7 +92,7 @@ $http.requestEnd = function(options) {
 }
 //所有接口数据处理（此方法需要开发者根据各自的接口返回类型修改，以下只是模板）
 // $http.dataFactory = async function(res) {
-
+// 	return  Promise.resolve(res);
 // }
 // 错误回调
 $http.requestError = function(e) {
@@ -112,4 +111,6 @@ $http.requestError = function(e) {
 		});
 	}
 }
+
+
 export default $http;
