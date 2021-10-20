@@ -66,7 +66,7 @@
 				password: '',
 				// #endif
 				// #ifndef APP-PLUS
-				tel: 'shk-范典玉',
+				tel: '测试',
 				password: '123456',
 				// #endif
 				isRotate: false, //是否加载旋转

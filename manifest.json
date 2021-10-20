@@ -2,8 +2,8 @@
     "name" : "安管平台",
     "appid" : "__UNI__69C57C9",
     "description" : "安全信息管理平台",
-    "versionName" : "5.1.0",
-    "versionCode" : 510,
+    "versionName" : "5.1.2",
+    "versionCode" : 512,
     "transformPx" : false,
     /* 5+App特有相关 */
     "h5" : {

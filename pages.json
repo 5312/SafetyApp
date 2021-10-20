@@ -250,48 +250,47 @@
 				"navigationStyle": "custom"
 			}
 
+		}, {
+			"path": "pages/assessment/assessment",
+			"style": {
+				"navigationBarTitleText": "考核计划",
+				"enablePullDownRefresh": true,
+				"navigationStyle": "custom"
+			}
+
+		}, {
+			"path": "pages/assessment/add_assessment/add_assessment",
+			"style": {
+				"navigationBarTitleText": "添加考核计划",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/assessment/assessmentlist/assessmentlist",
+			"style": {
+				"navigationBarTitleText": "考核详情",
+				"enablePullDownRefresh": false,
+				"navigationStyle": "custom"
+			}
+
+		}, {
+			"path": "pages/index/my/my",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false,
+				"navigationStyle": "custom"
+			}
+
+		},
+		{
+			"path": "uview-ui/components/u-avatar-cropper/u-avatar-cropper",
+			"style": {
+				"navigationBarTitleText": "头像裁剪",
+				"navigationBarBackgroundColor": "#000000"
+			}
 		}
-	    ,{
-            "path" : "pages/assessment/assessment",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "考核计划",
-                "enablePullDownRefresh": true,
-				"navigationStyle": "custom"
-            }
-            
-        }
-        ,{
-            "path" : "pages/assessment/add_assessment/add_assessment",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "添加考核计划",
-                "enablePullDownRefresh": false
-            }
-            
-        }
-        ,{
-            "path" : "pages/assessment/assessmentlist/assessmentlist",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "考核详情",
-                "enablePullDownRefresh": false,
-				"navigationStyle": "custom"
-            }
-            
-        }
-        ,{
-            "path" : "pages/index/my/my",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "",
-                "enablePullDownRefresh": false,
-				"navigationStyle": "custom"
-            }
-            
-        }
-       
-    ],
+
+	],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "Safety",
