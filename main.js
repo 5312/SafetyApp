@@ -9,6 +9,8 @@ Vue.prototype.$http = $http;
 //缓存中心
 import MinCache from '@/config/catch'
 Vue.use(MinCache)
+//  api 拦截器
+import Interceptor from '@/config/Interceptor.js'
 
 Vue.config.productionTip = false
 

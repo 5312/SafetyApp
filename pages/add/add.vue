@@ -599,6 +599,7 @@
 				}, perms)
 				this.$http.get('/index/Hjob.ashx?type=sel', params).then(res => {
 					let array = res.data.data;
+					console.log(res.data.data)
 					if (array) {
 						resolve(array)
 					} else {
