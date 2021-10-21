@@ -37,8 +37,8 @@
 			</u-card>
 			<u-card margin="20rpx" title="风险分析">
 				<view class="charts-box" slot="body">
-					<qiun-data-charts :errorShow="true" :errorReload="false" :opts="opts" :loadingType="2" type="column"
-						:chartData="chartData" />
+					<qiun-data-charts :errorShow="true" :echartsH5="true" :echartsApp="true" :errorReload="false"
+						:eopts="opts" :loadingType="2" type="column" :chartData="chartData" />
 				</view>
 				<view class="charts-box" slot="body">
 					<qiun-data-charts :errorShow="true" :errorReload="false" :opts="opts2" :loadingType="1" type="ring"
@@ -47,7 +47,7 @@
 			</u-card>
 			<u-card margin="20rpx" title="考核分析" @click="navto">
 				<view class="charts-box" slot="body">
-					<qiun-data-charts :errorShow="true" :errorReload="false" :opts="opts3" :loadingType="1"
+					<qiun-data-charts :errorShow="true" :echartsH5="true" :echartsApp="true" :errorReload="false" :eopts="opts3" :loadingType="1"
 						type="column" :localdata="khDataBase" />
 				</view>
 
@@ -95,26 +95,33 @@
 				khDataBase: [],
 				opts: {
 					"padding": [
-						20,
+						0,
 						0,
 						0,
 						0
 					],
+					"grid":{
+						"right":'30px'
+					},
 					"xAxis": {
 						"name": "月",
 						"disabled": false,
-						"disableGrid": true
+						"disableGrid": true,
 					},
 					"yAxis": {
 						"name": "条",
 						"gridType": "dash",
 						"splitNumber": 4
 					},
+					"subtitle": {
+						"name": "11",
+					},
 					"legend": {
 						"show": true,
 						"position": "bottom",
 						"lineHeight": 20,
 					},
+					
 				},
 				opts2: {
 					"padding": [
@@ -156,6 +163,7 @@
 						"disableGrid": true
 					},
 					"yAxis": {
+						"name": "扣分",
 						"gridType": "dash",
 						"splitNumber": 3
 					},
@@ -324,7 +332,7 @@
 					text: String(this.mesNum),
 				})
 			},
-			navto(){
+			navto() {
 				this.$u.route({
 					type: "to",
 					url: '../assessment/assessment'

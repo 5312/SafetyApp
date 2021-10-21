@@ -1,21 +1,21 @@
 // #ifdef APP-PLUS
     class Sqlite {
     	constructor(arg) {
-
+			this.open()
     	}
     	init() {
-
+			
     	}
     	open() {
     		plus.sqlite.openDatabase({
     			name: 'yhadd',
-    			path: '_yhadd/yh.db',
+    			path: '_doc/test.db',
     			success: function(e) {
     				// plus.nativeUI.alert('打开数据库成功');  
     				console.log('打开数据库成功')
     			},
     			fail: function(e) {
-    				// plus.nativeUI.alert("打开数据库失败");  
+    				plus.nativeUI.alert("打开数据库失败");  
     			}
     		})
     	}

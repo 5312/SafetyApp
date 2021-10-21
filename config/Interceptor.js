@@ -1,38 +1,60 @@
+//
+//                       _oo0oo_
+//                      o8888888o
+//                      88" . "88
+//                      (| -_- |)
+//                      0\  =  /0
+//                    ___/`---'\___
+//                  .' \\|     |// '.
+//                 / \\|||  :  |||// \
+//                / _||||| -:- |||||- \
+//               |   | \\\  - /// |   |
+//               | \_|  ''\---/''  |_/ |
+//               \  .-\__  '-'  ___/-. /
+//             ___'. .'  /--.--\  `. .'___
+//          ."" '<  `.___\_<|>_/___.' >' "".
+//         | | :  `- \`.;`\ _ /`;.`/ - ` : | |
+//         \  \ `_.   \_ __\ /__ _/   .-` /  /
+//     =====`-.____`.___ \_____/___.-`___.-'=====
+//                       `=---='
+//
+//
+//     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//
+//           佛祖保佑       永不宕机     永无BUG
+//
+//       佛曰:
+//               写字楼里写字间，写字间里程序员；
+//               程序人员写程序，又拿程序换酒钱。
+//               酒醒只在网上坐，酒醉还来网下眠；
+//               酒醉酒醒日复日，网上网下年复年。
+//               但愿老死电脑间，不愿鞠躬老板前；
+//               奔驰宝马贵者趣，公交自行程序员。
+//               别人笑我忒疯癫，我笑自己命太贱；
+//               不见满街漂亮妹，哪个归得程序员？
+//
 import sqlite from './sqlite'
 //获取网络信息  
 uni.getNetworkType({
 	success: res => {
 		let netWork = res.networkType;
-		// #ifdef APP-PLUS
-		if (netWork == 'none') {
+		// ##ifdef APP-PLUS
+		// if (netWork == 'none') {
 			Interceptor()
-		}
-		// #endif
+		// }
+		// ##endif
 
-		// #ifdef H5
-		Interceptor()
-		// #endif
+		
 	}
 })
-
+let result = null;
 function Interceptor() {
 	uni.addInterceptor('request', {
 		invoke(args) {
-			// request 触发前拼接 url 
-			bumen(args)
+			result = new Result(args,'部门管理sql');
 		},
 		success(args) {
-			// 请求成功后，修改code值为1
-			args.data = {
-				code:1,
-				data:[]
-			}
-			// #ifdef APP-PLUS
-			if (res.statusCode != '200') {
-				console.log('interceptor-complete', args)
-			}
-			// #endif
-			
+			result.success();
 		},
 		fail(err) {
 			console.log('interceptor-fail', err)
@@ -42,13 +64,24 @@ function Interceptor() {
 		}
 	})
 }
-// 部门拦截
-function bumen(args) {
-	if (args.data.T == '部门管理sql') {
-		console.log(args)
+class Result{
+	constructor(arg,T) {
+		this.args = arg
+		this.intercept = false
+	    if (arg.data.T == T) {
+	    	this.init()
+	    }
 	}
-}
-// 部门离线数据
-function requestBumen(){
-	
+	init(){
+		this.invoke();
+	}
+	invoke(){
+		console.log('开始拦截',this.args.data.T)
+		this.intercept = true
+	}
+	success(){
+		if(this.intercept){
+			console.log('返回数据',this.args.data.T)
+		}
+	}
 }
