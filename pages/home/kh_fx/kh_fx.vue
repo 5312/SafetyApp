@@ -3,7 +3,7 @@
 		<u-card margin="20rpx" title="考核分析" @click="navto">
 			<view class="charts-box" slot="body">
 				<qiun-data-charts :errorShow="true" :echartsH5="true" :echartsApp="true" :errorReload="false"
-					:eopts="opts3" :loadingType="1" :dataLabel="true" type="column" :localdata="khDataBase" />
+					:eopts="opts3" :loadingType="1" type="column" :localdata="khDataBase" />
 			</view>
 
 		</u-card>
@@ -29,25 +29,29 @@
 							"fontSize": 16,
 						}
 					},
-					"padding": [
-						20,
-						0,
-						0,
-						 0,
-					],
+					
 					"xAxis": {
+						"name": "扣分",
 						"type": 'value',
 						"disableGrid": true
 					},
 					"yAxis": {
 						"type": 'category',
-						"name": "扣分",
 						"gridType": "dash",
+						"rotateLabel":true,
+						"axisLabel": {
+							interval: 0,
+							rotate: 53
+						}
+					},
+					"grid": {
+						"top": 40,
+						"bottom": 20,
+						"right": 50,
+						"left": 40
 					},
 					"legend": {
 						"show": false,
-						"position": "bottom",
-						"lineHeight": 10,
 					},
 					"seriesTemplate":{
 						"type": 'bar',
@@ -69,6 +73,12 @@
 			...mapState(['user', 'mesNum', 'userid']),
 		},
 		methods: {
+			navto() {
+				this.$u.route({
+					type: "to",
+					url: '../assessment/assessment'
+				})
+			},
 			async index() {
 				const kh_statistics = await this.$http.get('/index/Hjob.ashx?type=sel', {
 					T: 'app_kh_statistics',

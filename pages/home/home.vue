@@ -21,6 +21,7 @@
 					</view>
 				</view>
 			</view>
+			<!--  -->
 			<u-card margin="20rpx" title="隐患概览" @click="yhglan()">
 				<view class="u-flex" slot="body">
 					<view v-for="x,y in yh_glist" :key="y" class="itembox" @click.stop="routes(x.event)">
@@ -35,6 +36,7 @@
 					</view>
 				</view>
 			</u-card>
+			<!--  -->
 			<u-card margin="20rpx" title="隐患分析">
 				<view class="charts-box" slot="body">
 					<qiun-data-charts :errorShow="true" :errorReload="false" :opts="yh_ring" :loadingType="2"
@@ -45,14 +47,14 @@
 					<qiun-data-charts :errorShow="true" :echartsH5="true" :echartsApp="true" :errorReload="false"
 						:eopts="yh_qushi" :loadingType="1" type="line" :chartData="yhQushi" />
 				</view>
-				<view class='qi_title' slot="body">隐患类型分布分析</view>
+				<!-- <view class='qi_title' slot="body">隐患类型分布分析</view> -->
 				<!-- 气泡图 -->
 				<!-- <view class="charts-box" slot="body">
 					<qiun-data-charts :errorShow="true" :errorReload="false" :opts="yh_qipao" :loadingType="1"
 						type="bubble" :chartData="yhQiPao" />
 				</view> -->
 				<!-- 各矿隐患 -->
-				<view class="charts-box" slot="body" v-if="permise">
+				<view class="charts-box" style="height:700rpx" slot="body" v-if="permise">
 					<qiun-data-charts :errorShow="true" :echartsH5="true" :echartsApp="true" :errorReload="false"
 						:eopts="yh_allktypes" :loadingType="2" type="column" :chartData="allkType" />
 				</view>
@@ -114,6 +116,36 @@
 				allkTypeData: [],
 				yhq: [],
 				yh_allktypes: { // h5
+					"color": [
+						"#EE6666",
+						"#FC8452",
+						"#FAC858",
+						"#1890FF",
+						"#91CB74",
+						"#73C0DE",
+						"#3CA272",
+						"#9A60B4",
+						"#ea7ccc"
+					],
+					"legend": {
+						"top": '10%',
+					},
+					"grid": {
+						"top": 80,
+						"bottom": 30,
+						"right": 30,
+						"left": 50
+					},
+					"xAxis": {
+						"type": 'value',
+					},
+					"yAxis": {
+						"type": 'category',
+						"axisLabel": {
+							interval: 0,
+							rotate: 45
+						}
+					},
 					"title": {
 						"text": '年度各矿隐患分布对比',
 						"fontSize": 12,
@@ -123,6 +155,16 @@
 							"fontSize": 16,
 						}
 					},
+					"seriesTemplate": {
+						"type": 'bar',
+						"data": [],
+						"barwidth": 10,
+						"label": {
+							"show": false,
+							"color": "#665809",
+							"position": 'right',
+						},
+					}
 				},
 				yh_qipao: { // uch
 					"xAxis": {
@@ -152,6 +194,17 @@
 					},
 				},
 				yh_qushi: { // h5
+					"color": [
+						"#EE6666",
+						"#FC8452",
+						"#FAC858",
+						"#1890FF",
+						"#91CB74",
+						"#73C0DE",
+						"#3CA272",
+						"#9A60B4",
+						"#ea7ccc"
+					],
 					"grid": {
 						"show": false
 					},
@@ -163,8 +216,19 @@
 							"fontSize": 16,
 						}
 					},
+					"legend": {
+						"top": 'left',
+						"right": 'right'
+					},
+					"grid": {
+						"top": 30,
+						"bottom": 50,
+						"right": 45,
+						"left": 10
+					},
 					"xAxis": {
-						"show": false,
+						"name": '月',
+						"show": true,
 						"splitLine": {
 							"show": false
 						},
@@ -172,14 +236,37 @@
 							"show": false,
 						},
 						"axisLabel": {
-							"show": false,
+							"show": true,
 						},
 					},
 					"yAxis": {
 						"show": false,
 					},
+					"seriesTemplate": {
+						"name": '',
+						"type": 'line',
+						"data": [],
+						"barwidth": 20,
+						"label": {
+							"show": false,
+							"color": "#666666",
+							"position": 'top',
+						},
+					},
 				},
 				yh_ring: { // uch
+					"color": [
+						"#FAC858",
+						"#FC8452",
+						"#EE6666",
+						"#1890FF",
+						"#91CB74",
+						"#73C0DE",
+						"#3CA272",
+
+						"#9A60B4",
+						"#ea7ccc"
+					],
 					"padding": [
 						50,
 						0,
@@ -272,13 +359,13 @@
 						if (obj == ele.deptName) {
 							switch (ele.levelId) {
 								case 'a':
-									a.splice(x,1,ele.quantity)
+									a.splice(x, 1, ele.quantity)
 									break;
 								case 'b':
-									b.splice(x,1,ele.quantity)
+									b.splice(x, 1, ele.quantity)
 									break;
 								case 'c':
-									c.splice(x,1,ele.quantity)
+									c.splice(x, 1, ele.quantity)
 									break;
 							}
 						}
@@ -287,14 +374,14 @@
 				return {
 					"categories": cate,
 					"series": [{
-						"name": "一般隐患",
-						"data": c
-					}, {
 						"name": "重大隐患",
 						"data": a
 					}, {
 						"name": "较大隐患",
 						"data": b
+					}, {
+						"name": "一般隐患",
+						"data": c
 					}]
 				}
 			},
@@ -370,9 +457,18 @@
 			},
 			// 隐患等级
 			yhLevel() {
+				let arr = this.yhRingData;
+				let array = []
+				for (var i = 0; i < arr.length; i++) {
+					const obj = arr[i]
+					console.log(obj)
+					if (obj.name != "一般不安全行为" && obj.name != "严重不安全行为") {
+						array.push(obj)
+					}
+				}
 				return {
 					"series": [{
-						"data": this.yhRingData,
+						"data": array,
 					}]
 				}
 			},
@@ -428,7 +524,7 @@
 					userId: this.userid,
 					t1: t1,
 					t2: this.$u.timeFormat(new Date(), 'yyyy-mm-dd'),
-				}).then(yhqushiB=>{
+				}).then(yhqushiB => {
 					if (yhqushiB.data.data) {
 						this.yhq = yhqushiB.data.data
 					}
@@ -442,17 +538,18 @@
 				// 		this.perDataBase = res.data.data
 				// 	}
 				// })
-				 this.$http.get('/index/Hjob.ashx?type=sel', {
+				this.$http.get('/index/Hjob.ashx?type=sel', {
 					T: '隐患等级占比分析sql',
 					department_id: this.user.department_id,
 					function_perms: this.user.function_perms
-				}).then(yhres=>{
+				}).then(yhres => {
 					if (yhres.data.data) {
 						this.yhRingData = yhres.data.data
+						// console.log( this.yhRingData )
 						// this.yhQushiData = yhres.data.data
 					}
 				})
-				
+
 				// const index = await this.$http.get('/index/Hjob.ashx?type=sel', {
 				// 	T: '每月数据',
 				// 	function_perms: this.user.function_perms
@@ -465,12 +562,12 @@
 					userId: this.userid,
 					t1: t1,
 					t2: this.$u.timeFormat(new Date(), 'yyyy-mm-dd'),
-				}).then(all =>{
+				}).then(all => {
 					if (all.data.data) {
 						this.allkTypeData = all.data.data;
 					}
 				})
-				
+
 				// const kh_statistics = await this.$http.get('/index/Hjob.ashx?type=sel', {
 				// 	T: 'app_kh_statistics',
 				// 	function_perms: this.user.function_perms

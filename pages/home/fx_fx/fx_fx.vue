@@ -28,6 +28,17 @@
 				fx_typeData:[],
 				err:false,
 				radar: {
+					"color": [
+						"#FC8452",
+						"#EE6666",
+						"#FAC858",
+						"#1890FF",
+						"#91CB74",
+						"#73C0DE",
+						"#3CA272",
+						"#9A60B4",
+						"#ea7ccc"
+					],
 					"legend": {
 						"show": false,
 						"position": "bottom",
@@ -44,6 +55,17 @@
 					}
 				},
 				opts2: {
+					"color": [
+						"#FC8452",
+						"#FAC858",
+						"#EE6666",
+						"#1890FF",
+						"#91CB74",
+						"#73C0DE",
+						"#3CA272",
+						"#9A60B4",
+						"#ea7ccc"
+					],
 					"padding": [
 						50,
 						0,
