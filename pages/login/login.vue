@@ -25,9 +25,9 @@
 
 			<!-- 其他登录 -->
 			<view class="other_login cuIcon">
-				<view class="login_icon">
+				<!-- <view class="login_icon">
 					<view class="cuIcon-weixin" @tap="login_weixin"></view>
-				</view>
+				</view> -->
 			</view>
 
 			<!-- 底部信息 -->

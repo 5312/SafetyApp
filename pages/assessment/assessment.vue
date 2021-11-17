@@ -89,11 +89,13 @@
 					job: 'demo_node_1',
 					tbname: 'kh_list',
 					T: '考核清单列表sql',
+					kh_plan_state:'1',
 					page: this.page,
 					limit: 10,
 					function_perms:this.user.function_perms,
 					keyword:this.keyword
 				})
+				console.log(result.data.data)
 				if(!result.data.data){
 					this.nomore = true;
 					this.loadStatus= "nomore"
@@ -107,6 +109,7 @@
 				this.loadStatus= "loadmore";
 			},
 			search() {
+				this.nomore = false;
 				this.index(false)
 			},
 			// 跳转 考核页面

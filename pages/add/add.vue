@@ -36,6 +36,12 @@
 
 					<u-input v-model="form.accompanyTitle" @click="listOfPeople('pj')" />
 				</u-form-item>
+				<!--  -->
+				<u-form-item label-width='150rpx' prop="accompanyTitle" label="同行人">
+				
+					<u-input v-model="form.peerpeopleTitle" @click="listOfPeople('tx')" />
+				</u-form-item>
+				<!--  -->
 				<u-form-item label-width='150rpx' :required='true' prop="inspectiondate" label="检查日期">
 					<u-calendar v-model="dateShow" :min-date="mindate" mode="date" @change='inspectiondateFunc'>
 					</u-calendar>
@@ -54,7 +60,7 @@
 				<u-form-item label-width='150rpx' label="检查类别">
 					<u-select @confirm="checkingFunc" v-model="checking" value-name='ids' label-name='jiancha_name'
 						:list="checkingType"></u-select>
-					<!-- <u-button @click="show = true">打开</u-button> -->
+
 					<u-input v-model="form.yh_zhuanxiangLable" :select-open='checking' @click="checking = true"
 						type="select" />
 				</u-form-item>
@@ -113,11 +119,13 @@
 				</view>
 				<!--  -->
 				<u-form-item label-width='180rpx' label="要求完成时间">
-					<u-calendar v-model="claim" mode="date" @change='reqDate'></u-calendar>
+					<u-calendar v-model="claim" :min-date="yqmindate" :max-date="maxdate" mode="date" @change='reqDate'>
+					</u-calendar>
 					<u-input v-model="form.yh_requesttime" type="select" @click='claim = true' />
 				</u-form-item>
 				<u-form-item>
 					<u-radio-group v-model="rname" @change="radioGroupChange">
+						<u-radio name='null'>当班整改</u-radio>
 						<u-radio name='0'>当天整改</u-radio>
 						<u-radio name='1'>一天整改</u-radio>
 						<u-radio name='2'>二天整改</u-radio>
@@ -189,7 +197,7 @@
 				}, // 文字提示
 				errorType: ['message', 'toast'],
 				pname: '',
-				pin_number: false, // 销号部门
+				pin_number: true, // 销号部门
 				form: {
 					yh_zhuanxiangLable: '',
 					yh_zhuanxiang: '',
@@ -272,13 +280,15 @@
 		},
 		watch: {
 			'form.yh_level'(old) {
-				if (old == '较大隐患~b~#f78605') {
-					this.pin_number = true
-				} else if (old == '重大隐患~a~#f82707') {
-					this.pin_number = true
-				} else {
-					this.pin_number = false
-				}
+
+			},
+			'form.yh_requesttime'(old) {
+				let star = this.form.inspectiondate;
+				let end = this.form.yh_requesttime;
+				let dateBagin = new Date(star.replace(/-/g, "/")).getTime();
+				let dateOver = new Date(end.replace(/-/g, "/")).getTime();
+				let radio = (dateOver - dateBagin) / (1000 * 3600 * 24)
+				this.rname = radio
 			}
 		},
 		computed: {
@@ -306,12 +316,22 @@
 					}
 				})
 			},
+			// 检查时间
 			mindate() {
 				let td = 60 * 60 * 24 * 2 * 1000;
 				let time = this.$u.timeFormat(new Date() - td, 'yyyy-mm-dd');
 				return time
+			},
+			yqmindate() {
+				// 要求完成时间
+				let time = this.$u.timeFormat(new Date(), 'yyyy-mm-dd');
+				return time
+			},
+			maxdate() {
+				let td = 60 * 60 * 24 * 365 * 1000;
+				let time = this.$u.timeFormat(new Date().getTime() + td, 'yyyy-mm-dd');
+				return time
 			}
-
 		},
 		// 必须要在onReady生命周期，因为onLoad生命周期组件可能尚未创建完毕
 		onReady(o) {
@@ -339,10 +359,38 @@
 				// 强制更新
 				this.$forceUpdate()
 			})
-			// 监听事件选择人员
+			// 监听事件 陪检人
 			uni.$on('pjbackPeople', (resins) => {
-				this.form.accompany = resins.accompany;
-				this.form.accompanyTitle = resins.name;
+				// this.form.accompany = [];
+				
+				if(!this.form.accompany){
+					this.form.accompany = "";
+					this.form.accompanyTitle = "";
+				}
+				let oldval = this.form.accompany.split(',')
+				oldval.push(resins.accompany);
+				let oldid = this.form.accompanyTitle.split(',')
+				oldid.push(resins.name)
+				
+				this.form.accompany =oldval.filter(i=>i && i.trim()).join(',')
+				this.form.accompanyTitle =oldid.filter(i=>i && i.trim()).join(',')
+				
+				// 强制更新
+				this.$forceUpdate()
+			})
+			// 监听事件 同行人
+			uni.$on('txbackPeople', (resins) => {
+				if(!this.form.peerpeople){
+					this.form.peerpeople = "";
+					this.form.peerpeopleTitle = "";
+				}
+				let oldval = this.form.peerpeople.split(',')
+				oldval.push(resins.peerpeople);
+				let oldid = this.form.peerpeopleTitle.split(',')
+				oldid.push(resins.name)
+				
+				this.form.peerpeople =oldval.filter(i=>i && i.trim()).join(',')
+				this.form.peerpeopleTitle =oldid.filter(i=>i && i.trim()).join(',')
 				// 强制更新
 				this.$forceUpdate()
 			})
@@ -375,7 +423,7 @@
 				} else {
 					this.dangerData = this.$cache.get('_dangerData')
 				}
-				
+
 				if (!this.$cache.get('_dangertypeAllData')) {
 					// 隐患种类
 					const restype = await this.$http.get('/index/Hjob.ashx?type=sel', {
@@ -407,7 +455,18 @@
 				} else {
 					this.checkingType = this.$cache.get('_checkingType')
 				}
-
+				if (this.checkingType && this.checkingType.length <= 0) {
+					let obj = {
+						createdate: "2021-07-12 17:48:12",
+						end_time: "2088-07-12",
+						ids: "7591465c-c9bc-4e9c-9d6b-bac734173bf4",
+						jiancha_name: "日常检查",
+						link_depart: "000000000000000000000000000000000001",
+						link_departname: "集团",
+						star_time: "2021-07-01",
+					}
+					this.checkingType.push(obj)
+				}
 			},
 			checkingFunc(d) {
 				this.form.yh_zhuanxiang = d[0].value
@@ -508,7 +567,7 @@
 			radioGroupChange(d) {
 				// console.log(this.getDateNow(d))
 				this.rname = d
-				this.form.yh_requesttime = this.getDateNow(d);
+				this.form.yh_requesttime = this.getDateNow(d != "null" ? d : 0);
 			},
 			uploadFile() {
 				// 视频上传
@@ -599,7 +658,7 @@
 				}, perms)
 				this.$http.get('/index/Hjob.ashx?type=sel', params).then(res => {
 					let array = res.data.data;
-					console.log(res.data.data)
+					// console.log(res.data.data)
 					if (array) {
 						resolve(array)
 					} else {
@@ -609,9 +668,12 @@
 			},
 			formData(mes = false) {
 				let imgs = [];
+
 				this.$refs.uUpload.lists.filter(val => {
 					imgs.push(val.response.url)
 				})
+				// 隐患编码
+				this.form.yh_code = this.yh_code;
 				this.form.filepath = [...this.video, ...imgs];
 				// 历史记录信息
 				let detailJson = this.form
@@ -640,9 +702,12 @@
 				} else {
 					this.form.leader = ''
 				}
-				// 当天直接销号
-				if (this.form.yh_requesttime == this.form.inspectiondate) {
-					this.form.yh_state = 8; //隐患状态 --当班整改 直接销号 8
+
+				if (mes) {
+					if (this.rname == "null" ? true : false) {
+						// 当班直接销号 -- 当天不销号
+						this.form.yh_state = 8; //隐患状态 --当班整改 直接销号 8
+					}
 				}
 				let objmerge = Object.assign(this.form, {
 					mid: '9c6a100d-8543-438e-9311-ce6a38e75cae',
@@ -679,6 +744,14 @@
 					this.successEmpty()
 				})
 			},
+			async genNewYhCode() {
+				const res = await this.$http.post('/api/GenNewYinHuanCode', {
+					date: this.form.inspectiondate
+				})
+				if (res.statusCode == 200) {
+					this.yh_code = res.data.data;
+				}
+			},
 			successEmpty() {
 				// 成功后清空部分
 				this.form.yh_content = '';
@@ -688,7 +761,14 @@
 				this.$refs.uForm.validate(valid => {
 					this.form.yh_state = 0
 					if (valid) {
-						this.formData()
+						this.genNewYhCode().then(() => {
+							this.formData()
+						}).catch(e => {
+							this.$refs.uToast.show({
+								title: '请求失败',
+								type: 'error',
+							})
+						})
 					} else {
 						console.log('验证失败');
 					}
@@ -698,7 +778,14 @@
 				this.$refs.uForm.validate(valid => {
 					this.form.yh_state = 1;
 					if (valid) {
-						this.formData(true);
+						this.genNewYhCode().then(() => {
+							this.formData(true);
+						}).catch(e => {
+							this.$refs.uToast.show({
+								title: '请求失败',
+								type: 'error',
+							})
+						})
 					} else {
 						console.log('验证失败');
 					}

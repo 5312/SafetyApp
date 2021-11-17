@@ -44,8 +44,7 @@
 			this.index(option).then(() => {
 				this.getAddress()
 			})
-			// this.pname_id = option.pname;
-			// this.getAddress()
+	 
 
 		},
 		onReachBottom() {

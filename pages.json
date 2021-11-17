@@ -290,7 +290,43 @@
 			}
 		}
 
-	],
+	    ,{
+            "path" : "pages/danger/fine/fine",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "添加罚款单",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/danger/fine/fine_people/fine_people",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/danger/fine/link_yj/link_yj",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/danger/fine/bassis/bassis",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+    ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "Safety",
@@ -313,7 +349,7 @@
 				"pagePath": "pages/danger/danger",
 				"iconPath": "/static/uview/example/yinhuan1.png",
 				"selectedIconPath": "/static/uview/example/yinhuan1_select.png",
-				"text": "信息查询"
+				"text": "控制台"
 			},
 			{
 				"pagePath": "pages/assessment/assessment",

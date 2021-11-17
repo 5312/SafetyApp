@@ -159,7 +159,7 @@ module.exports = {
 				"activeOpacity": 0.5,
 				"activeRadius": 10,
 				"offsetAngle": 0,
-				"labelWidth": 15,
+				"labelWidth": 10,
 				"border": true,
 				"borderWidth": 3,
 				"borderColor": "#FFFFFF"

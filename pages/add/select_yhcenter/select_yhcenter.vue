@@ -1,13 +1,14 @@
 <template>
 	<view class="content">
+		<u-alert-tips type="warning" :description="description"></u-alert-tips>
 		<view class="wrap">
-			<u-search placeholder="" v-model="keyword" :animation="true" :show-action="true" action-text="添加" placeholder="请入搜素的内容或者添加的内容"
-				@search="addsearch" @custom="addsearch"></u-search>
+			<u-search placeholder="" v-model="keyword" :animation="true" :show-action="true" action-text="添加"
+				placeholder="请入搜素的内容或者添加的内容" @search="addsearch" @custom="addsearch"></u-search>
 		</view>
 		<view class="address_list">
 			<u-cell-group>
-				<u-cell-item v-for="(item,index) in address" :key='index' :label="item.yh_lib_specialty" icon="plus-circle"
-					:arrow="false" :title="item.yh_lib_content" @click="click(item)"></u-cell-item>
+				<u-cell-item v-for="(item,index) in address" :key='index' :label="item.yh_lib_specialty"
+					icon="plus-circle" :arrow="false" :title="item.yh_lib_content" @click="click(item)"></u-cell-item>
 			</u-cell-group>
 			<u-loadmore :status="status" />
 		</view>
@@ -27,7 +28,8 @@
 				address: [],
 				page: 1,
 				nomore: false,
-				pname_id: ''
+				pname_id: '',
+				description: '点击搜索框，后面会出现添加按钮，输入时会实时搜索，点击“添加”按钮会添加输入框的内容，点击下面的行，会添加所点击的行数据'
 			}
 		},
 		watch: {
@@ -40,7 +42,7 @@
 		},
 		onLoad(option) {
 			this.nomore = false;
-			this.index()
+			this.index();
 		},
 		onReachBottom() {
 			if (this.nomore) return;
@@ -81,17 +83,19 @@
 					page: 1,
 					limit: 10,
 					keyword: this.keyword,
-				},{load:false}).then(result_address => {
+				}, {
+					load: false
+				}).then(result_address => {
 					if (result_address.data.code == 0) {
 						if (result_address.data.data && result_address.data.data.length > 0) {
 							this.address = result_address.data.data;
-						}else{
-							this.address=[]
+						} else {
+							this.address = []
 						}
 					}
 				})
 			},
-			addsearch(){
+			addsearch() {
 				let _this = this
 				uni.navigateBack({
 					url: '../add',

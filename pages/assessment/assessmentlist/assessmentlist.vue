@@ -7,6 +7,7 @@
 				</view>
 			</view>
 		</u-navbar>
+		<u-alert-tips type="warning" :description="description"></u-alert-tips>
 		<u-card v-for="(item,index) in acticeList" :key="index" :title="'考核部门:'+item.fenPeiBumen"
 			@click="nd_detail(item)" v-if="showType(item)">
 			<view class="" slot="body">
@@ -58,7 +59,8 @@
 				value: 0,
 				ids: null,
 				isSave: false,
-				isMei: false
+				isMei: false,
+				description:'考核后，请点击右侧保存按钮进行保存再退出'
 			}
 		},
 		onLoad(options) {
@@ -142,14 +144,22 @@
 			},
 
 			nd_detail(item) {
-				// 修改分值
-				this.show = true;
-				this.value = Number(item.kh_fenzhi)
-				this.ids = item.ids
+				console.log(item)
+				if(item.fenPeiBumen_id == this.user.department_id){
+					// 修改分值
+					this.show = true;
+					this.value = Number(item.kh_fenzhi)
+					this.ids = item.ids
+				}else{
+					this.$refs.uToast.show({
+						title: '您无法考核该项！',
+						type: 'error',
+					})
+				}
 			},
 			back() {
 				// 返回
-				if (this.isSave) {
+				if (true) { //this.isSave
 					this.$u.route({
 						type: 'back',
 					})

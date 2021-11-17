@@ -102,11 +102,45 @@
 									<view class="logistics btn">{{res.zx_level }}</view>
 								</view>
 							</view>
-							<u-loadmore :status="loadStatus[x]" :load-text="loadText" bgColor="#f2f2f2"></u-loadmore>
+							<!-- <u-loadmore :status="loadStatus[x]" :load-text="loadText" bgColor="#f2f2f2"></u-loadmore> -->
 							<!--  -->
 						</view>
 						<!--  -->
 					</view>
+				</swiper-item>
+				<swiper-item class="swiper-item swiper-item2">
+					<view class="top_btn">
+						<u-button type="primary" :ripple="true" @click="add_fine">添加罚款单</u-button>
+					</view>
+					<scroll-view scroll-y style="height: 1000rpx;width: 100%;" @scrolltolower="onreachBottom">
+						<view class="f_wrap">
+							<view v-for="x,y in f_list" :key="y">
+								<u-card margin="20rpx" :title="'责任人:'+x.responsible">
+									<view class="" slot="body">
+										<view class="u-body-item u-flex u-border-bottom u-col-between u-p-t-0">
+											罚款原因：{{x.fine_desc}}
+										</view>
+										<view class="u-body-item u-flex u-border-bottom u-col-between u-p-t-0">
+											罚款金额：{{x.fine_sum}}
+										</view>
+										<view class="u-body-item u-flex u-border-bottom u-col-between u-p-t-0">
+											罚款人：{{x.fine_penalty}}
+										</view>
+										<view class="u-body-item u-flex u-border-bottom u-col-between u-p-t-0">
+											罚款时间：{{x.fine_time}}
+										</view>
+										<view class="u-body-item u-flex u-border-bottom u-col-between u-p-t-0">
+											责任人部门：{{x.responsible_person_name}}
+										</view>
+									</view>
+									<view class="" slot="foot">
+										<u-icon name="chat-fill" size="34" color="" :label="x.fine_basis"></u-icon>
+									</view>
+								</u-card>
+							</view>
+						</view>
+					</scroll-view>
+
 				</swiper-item>
 			</swiper>
 
@@ -129,6 +163,9 @@
 					},
 					{
 						name: '风险'
+					},
+					{
+						name: '罚款'
 					}
 				],
 				// 风险
@@ -176,7 +213,10 @@
 						num: 0,
 						event: '../xiaohao/xiaohao'
 					},
-				]
+				],
+				// 罚款数据
+				f_list: [],
+				fpage: 1
 			}
 		},
 		computed: {
@@ -228,8 +268,13 @@
 				index: 1,
 				text: String(this.mesNum),
 			})
+			// 罚款数据
+			this.fine_list()
 		},
 		onPullDownRefresh() {
+			// 罚款数据
+			this.fine_list()
+			// 
 			this.getYhCount().then(res => {
 				this.getOrderList(this.currents, false).then(res => {
 					uni.stopPullDownRefresh()
@@ -242,12 +287,30 @@
 
 		},
 		onReachBottom() {
-			this.loadStatus.splice(this.currents, 1, "loading")
-			this.page += 1;
-			this.getOrderList(this.currents, true);
+			if (this.current == 1) {
+				this.loadStatus.splice(this.currents, 1, "loading")
+				this.page += 1;
+				this.getOrderList(this.currents, true);
+			}
+			if (this.current == 2) {
+				this.fpage += 1
+				this.fine_list(true)
+			}
+
 		},
 		methods: {
 			...mapMutations(['setMessageNum']),
+			onreachBottom() {
+				if (this.current == 1) {
+					this.loadStatus.splice(this.currents, 1, "loading")
+					this.page += 1;
+					this.getOrderList(this.currents, true);
+				}
+				if (this.current == 2) {
+					this.fpage += 1
+					this.fine_list(true)
+				}
+			},
 			async index() {
 				this.$http.get('/index/Hjob.ashx?type=sel', {
 					T: '专项风险类型sql',
@@ -316,6 +379,28 @@
 					url: event
 				})
 			},
+			async fine_list(ispush = false) {
+				const data = await this.$http.get('/index/Hjob.ashx?type=sel', {
+					T: 'app_fine_list_sql',
+					function_perms: this.user.function_perms,
+					page: this.fpage,
+					limit: 10
+				})
+
+				let array = []
+				if (data.statusCode == '200') {
+					let data1 = data.data.data;
+					if (!data1) {
+						return;
+					}
+					if (ispush) {
+						array.push(data1)
+					} else {
+						array = data1
+					}
+				}
+				this.f_list = array
+			},
 			// 页面数据
 			async getOrderList(idx, ispush = true) {
 				let a = {
@@ -349,6 +434,11 @@
 				}
 				this.reqData = array
 				this.loadStatus.splice(this.currents, 1, "loadmore")
+			},
+			add_fine() {
+				this.$u.route({
+					url: './fine/fine',
+				})
 			},
 			judgment_detail(item) {
 				if (item.zx_address_list) {
@@ -419,7 +509,7 @@
 	}
 
 	.swiper-box {
-		height: 1300rpx;
+		height: 1200rpx;
 		overflow: hidden;
 	}
 
@@ -659,5 +749,37 @@
 
 	.swiper-item {
 		padding-bottom: 20rpx;
+	}
+
+	.swiper-item2 {
+		padding-bottom: 20rpx;
+		overflow: auto !important;
+	}
+
+	.top_btn {
+		padding: 20rpx 40rpx;
+		padding-bottom: 0;
+	}
+
+	.f_wrap {
+		margin: 20rpx auto;
+		border-radius: 20rpx;
+		box-sizing: border-box;
+		padding: 20rpx;
+		font-size: 28rpx;
+		padding-top: 0;
+
+		.u-card-wrap {
+			background-color: $u-bg-color;
+			padding: 1px;
+		}
+
+		.u-body-item {
+			font-size: 32rpx;
+			color: #333;
+			padding: 30rpx 10rpx;
+			margin: 10rpx;
+		}
+
 	}
 </style>

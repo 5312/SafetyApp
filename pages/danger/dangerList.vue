@@ -174,10 +174,10 @@
 			showDetail() {},
 			search() {
 				this.nomore = false;
-				this.getOrderList(this.current, false)
+				this.getOrderList(this.current, false,true)
 			},
 			// 页面数据
-			async getOrderList(idx, ispush = true) {
+			async getOrderList(idx, ispush = true,ser=false) {
 				const users = this.$store.state.user
 				let level = 'A';
 				let bind = '';
@@ -208,7 +208,14 @@
 					limit: 10,
 					keyword: this.keyword,
 				})
-
+				if(ser){
+					if(result_yh.data.data){
+						this.reqData =result_yh.data.data
+					}else{
+						this.reqData =[]
+					}
+				}
+				// console.log(result_yh.data.data)
 				if (!result_yh.data.data) {
 					// 没有下一页时
 					this.nomore = true;

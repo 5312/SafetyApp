@@ -33,55 +33,59 @@
 //               别人笑我忒疯癫，我笑自己命太贱；
 //               不见满街漂亮妹，哪个归得程序员？
 //
-import sqlite from './sqlite'
+import Sqlite from './sqlite'
 //获取网络信息  
 uni.getNetworkType({
 	success: res => {
 		let netWork = res.networkType;
-		// ##ifdef APP-PLUS
-		// if (netWork == 'none') {
-			Interceptor()
-		// }
-		// ##endif
-
+		// 初始化 sqlite
+		let sqlite = new Sqlite
 		
+		if (netWork == 'none') {
+			Interceptor()
+		}else{
+			
+		}
 	}
 })
 let result = null;
+
 function Interceptor() {
 	uni.addInterceptor('request', {
 		invoke(args) {
-			result = new Result(args,'部门管理sql');
+			result = new Result(args, '部门管理sql');
 		},
 		success(args) {
-			result.success();
+			if(result){
+				result.success();
+			}
 		},
 		fail(err) {
 			console.log('interceptor-fail', err)
 		},
 		complete(res) {
-			
+
 		}
 	})
 }
-class Result{
-	constructor(arg,T) {
+class Result {
+	constructor(arg, T) {
 		this.args = arg
 		this.intercept = false
-	    if (arg.data.T == T) {
-	    	this.init()
-	    }
+		if (arg.data.T == T) {
+			this.init()
+		}
 	}
-	init(){
+	init() {
 		this.invoke();
 	}
-	invoke(){
-		console.log('开始拦截',this.args.data.T)
+	invoke() {
+		console.log('开始拦截', this.args.data.T)
 		this.intercept = true
 	}
-	success(){
-		if(this.intercept){
-			console.log('返回数据',this.args.data.T)
+	success() {
+		if (this.intercept) {
+			console.log('返回数据', this.args.data.T)
 		}
 	}
 }

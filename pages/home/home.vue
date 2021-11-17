@@ -3,7 +3,7 @@
 		<view class="u-wrap">
 			<view class="home-top-bg">
 				<view class="title">安全数据概况</view>
-				<view class="top-card-box">
+				<view class="top-card-box" @click="yhglan()">
 					<view class="numbox">
 						<u-count-to class="uicon-bag" color="#fff" :start-val="0" separator="," :end-val="yhall">
 						</u-count-to>
@@ -21,9 +21,9 @@
 					</view>
 				</view>
 			</view>
-			<u-card margin="20rpx" title="隐患概览">
+			<u-card margin="20rpx" title="隐患概览" @click="yhglan()">
 				<view class="u-flex" slot="body">
-					<view v-for="x,y in yh_glist" :key="y" class="itembox" @click="routes(x.event)">
+					<view v-for="x,y in yh_glist" :key="y" class="itembox" @click.stop="routes(x.event)">
 						<u-image width="100%" height="100%" :src="x.url" mode=""></u-image>
 						<view class="textn">
 							<view>{{x.text}}</view>
@@ -35,23 +35,33 @@
 					</view>
 				</view>
 			</u-card>
-			<u-card margin="20rpx" title="风险分析">
+			<u-card margin="20rpx" title="隐患分析">
+				<view class="charts-box" slot="body">
+					<qiun-data-charts :errorShow="true" :errorReload="false" :opts="yh_ring" :loadingType="2"
+						type="ring" :chartData="yhLevel" />
+				</view>
+				<!--  -->
 				<view class="charts-box" slot="body">
 					<qiun-data-charts :errorShow="true" :echartsH5="true" :echartsApp="true" :errorReload="false"
-						:eopts="opts" :loadingType="2" type="column" :chartData="chartData" />
+						:eopts="yh_qushi" :loadingType="1" type="line" :chartData="yhQushi" />
 				</view>
-				<view class="charts-box" slot="body">
-					<qiun-data-charts :errorShow="true" :errorReload="false" :opts="opts2" :loadingType="1" type="ring"
-						:chartData="perdata" />
+				<view class='qi_title' slot="body">隐患类型分布分析</view>
+				<!-- 气泡图 -->
+				<!-- <view class="charts-box" slot="body">
+					<qiun-data-charts :errorShow="true" :errorReload="false" :opts="yh_qipao" :loadingType="1"
+						type="bubble" :chartData="yhQiPao" />
+				</view> -->
+				<!-- 各矿隐患 -->
+				<view class="charts-box" slot="body" v-if="permise">
+					<qiun-data-charts :errorShow="true" :echartsH5="true" :echartsApp="true" :errorReload="false"
+						:eopts="yh_allktypes" :loadingType="2" type="column" :chartData="allkType" />
 				</view>
 			</u-card>
-			<u-card margin="20rpx" title="考核分析" @click="navto">
-				<view class="charts-box" slot="body">
-					<qiun-data-charts :errorShow="true" :echartsH5="true" :echartsApp="true" :errorReload="false" :eopts="opts3" :loadingType="1"
-						type="column" :localdata="khDataBase" />
-				</view>
+			<!--  -->
+			<fx></fx>
+			<!--  -->
+			<kh v-if="permise"></kh>
 
-			</u-card>
 			<u-card margin="20rpx">
 				<view class="u-flex header" slot="head">
 					<view>消息通知</view>
@@ -79,7 +89,13 @@
 		mapState,
 		mapMutations
 	} from 'vuex';
+	import fx from './fx_fx/fx_fx.vue';
+	import kh from './kh_fx/kh_fx.vue';
 	export default {
+		components: {
+			fx,
+			kh
+		},
 		data() {
 			return {
 				scrollTop: 0,
@@ -93,88 +109,108 @@
 				lineDataBase: [],
 				perDataBase: [],
 				khDataBase: [],
-				opts: {
-					"padding": [
-						0,
-						0,
-						0,
-						0
-					],
-					"grid":{
-						"right":'30px'
+				yhRingData: [],
+				yhQushiData: [],
+				allkTypeData: [],
+				yhq: [],
+				yh_allktypes: { // h5
+					"title": {
+						"text": '年度各矿隐患分布对比',
+						"fontSize": 12,
+						"color": "#000",
+						"textStyle": {
+							"fontWeight": 500,
+							"fontSize": 16,
+						}
 					},
+				},
+				yh_qipao: { // uch
 					"xAxis": {
-						"name": "月",
-						"disabled": false,
+						"disabled": true,
 						"disableGrid": true,
+						"axisLine": false,
+						// "max":100
 					},
 					"yAxis": {
-						"name": "条",
-						"gridType": "dash",
-						"splitNumber": 4
-					},
-					"subtitle": {
-						"name": "11",
+						"disabled": true,
+						"disableGrid": true,
+						"axisLine": false,
+						"data": [{
+							"min": 0,
+							"max": 1000
+						}]
 					},
 					"legend": {
-						"show": true,
-						"position": "bottom",
-						"lineHeight": 20,
+						"position": 'bottom',
+						"float": 'center',
 					},
-					
-				},
-				opts2: {
-					"padding": [
-						20,
-						0,
-						0,
-						20,
-					],
 					"title": {
-						"name": "",
-						"fontSize": 15,
-						"color": "#666666"
+						"name": '隐患类型分布分析',
+						"color": "#000000",
+						"fontWeight": 600,
+						"fontSize": 16,
+					},
+				},
+				yh_qushi: { // h5
+					"grid": {
+						"show": false
+					},
+					"title": {
+						"text": '隐患趋势分析',
+						"color": "#000",
+						"textStyle": {
+							"fontWeight": 500,
+							"fontSize": 16,
+						}
+					},
+					"xAxis": {
+						"show": false,
+						"splitLine": {
+							"show": false
+						},
+						"axisTick": {
+							"show": false,
+						},
+						"axisLabel": {
+							"show": false,
+						},
+					},
+					"yAxis": {
+						"show": false,
+					},
+				},
+				yh_ring: { // uch
+					"padding": [
+						50,
+						0,
+						0,
+						0,
+					],
+					"legend": {
+						"position": 'top',
+						"float": 'right',
+					},
+					"title": {
+						"name": '隐患等级占比分析图',
+						"color": "#000000",
+						"fontWeight": 600,
+						"fontSize": 16,
+						"offsetX": -80,
+						"offsetY": -150
 					},
 					"subtitle": {
-						"name": "",
-						"fontSize": 25,
-						"color": "#7cb5ec"
-					},
-					"legend": {
-						"show": true,
-						"position": "bottom",
-						"lineHeight": 20,
+						"name": '隐患等级',
+						"fontSize": 12,
+						"offsetX": -125,
+						"offsetY": -150,
+						"color": "#949494",
 					},
 					"extra": {
 						"ring": {
+							"ringWidth": 10,
 							"border": false,
-
 						},
 					},
-				},
-				opts3: {
-					"padding": [
-						20,
-						0,
-						0,
-						20,
-					],
-					"xAxis": {
-						"disableGrid": true
-					},
-					"yAxis": {
-						"name": "扣分",
-						"gridType": "dash",
-						"splitNumber": 3
-					},
-					"legend": {
-						"show": false,
-						"position": "bottom",
-						"lineHeight": 20,
-					},
-					"tooltip": {
-
-					}
 				},
 				message: [],
 				yh_glist: [{
@@ -201,7 +237,119 @@
 		},
 		computed: {
 			...mapState(['user', 'mesNum', 'userid']),
-			chartData() {
+			permise() {
+				if (this.user.level == 'A') {
+					return true
+				} else {
+					return false
+				}
+			},
+			// 各矿隐患分类对比
+			allkType() {
+				let arr = this.allkTypeData
+				let cateObject = {};
+
+				for (var i = 0; i < arr.length; i++) {
+					const obj = arr[i]
+					cateObject[obj.deptName] = obj
+				}
+				let cate = [];
+				let a = []
+				let c = []
+				let b = []
+				for (let key in cateObject) {
+					cate.push(key)
+				}
+				for (var i = 0; i < cate.length; i++) {
+					a.push(0)
+					b.push(0)
+					c.push(0)
+				}
+				for (var x = 0; x < cate.length; x++) {
+					const obj = cate[x]
+					for (var i = 0; i < arr.length; i++) {
+						const ele = arr[i]
+						if (obj == ele.deptName) {
+							switch (ele.levelId) {
+								case 'a':
+									a.splice(x,1,ele.quantity)
+									break;
+								case 'b':
+									b.splice(x,1,ele.quantity)
+									break;
+								case 'c':
+									c.splice(x,1,ele.quantity)
+									break;
+							}
+						}
+					}
+				}
+				return {
+					"categories": cate,
+					"series": [{
+						"name": "一般隐患",
+						"data": c
+					}, {
+						"name": "重大隐患",
+						"data": a
+					}, {
+						"name": "较大隐患",
+						"data": b
+					}]
+				}
+			},
+			// 隐患类型分布分析
+			yhQiPao() {
+				let array = [];
+				let arr = this.yhq;
+				let object = {};
+				for (var i = 0; i < arr.length; i++) {
+					const obj = arr[i];
+					if (obj.oldofclass) {
+						let key = String(obj.oldofclass).trim()
+						obj.name = obj.oldofclass;
+						obj.data = [];
+						object[key] = obj
+					}
+				}
+				for (var i = 0; i < arr.length; i++) {
+					const obj = arr[i]
+					let key = [obj.oldofclass];
+					let num = obj.quantity
+					if (object[key]) {
+						object[key].data.push([num, num, Math.round(Math.random()) * 10, obj.kind])
+					}
+				}
+				for (let key in object) {
+					array.push(object[key]);
+				}
+				return {
+					"series": array
+				}
+			},
+			// 隐患趋势
+			yhQushi() {
+				let arr = this.yhQushiData;
+				let array = [];
+				let res = {};
+				for (var i = 0; i < arr.length; i++) {
+					const obj = arr[i]
+					if (obj.levelId != 'f' && obj.levelId != 'd') {
+						obj.data = [];
+						obj.name = obj.levelName;
+						res[obj.levelId] = obj
+					}
+				}
+				for (var i = 0; i < arr.length; i++) {
+					const obj = arr[i];
+					if (res[obj.levelId]) {
+						// res[obj.levelId].data.push({v:obj.quantity,m:obj.month})
+						res[obj.levelId].data.push(obj.quantity)
+					}
+				}
+				for (let key in res) {
+					array.push(res[key]);
+				}
 				return {
 					"categories": [
 						"1",
@@ -217,19 +365,18 @@
 						"11",
 						"12",
 					],
-					"series": [{
-						"name": "风险",
-						"data": this.lineDataBase
-					}]
+					"series": array
 				}
 			},
-			perdata() {
+			// 隐患等级
+			yhLevel() {
 				return {
 					"series": [{
-						"data": this.perDataBase
+						"data": this.yhRingData,
 					}]
 				}
 			},
+
 
 		},
 		onLoad() {
@@ -261,33 +408,76 @@
 		},
 		methods: {
 			...mapMutations(['setMessageNum']),
+
 			async index() {
-				this.$http.get('/index/Hjob.ashx?type=sel', {
-					T: '专项风险类型sql',
-					function_perms: this.user.function_perms
-				}).then(res => {
-					if (res.data.data) {
-						this.perDataBase = res.data.data
+				// 时间参数
+				let lastYear = new Date().getFullYear() - 1;
+				let lastMonth = new Date().getMonth();
+				let lastDate = new Date().getDate();
+				let t1 = lastYear + '-' + lastMonth + '-' + lastDate
+
+				// 隐患趋势分析
+				const yhqushi = await this.$http.get('/Query/StatisticsA', {
+					userId: this.userid
+				})
+				if (yhqushi.data.data) {
+					this.yhQushiData = yhqushi.data.data
+				}
+				// 隐患类型分布
+				this.$http.get('/Query/StatisticsB', {
+					userId: this.userid,
+					t1: t1,
+					t2: this.$u.timeFormat(new Date(), 'yyyy-mm-dd'),
+				}).then(yhqushiB=>{
+					if (yhqushiB.data.data) {
+						this.yhq = yhqushiB.data.data
 					}
 				})
 
-				const index = await this.$http.get('/index/Hjob.ashx?type=sel', {
-					T: '每月数据',
+				// this.$http.get('/index/Hjob.ashx?type=sel', {
+				// 	T: '专项风险类型sql',
+				// 	function_perms: this.user.function_perms
+				// }).then(res => {
+				// 	if (res.data.data) {
+				// 		this.perDataBase = res.data.data
+				// 	}
+				// })
+				 this.$http.get('/index/Hjob.ashx?type=sel', {
+					T: '隐患等级占比分析sql',
+					department_id: this.user.department_id,
 					function_perms: this.user.function_perms
+				}).then(yhres=>{
+					if (yhres.data.data) {
+						this.yhRingData = yhres.data.data
+						// this.yhQushiData = yhres.data.data
+					}
 				})
-				if (index.data.data) {
-					this.lineDataBase = index.data.data[0].replace.split(',')
-
-				}
-
-				const kh_statistics = await this.$http.get('/index/Hjob.ashx?type=sel', {
-					T: 'app_kh_statistics',
-					function_perms: this.user.function_perms
+				
+				// const index = await this.$http.get('/index/Hjob.ashx?type=sel', {
+				// 	T: '每月数据',
+				// 	function_perms: this.user.function_perms
+				// })
+				// if (index.data.data) {
+				// 	this.lineDataBase = index.data.data[0].replace.split(',')
+				// }
+				// 隐患各矿分类对比
+				this.$http.get('/Query/StatisticsC', {
+					userId: this.userid,
+					t1: t1,
+					t2: this.$u.timeFormat(new Date(), 'yyyy-mm-dd'),
+				}).then(all =>{
+					if (all.data.data) {
+						this.allkTypeData = all.data.data;
+					}
 				})
-				if (kh_statistics.data.data) {
-					this.khDataBase = kh_statistics.data.data
-					// console.log(kh_statistics.data.data)
-				}
+				
+				// const kh_statistics = await this.$http.get('/index/Hjob.ashx?type=sel', {
+				// 	T: 'app_kh_statistics',
+				// 	function_perms: this.user.function_perms
+				// })
+				// if (kh_statistics.data.data) {
+				// 	this.khDataBase = kh_statistics.data.data
+				// }
 			},
 			async getYhCount() {
 				// 数量
@@ -344,6 +534,12 @@
 					url: event
 				})
 			},
+			yhglan() {
+				this.$u.route({
+					type: "to",
+					url: '../danger/dangerList'
+				})
+			},
 			meslist() {
 				this.$u.route({
 					type: "to",
@@ -359,7 +555,15 @@
 	/* 请根据需求修改图表容器尺寸，如果父容器没有高度图表则会显示异常 */
 	.charts-box {
 		width: 100%;
-		height: 400rpx;
+		height: 500rpx;
+		margin: 10px 0;
+	}
+
+	.qi_title {
+		font-size: 32rpx;
+		font-weight: 500;
+		margin: 10rpx 0;
+		padding-left: 10rpx;
 	}
 
 	page {

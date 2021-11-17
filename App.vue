@@ -131,7 +131,6 @@
 			});
 			// 离线缓存数据
 			this.indexAddCatch()
-
 		},
 		onShow: function() {
 			// console.log('App Show')
