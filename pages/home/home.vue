@@ -3,18 +3,19 @@
 		<view class="u-wrap">
 			<view class="home-top-bg">
 				<view class="title">安全数据概况</view>
-				<view class="top-card-box" @click="yhglan()">
-					<view class="numbox">
+				<view class="top-card-box">
+					<view class="numbox" @click="yhglan()">
 						<u-count-to class="uicon-bag" color="#fff" :start-val="0" separator="," :end-val="yhall">
 						</u-count-to>
 						<view class="gray">隐患数量</view>
 					</view>
-					<view class="numbox">
+					<!-- @click="fxslan()" -->
+					<view class="numbox" @click="fxslan()">
 						<u-count-to class="uicon-bag" color="#fff" :start-val="0" separator="," :end-val="fxall">
 						</u-count-to>
 						<view class="gray">风险数量</view>
 					</view>
-					<view class="numbox">
+					<view class="numbox" @click="finego()">
 						<u-count-to class="uicon-bag" color="#fff" :start-val="0" separator="," :end-val="fkall">
 						</u-count-to>
 						<view class="gray">罚款数量</view>
@@ -55,8 +56,8 @@
 				</view> -->
 				<!-- 各矿隐患 -->
 				<view class="charts-box" style="height:700rpx" slot="body" v-if="permise">
-					<qiun-data-charts :errorShow="true" :echartsH5="true" :echartsApp="true" :errorReload="false"
-						:eopts="yh_allktypes" :loadingType="2" type="column" :chartData="allkType" />
+					<qiun-data-charts :errorShow="true" :echartsH5="true" :echartsApp="true" :errorReload="true"
+						:eopts="yh_allktypes" :loadingType="1" type="column" :chartData="allkType" />
 				</view>
 			</u-card>
 			<!--  -->
@@ -113,16 +114,16 @@
 				khDataBase: [],
 				yhRingData: [],
 				yhQushiData: [],
-				allkTypeData: [],
-				yhq: [],
+				allkTypeData: null,
+				yhq: [], 
 				yh_allktypes: { // h5
 					"color": [
-						"#EE6666",
+						"#f4050d",
+						"#f79533",
+						"#FEE147",
 						"#FC8452",
 						"#FAC858",
-						"#1890FF",
-						"#91CB74",
-						"#73C0DE",
+						"#EE6666",
 						"#3CA272",
 						"#9A60B4",
 						"#ea7ccc"
@@ -195,15 +196,15 @@
 				},
 				yh_qushi: { // h5
 					"color": [
+						"#f4050d",
+						"#f79533",
+						"#FEE147",
+						"#3CA272",
+						"#9A60B4",
+						"#ea7ccc",
 						"#EE6666",
 						"#FC8452",
 						"#FAC858",
-						"#1890FF",
-						"#91CB74",
-						"#73C0DE",
-						"#3CA272",
-						"#9A60B4",
-						"#ea7ccc"
 					],
 					"grid": {
 						"show": false
@@ -256,16 +257,15 @@
 				},
 				yh_ring: { // uch
 					"color": [
+						"#FEE147",
+						"#f79533",
+						"#f4050d",
 						"#FAC858",
-						"#FC8452",
-						"#EE6666",
-						"#1890FF",
-						"#91CB74",
-						"#73C0DE",
-						"#3CA272",
-
+						"#ea7ccc",
+						"#0B69FF",
+						"#063fde",
+						"#091faf",
 						"#9A60B4",
-						"#ea7ccc"
 					],
 					"padding": [
 						50,
@@ -333,6 +333,9 @@
 			},
 			// 各矿隐患分类对比
 			allkType() {
+				if (!this.allkTypeData ) {
+					return
+				}
 				let arr = this.allkTypeData
 				let cateObject = {};
 
@@ -421,7 +424,7 @@
 				let res = {};
 				for (var i = 0; i < arr.length; i++) {
 					const obj = arr[i]
-					if (obj.levelId != 'f' && obj.levelId != 'd') {
+					if (obj.levelId != 'f' && obj.levelId != 'd' && obj.levelId != 'e') {
 						obj.data = [];
 						obj.name = obj.levelName;
 						res[obj.levelId] = obj
@@ -430,10 +433,11 @@
 				for (var i = 0; i < arr.length; i++) {
 					const obj = arr[i];
 					if (res[obj.levelId]) {
-						// res[obj.levelId].data.push({v:obj.quantity,m:obj.month})
 						res[obj.levelId].data.push(obj.quantity)
+						// res[obj.levelId].data.push({v:obj.quantity,m:obj.month})
 					}
 				}
+				// console.log(res)
 				for (let key in res) {
 					array.push(res[key]);
 				}
@@ -461,8 +465,8 @@
 				let array = []
 				for (var i = 0; i < arr.length; i++) {
 					const obj = arr[i]
-					console.log(obj)
-					if (obj.name != "一般不安全行为" && obj.name != "严重不安全行为") {
+					// console.log(obj)
+					if (obj.name != "一般不安全行为" && obj.name != "严重不安全行为" && obj.name != "不规范行为") {
 						array.push(obj)
 					}
 				}
@@ -480,7 +484,12 @@
 			this.getYhCount();
 			// 消息
 			this.getMessage()
-			console.log('load')
+			// this.$http.get("/index/Hjob.ashx?type=sel&t=app_update",{
+			// 	isPrompt: ''
+			// }).then(res=>{
+			// 	console.log(res)
+			// })
+			// console.log('load')
 		},
 		onPullDownRefresh() {
 			this.index();
@@ -513,17 +522,25 @@
 				let t1 = lastYear + '-' + lastMonth + '-' + lastDate
 
 				// 隐患趋势分析
-				const yhqushi = await this.$http.get('/Query/StatisticsA', {
+				this.$http.get('/Query/StatisticsA', {
 					userId: this.userid
+				}, {
+					load: false,
+					timeout: 60000
+				}).then((yhqushi) => {
+					if (yhqushi.data.data) {
+						this.yhQushiData = yhqushi.data.data
+					}
 				})
-				if (yhqushi.data.data) {
-					this.yhQushiData = yhqushi.data.data
-				}
+
 				// 隐患类型分布
 				this.$http.get('/Query/StatisticsB', {
 					userId: this.userid,
 					t1: t1,
 					t2: this.$u.timeFormat(new Date(), 'yyyy-mm-dd'),
+				}, {
+					load: false,
+					timeout: 60000
 				}).then(yhqushiB => {
 					if (yhqushiB.data.data) {
 						this.yhq = yhqushiB.data.data
@@ -542,6 +559,8 @@
 					T: '隐患等级占比分析sql',
 					department_id: this.user.department_id,
 					function_perms: this.user.function_perms
+				}, {
+					load: false
 				}).then(yhres => {
 					if (yhres.data.data) {
 						this.yhRingData = yhres.data.data
@@ -562,10 +581,15 @@
 					userId: this.userid,
 					t1: t1,
 					t2: this.$u.timeFormat(new Date(), 'yyyy-mm-dd'),
+				}, {
+					load: false,
+					timeout: 60000
 				}).then(all => {
 					if (all.data.data) {
 						this.allkTypeData = all.data.data;
 					}
+				}).catch(e => {
+					this.allkTypeData = []
 				})
 
 				// const kh_statistics = await this.$http.get('/index/Hjob.ashx?type=sel', {
@@ -588,6 +612,8 @@
 					department_id: this.user.department_id,
 					function_perms: this.user.function_perms,
 					T: 'app_danger_list_num',
+				}, {
+					load: false
 				})
 				let alldata = result.data.data
 				this.yhall = result.data.count
@@ -610,6 +636,8 @@
 					T: '新消息sql',
 					page: 1,
 					limit: 3
+				}, {
+					load: false
 				})
 				this.message = mes.data.data
 				this.setMessageNum(mes.data.count);
@@ -635,6 +663,22 @@
 				this.$u.route({
 					type: "to",
 					url: '../danger/dangerList'
+				})
+			},
+			finego() {
+				this.$u.route({
+					type: "to",
+					url: '../fine_search/fine_search'
+				})
+			},
+			fxslan() {
+				this.$u.route({
+					type: "to",
+					animationType: 'pop-in',
+					url: '../risk/risk',
+					params: {
+						current: 1
+					}
 				})
 			},
 			meslist() {

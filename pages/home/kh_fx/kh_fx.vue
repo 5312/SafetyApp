@@ -21,6 +21,17 @@
 			return {
 				khDataBase: [],
 				opts3: {
+					"color": [
+						"#fff14e",
+						"#FEE147",
+						"#f4050d",
+						"#1890FF",
+						"#91CB74",
+						"#73C0DE",
+						"#3CA272",
+						"#9A60B4",
+						"#ea7ccc"
+					],
 					"title": {
 						"text": '各单位考核扣分情况',
 						"color": "#000",

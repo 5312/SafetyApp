@@ -22,16 +22,16 @@
 		name: 'fx',
 		data() {
 			return {
-				perDataBase: [],
+				perDataBase: null,
 				lineDataBase: [],
 				radarData: [],
-				fx_typeData:[],
-				err:false,
+				fx_typeData: null,
+				err: false,
 				radar: {
 					"color": [
-						"#FC8452",
-						"#EE6666",
-						"#FAC858",
+						"#fff14e",
+						"#ff963a",
+						"#ff5d60",
 						"#1890FF",
 						"#91CB74",
 						"#73C0DE",
@@ -56,10 +56,10 @@
 				},
 				opts2: {
 					"color": [
-						"#FC8452",
-						"#FAC858",
-						"#EE6666",
 						"#1890FF",
+						"#fff14e",
+						"#ff963a",
+						"#ff5d60",
 						"#91CB74",
 						"#73C0DE",
 						"#3CA272",
@@ -73,7 +73,7 @@
 						0,
 					],
 					"legend": {
-						"show":false,
+						// "show":false,
 						"position": 'top',
 						"float": 'right',
 					},
@@ -102,12 +102,14 @@
 			...mapState(['user', 'userid']),
 			radarOption() {
 				let arr = this.fx_typeData;
-				console.log(arr)
+				if (!arr) {
+					return
+				}
 				let object = {
-					'人':0,
-					'机':0,
-					'管':0,
-					'环':0
+					'人': 0,
+					'机': 0,
+					'管': 0,
+					'环': 0
 				};
 				for (var i = 0; i < arr.length; i++) {
 					const obj = arr[i]
@@ -126,23 +128,56 @@
 					],
 					"series": [{
 							"name": "",
-							"data":data
+							"data": data
 						}
 
 					]
 				}
 			},
- 
+
 			perdata() {
 				let arr = this.perDataBase;
+				if (!arr) {
+					return
+				}
 				let d = []
+				console.log(arr)
+				let di = {};
+				let yb = {};
+				let jd = {};
+				let zd = {};
+
 				for (let i = 0; i < arr.length; i++) {
 					const obj = arr[i]
-					d.push({
-						name:obj.level,
-						value:obj.quantity
-					})
+					if (obj.level == '低风险') {
+						di = {
+							name: obj.level,
+							value: obj.quantity
+						}
+					}
+					if (obj.level == '一般风险') {
+						yb = {
+							name: obj.level,
+							value: obj.quantity
+						}
+					}
+					if (obj.level == '较大风险') {
+						jd = {
+							name: obj.level,
+							value: obj.quantity
+						}
+					}
+					if (obj.level == '重大风险') {
+						zd = {
+							name: obj.level,
+							value: obj.quantity
+						}
+					}
 				}
+				d.push(di)
+				d.push(yb)
+				d.push(jd)
+				d.push(zd)
 				return {
 					"series": [{
 						"data": d
@@ -156,28 +191,37 @@
 		methods: {
 			async index() {
 				let lastYear = new Date().getFullYear() - 1;
-				let lastMonth = new Date().getMonth();
+				let lastMonth = new Date().getMonth() + 1;
 				let lastDate = new Date().getDate();
 				let t1 = lastYear + '-' + lastMonth + '-' + lastDate
+				let t2 = new Date().getFullYear() + '-' + lastMonth + '-' + (new Date().getDate() + 1)
 				// 风险等级分析
 				this.$http.get('/Query/StatisticsD', {
-					t1:t1,
-					t2:this.$u.timeFormat(new Date(), 'yyyy-mm-dd')
+					t1: t1,
+					t2: t2 //this.$u.timeFormat(new Date(), 'yyyy-mm-dd')
+				}, {
+					load: false,
+					timeout: 60000
 				}).then(res => {
 					if (res.data.data) {
 						this.perDataBase = res.data.data
 					}
-				}).catch(e=>{this.perDataBase = []})
+				}).catch(e => {
+					this.perDataBase = []
+				})
 				this.$http.get('/Query/StatisticsE', {
-					t1:t1,
-					t2:this.$u.timeFormat(new Date(), 'yyyy-mm-dd')
+					t1: t1,
+					t2: t2 //this.$u.timeFormat(new Date(), 'yyyy-mm-dd')
+				}, {
+					load: false,
+					timeout: 60000
 				}).then(res => {
 					if (res.data.data) {
 						let data = res.data.data;
 						this.fx_typeData = data
 					}
 				})
-				 
+
 
 			},
 		}

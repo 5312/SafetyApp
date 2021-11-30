@@ -8,56 +8,55 @@
 		</u-navbar>
 		<view class="wrap">
 			<view class="u-tabs-box">
-				<u-tabs-swiper activeColor="#1e76ef" inactive-color="#1e76ef" ref="tabs" :list="list" :current="current"
-					@change="change" :is-scroll="false" swiperWidth="750"></u-tabs-swiper>
+				<!-- <u-tabs-swiper activeColor="#1e76ef" inactive-color="#1e76ef" ref="tabs" :list="list" :current="current"
+					@change="change" :is-scroll="false" swiperWidth="750"></u-tabs-swiper> -->
 			</view>
-			<view class="u-tabs-box-shadow"></view>	
-			<swiper class="swiper-box" :current="swiperCurrent" @transition="transition"
-				@animationfinish="animationfinish">
-				<swiper-item class="swiper-item" v-for="(x,y) in tabar" :key='y'>
+			<!-- <view class="u-tabs-box-shadow"></view>	 -->
+			<swiper class="swiper-box">
+				<swiper-item class="swiper-item" catchtouchmove="stopTouthMove" v-for="(x,y) in tabar" :key='y'>
 					<scroll-view v-if="orderList[x].length!= 0" scroll-y style="height: 100%;width: 100%;"
 						@scrolltolower="reachBottom">
 						<!-- <view class="page-box"> -->
-							<view class="order" v-for="(res, index) in orderList[x]" :key="res.id">
-								<view class="top">
-									<view class="left">
-										<u-icon name="home" :size="30" color="rgb(94,94,94)"></u-icon>
-										<view class="store">{{ res.responsibledepartme }}</view>
-									</view>
-									<view class="right" :style="{color:stateColor(res.yh_state)}">
-										{{ state(res.yh_state) }}
-									</view>
+						<view class="order" v-for="(res, index) in orderList[x]" :key="res.id">
+							<view class="top">
+								<view class="left">
+									<u-icon name="home" :size="30" color="rgb(94,94,94)"></u-icon>
+									<view class="store">{{ res.responsibledepartme }}</view>
 								</view>
-								<view class="item">
-									<view class="content">
-										<view class="title u-line-2">{{ res.yh_content }}</view>
-										<view class="type">{{ res.oldofclass }}</view>
-										<view class="type" :style="{color:res.yh_level.split('~')[2]}">
-											{{ res.yh_level.split('~')[0] }}
-										</view>
-										<view class="delivery-time">检查时间： {{ res.inspectiondate }}</view>
-									</view>
-									<view class="right">
-										<view class="price" style="white-space: nowrap;">
-											<u-icon name="account-fill"></u-icon>{{ res.inspeople.split('~')[0] }}
-											<text class="decimal">{{ }}</text>
-										</view>
-									</view>
-								</view>
-								<view class="total">
-									资金:
-									<text class="total-price">
-										￥{{ res.yh_fine==''?0:res.yh_fine }}
-									</text>
-								</view>
-								<view class="bottom">
-									<view class="more">
-										<u-icon name="more-dot-fill" color="rgb(203,203,203)"></u-icon>
-									</view>
-									<view class="logistics btn" @click="showDetail">查看详情</view>
+								<view class="right" :style="{color:stateColor(res.yh_state)}">
+									{{ state(res.yh_state) }}
 								</view>
 							</view>
-							<u-loadmore :status="loadStatus[x]" :load-text="loadText" bgColor="#f2f2f2"></u-loadmore>
+							<view class="item">
+								<view class="content">
+									<view class="title u-line-2">{{ res.yh_content }}</view>
+									<view class="type">{{ res.oldofclass }}</view>
+									<view class="type" :style="{color:res.yh_level.split('~')[2]}">
+										{{ res.yh_level.split('~')[0] }}
+									</view>
+									<view class="delivery-time">检查时间： {{ res.inspectiondate }}</view>
+								</view>
+								<view class="right">
+									<view class="price" style="white-space: nowrap;">
+										<u-icon name="account-fill"></u-icon>{{ res.inspeople.split('~')[0] }}
+										<text class="decimal">{{ }}</text>
+									</view>
+								</view>
+							</view>
+							<view class="total">
+								资金:
+								<text class="total-price">
+									￥{{ res.yh_fine==''?0:res.yh_fine }}
+								</text>
+							</view>
+							<view class="bottom">
+								<view class="more">
+									<u-icon name="more-dot-fill" color="rgb(203,203,203)"></u-icon>
+								</view>
+								<view class="logistics btn" @click="showDetail(res.ids)">查看详情</view>
+							</view>
+						</view>
+						<u-loadmore :status="loadStatus[x]" :load-text="loadText" bgColor="#f2f2f2"></u-loadmore>
 						<!-- </view> -->
 					</scroll-view>
 					<scroll-view v-else scroll-y style="height: 100%;width: 100%;">
@@ -77,9 +76,42 @@
 						</view>
 					</scroll-view>
 				</swiper-item>
-
-
 			</swiper>
+			<u-popup v-model="detail" mode="center" width="80%"  border-radius="14" :closeable="true">
+				<view class="detail">
+					<span class="yh">隐患详情</span>
+					<view class="dept" v-if="detailData">
+						<view>
+							<view>
+								检查部门：<text>{{detailData.yh_origin}}</text>
+							</view>
+							<view>
+								责任部门：<text>{{detailData.responsibledepartme}}</text>
+							</view>
+							<view>
+								检查班次：<text>{{detailData.oldofclass}}</text>
+							</view>
+							<view>
+								检查人：<text>{{detailData?detailData.inspeople.split('~')[0] :''}}</text>
+							</view>
+							<view>
+								检查地点：<text>{{detailData.address}}</text>
+							</view>
+							<view>
+								详细隐患：<text>{{detailData.yh_content}}</text>
+							</view>
+							<view>
+								隐患类型：<text
+									:style="{color:detailData?detailData.yh_level.split('~')[2]:''}">{{detailData?detailData.yh_level.split('~')[0]:''}}</text>
+							</view>
+							<view>
+								检查时间：<text>{{detailData.yh_requesttime}}</text>
+							</view>
+						</view>
+					</view>
+				</view>
+			</u-popup>
+
 		</view>
 	</view>
 </template>
@@ -88,10 +120,12 @@
 	export default {
 		data() {
 			return {
-				tabar: [0, 1, 2],
+				tabar: [0],
 				reqData: [], // 每次请求后的数据
 				dataList: [],
 				keyword: '', // 搜索
+				detail: false, //详情弹框
+				detailData: null,
 				list: [
 
 					{
@@ -165,21 +199,36 @@
 			}
 		},
 		methods: {
+			stopTouthMove() {
+				return false;
+			},
 			reachBottom() { // 下拉懒加载
 				this.loadStatus.splice(this.current, 1, "loading")
 				this.page += 1;
 				this.getOrderList(this.current, true);
 			},
 			// 查看详情
-			showDetail() {},
+			showDetail(ids) {
+				const users = this.$store.state.user
+				this.detail = true
+				let deta = this.orderList[0]
+				deta.forEach(item => {
+					if (ids == item.ids) {
+						this.detailData = item
+					}
+				})
+			},
+			close() {
+				this.detail = false
+			},
 			search() {
 				this.nomore = false;
-				this.getOrderList(this.current, false,true)
+				this.getOrderList(this.current, false, true)
 			},
 			// 页面数据
-			async getOrderList(idx, ispush = true,ser=false) {
+			async getOrderList(idx, ispush = true, ser = false) {
 				const users = this.$store.state.user
-				let level = 'A';
+				let level = 'A'
 				let bind = '';
 				if (users) {
 					level = users.level
@@ -199,20 +248,25 @@
 					mid: '9c6a100d-8543-438e-9311-ce6a38e75cae',
 					job: 'demo_node_1',
 					tbname: 'YH',
-					bind: bind, // 本部门 查看条件
+					// bind: bind, // 本部门 查看条件
 					level: level,
-					T: "隐患列表_无cookie_sql",
+					// T: "隐患列表_无cookie_sql",
+					T: "app_yh_search_sql",
 					department_id: users.department_id,
-					state: state[idx], // 条件
+					function_perms: users.function_perms,
+					job: users.jobnumber,
+					// state: state[idx], // 条件
+					// state: "", // 条件
 					page: this.page,
 					limit: 10,
 					keyword: this.keyword,
 				})
-				if(ser){
-					if(result_yh.data.data){
-						this.reqData =result_yh.data.data
-					}else{
-						this.reqData =[]
+				if (ser) {
+					if (result_yh.data.data) {
+						this.reqData = result_yh.data.data
+						console.log(this.reqData)
+					} else {
+						this.reqData = []
 					}
 				}
 				// console.log(result_yh.data.data)
@@ -263,16 +317,16 @@
 					dx
 				}
 			}) {
-				this.$refs.tabs.setDx(dx);
+				// this.$refs.tabs.setDx(dx);
 			},
 			animationfinish({
 				detail: {
 					current
 				}
 			}) {
-				this.$refs.tabs.setFinishCurrent(current);
-				this.swiperCurrent = current;
-				this.current = current;
+				// this.$refs.tabs.setFinishCurrent(current);
+				// this.swiperCurrent = current;
+				// this.current = current;
 			}
 		}
 	};
@@ -289,6 +343,10 @@
 </style>
 
 <style lang="scss" scoped>
+	* {
+		list-style: none;
+	}
+
 	.u-tabs-box {
 		position: fixed;
 		width: 100%;
@@ -464,5 +522,31 @@
 
 	.swiper-item {
 		padding-bottom: 20rpx;
+	}
+
+	.detail {
+		width: 70%;
+		margin:auto;
+		border-radius: 20upx;
+		padding:30rpx;
+		view{
+			margin-top: 20rpx;
+			text{
+				color:$uni-text-color-disable;
+			}
+		}
+	}
+
+	.yh {
+		margin-left: 35%;
+		font-weight: bold;
+		font-size: 30upx;
+	}
+
+	.close {
+		float: right;
+		font-size: 4upx;
+		margin-right: 20upx;
+		margin-bottom: 20upx;
 	}
 </style>

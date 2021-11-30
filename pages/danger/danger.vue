@@ -258,7 +258,7 @@
 				}
 			}
 		},
-		onLoad() {
+		onLoad(options) {
 			this.getYhCount();
 			// 消息
 			this.getMessage()
@@ -269,7 +269,7 @@
 				text: String(this.mesNum),
 			})
 			// 罚款数据
-			this.fine_list()
+			this.fine_list();
 		},
 		onPullDownRefresh() {
 			// 罚款数据

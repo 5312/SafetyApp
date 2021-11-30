@@ -38,7 +38,7 @@
 				</u-form-item>
 				<!--  -->
 				<u-form-item label-width='150rpx' prop="accompanyTitle" label="同行人">
-				
+
 					<u-input v-model="form.peerpeopleTitle" @click="listOfPeople('tx')" />
 				</u-form-item>
 				<!--  -->
@@ -91,6 +91,8 @@
 				</u-form-item>
 				<u-form-item v-if="pin_number" prop="del_dept" :required='true' label-width='150rpx' label="销号部门">
 					<u-input v-model="form.del_dept" :select-open='depart' type="select" @click='xiaohao' />
+					<u-button class="sbtn" type="success" :ripple="true" size="mini" @click='my_dept'>本部门</u-button>
+					<u-button class="sbtn" type="success" :ripple="true" size="mini" @click='zr_dept'>责任部门</u-button>
 				</u-form-item>
 				<u-form-item label-width='150rpx' prop="yh_kindt" label="隐患种类">
 					<u-select v-model="dangertypeShow" label-name='dict_name' value-name='ids' :list="dangertypeAllData"
@@ -362,8 +364,8 @@
 			// 监听事件 陪检人
 			uni.$on('pjbackPeople', (resins) => {
 				// this.form.accompany = [];
-				
-				if(!this.form.accompany){
+
+				if (!this.form.accompany) {
 					this.form.accompany = "";
 					this.form.accompanyTitle = "";
 				}
@@ -371,16 +373,16 @@
 				oldval.push(resins.accompany);
 				let oldid = this.form.accompanyTitle.split(',')
 				oldid.push(resins.name)
-				
-				this.form.accompany =oldval.filter(i=>i && i.trim()).join(',')
-				this.form.accompanyTitle =oldid.filter(i=>i && i.trim()).join(',')
-				
+
+				this.form.accompany = oldval.filter(i => i && i.trim()).join(',')
+				this.form.accompanyTitle = oldid.filter(i => i && i.trim()).join(',')
+
 				// 强制更新
 				this.$forceUpdate()
 			})
 			// 监听事件 同行人
 			uni.$on('txbackPeople', (resins) => {
-				if(!this.form.peerpeople){
+				if (!this.form.peerpeople) {
 					this.form.peerpeople = "";
 					this.form.peerpeopleTitle = "";
 				}
@@ -388,9 +390,9 @@
 				oldval.push(resins.peerpeople);
 				let oldid = this.form.peerpeopleTitle.split(',')
 				oldid.push(resins.name)
-				
-				this.form.peerpeople =oldval.filter(i=>i && i.trim()).join(',')
-				this.form.peerpeopleTitle =oldid.filter(i=>i && i.trim()).join(',')
+
+				this.form.peerpeople = oldval.filter(i => i && i.trim()).join(',')
+				this.form.peerpeopleTitle = oldid.filter(i => i && i.trim()).join(',')
 				// 强制更新
 				this.$forceUpdate()
 			})
@@ -538,6 +540,19 @@
 				// 销号部门
 				this.zeren = false;
 				this.depart = true;
+			},
+			my_dept() {
+				this.form.del_dept_id = this.user.department_id
+				// this.form.del_dept = this.user.department_name
+				this.$set(this.form,'del_dept',this.user.department_name)
+				// this.$forceUpdate()
+			},
+			zr_dept() {
+				// console.log(this.form)
+				this.form.del_dept_id = this.form.responsibledepartme
+				// this.form.del_dept = this.form.bumen_name
+				this.$set(this.form,'del_dept',this.form.bumen_name)
+				// this.$forceUpdate()
 			},
 			// 补零函数
 			doHandleZero(zero) {
@@ -810,6 +825,10 @@
 			padding: 20rpx;
 			background-color: #FFF;
 		}
+	}
+
+	.sbtn {
+		margin: 0 10rpx;
 	}
 
 	.upload_info {
