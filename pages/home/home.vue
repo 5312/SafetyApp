@@ -48,14 +48,9 @@
 					<qiun-data-charts :errorShow="true" :echartsH5="true" :echartsApp="true" :errorReload="false"
 						:eopts="yh_qushi" :loadingType="1" type="line" :chartData="yhQushi" />
 				</view>
-				<!-- <view class='qi_title' slot="body">隐患类型分布分析</view> -->
-				<!-- 气泡图 -->
-				<!-- <view class="charts-box" slot="body">
-					<qiun-data-charts :errorShow="true" :errorReload="false" :opts="yh_qipao" :loadingType="1"
-						type="bubble" :chartData="yhQiPao" />
-				</view> -->
+
 				<!-- 各矿隐患 -->
-				<view class="charts-box" style="height:700rpx" slot="body" v-if="permise">
+				<view class="charts-box" style="height:1400rpx" slot="body" v-if="permise">
 					<qiun-data-charts :errorShow="true" :echartsH5="true" :echartsApp="true" :errorReload="true"
 						:eopts="yh_allktypes" :loadingType="1" type="column" :chartData="allkType" />
 				</view>
@@ -115,12 +110,12 @@
 				yhRingData: [],
 				yhQushiData: [],
 				allkTypeData: null,
-				yhq: [], 
+				yhq: [],
 				yh_allktypes: { // h5
 					"color": [
-						"#f4050d",
-						"#f79533",
 						"#FEE147",
+						"#f79533",
+						"#f4050d",
 						"#FC8452",
 						"#FAC858",
 						"#EE6666",
@@ -129,7 +124,7 @@
 						"#ea7ccc"
 					],
 					"legend": {
-						"top": '10%',
+						"top": '5%',
 					},
 					"grid": {
 						"top": 80,
@@ -142,6 +137,7 @@
 					},
 					"yAxis": {
 						"type": 'category',
+						"inverse": true,
 						"axisLabel": {
 							interval: 0,
 							rotate: 45
@@ -196,9 +192,9 @@
 				},
 				yh_qushi: { // h5
 					"color": [
-						"#f4050d",
-						"#f79533",
 						"#FEE147",
+						"#f79533",
+						"#f4050d",
 						"#3CA272",
 						"#9A60B4",
 						"#ea7ccc",
@@ -333,12 +329,24 @@
 			},
 			// 各矿隐患分类对比
 			allkType() {
-				if (!this.allkTypeData ) {
+				if (!this.allkTypeData) {
 					return
 				}
 				let arr = this.allkTypeData
 				let cateObject = {};
-
+				/* null 和 双引号处理 */
+				for (var i = 0; i < arr.length; i++) {
+					const obj = arr[i]
+					let name = obj.deptName
+					if (name) {
+						obj.deptName = name.replace(/\"/g, '')
+					} else {
+						// 为null 时 去掉
+						arr.splice(i, 1)
+						i--
+					}
+				}
+				/*  */
 				for (var i = 0; i < arr.length; i++) {
 					const obj = arr[i]
 					cateObject[obj.deptName] = obj
@@ -350,6 +358,7 @@
 				for (let key in cateObject) {
 					cate.push(key)
 				}
+				// 把 空的设置成 0
 				for (var i = 0; i < cate.length; i++) {
 					a.push(0)
 					b.push(0)
@@ -376,15 +385,18 @@
 				}
 				return {
 					"categories": cate,
-					"series": [{
-						"name": "重大隐患",
-						"data": a
+					"series": [ {
+						"name": "一般隐患",
+						"stack": 'total',
+						"data": c
 					}, {
 						"name": "较大隐患",
+						"stack": 'total',
 						"data": b
-					}, {
-						"name": "一般隐患",
-						"data": c
+					},{
+						"name": "重大隐患",
+						"stack": 'total',
+						"data": a
 					}]
 				}
 			},
@@ -434,12 +446,25 @@
 					const obj = arr[i];
 					if (res[obj.levelId]) {
 						res[obj.levelId].data.push(obj.quantity)
-						// res[obj.levelId].data.push({v:obj.quantity,m:obj.month})
 					}
 				}
-				// console.log(res)
 				for (let key in res) {
 					array.push(res[key]);
+				}
+				// console.log(array);
+				let formatdata = [0,0,0];
+
+				for (var i = 0; i < array.length; i++) {
+					const obj = array[i]
+					if (obj.levelName == '一般隐患') {
+						formatdata.splice(0, 1, obj)
+					}
+					if (obj.levelName == '较大隐患') {
+						formatdata.splice(1, 1, obj)
+					}
+					if (obj.levelName == "重大隐患") {
+						formatdata.splice(2, 1, obj)
+					}
 				}
 				return {
 					"categories": [
@@ -456,19 +481,31 @@
 						"11",
 						"12",
 					],
-					"series": array
+					"series": formatdata
 				}
 			},
 			// 隐患等级
 			yhLevel() {
 				let arr = this.yhRingData;
+				// console.log(arr)
 				let array = []
+				let zdobj = {
+					leve: 0
+				}
 				for (var i = 0; i < arr.length; i++) {
 					const obj = arr[i]
-					// console.log(obj)
 					if (obj.name != "一般不安全行为" && obj.name != "严重不安全行为" && obj.name != "不规范行为") {
 						array.push(obj)
 					}
+					if (obj.name == '重大隐患') {
+						zdobj.leve += 1;
+					}
+				}
+				if (zdobj.leve <= 0) {
+					array.push({
+						name: '重大隐患',
+						value: 0
+					})
 				}
 				return {
 					"series": [{
@@ -534,18 +571,18 @@
 				})
 
 				// 隐患类型分布
-				this.$http.get('/Query/StatisticsB', {
-					userId: this.userid,
-					t1: t1,
-					t2: this.$u.timeFormat(new Date(), 'yyyy-mm-dd'),
-				}, {
-					load: false,
-					timeout: 60000
-				}).then(yhqushiB => {
-					if (yhqushiB.data.data) {
-						this.yhq = yhqushiB.data.data
-					}
-				})
+				// this.$http.get('/Query/StatisticsB', {
+				// 	userId: this.userid,
+				// 	t1: t1,
+				// 	t2: this.$u.timeFormat(new Date(), 'yyyy-mm-dd'),
+				// }, {
+				// 	load: false,
+				// 	timeout: 60000
+				// }).then(yhqushiB => {
+				// 	if (yhqushiB.data.data) {
+				// 		this.yhq = yhqushiB.data.data
+				// 	}
+				// })
 
 				// this.$http.get('/index/Hjob.ashx?type=sel', {
 				// 	T: '专项风险类型sql',
@@ -576,6 +613,7 @@
 				// if (index.data.data) {
 				// 	this.lineDataBase = index.data.data[0].replace.split(',')
 				// }
+
 				// 隐患各矿分类对比
 				this.$http.get('/Query/StatisticsC', {
 					userId: this.userid,

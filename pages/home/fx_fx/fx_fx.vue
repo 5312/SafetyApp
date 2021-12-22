@@ -141,7 +141,6 @@
 					return
 				}
 				let d = []
-				console.log(arr)
 				let di = {};
 				let yb = {};
 				let jd = {};

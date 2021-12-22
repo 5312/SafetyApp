@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<u-card margin="20rpx" title="考核分析" @click="navto">
-			<view class="charts-box" slot="body">
+			<view class="charts-box"  slot="body">
 				<qiun-data-charts :errorShow="true" :echartsH5="true" :echartsApp="true" :errorReload="false"
 					:eopts="opts3" :loadingType="1" type="column" :localdata="khDataBase" />
 			</view>
@@ -107,7 +107,7 @@
 	/* 请根据需求修改图表容器尺寸，如果父容器没有高度图表则会显示异常 */
 	.charts-box {
 		width: 100%;
-		height: 700rpx;
+		height: 1400rpx;
 		margin: 10px 0;
 	}
 </style>
