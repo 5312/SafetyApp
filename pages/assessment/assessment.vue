@@ -5,7 +5,7 @@
 				<u-search v-model="keyword" placeholder="考核查询" @search="search" @custom="search"></u-search>
 			</view>
 		</u-navbar>
-		<view class="main" v-if="acticeList.length <= 0">
+		<view class="main" v-if="skeleton">
 			<u-card class="u-skeleton">
 				<view class="" slot="body">
 					<view class="u-skeleton-fillet u-body-item u-flex u-border-bottom u-col-between u-p-t-0">
@@ -53,6 +53,9 @@
 				</view>
 			</u-card>
 		</view>
+		<view v-if="acticeList.length<= 0 ">
+			<u-empty text="暂无数据" mode="list"></u-empty>
+		</view>
 		<u-loadmore v-if="acticeList.length > 0" :status="loadStatus" :load-text="loadText" bgColor="#f5f5f5"
 			@loadmore="loadmore"></u-loadmore>
 		<!--引用组件-->
@@ -79,6 +82,7 @@
 					loading: '努力加载中',
 					nomore: '实在没有了'
 				},
+				skeleton:true
 			}
 		},
 		onLoad() {
@@ -109,7 +113,8 @@
 			},
 			async index(ispush = false) {
 				if (this.nomore) {
-					this.loadStatus = 'nomore'
+					this.loadStatus = 'nomore';
+					this.skeleton = false;
 					return
 				}
 				const result = await this.$http.get('/index/Hjob.ashx', {
@@ -131,7 +136,8 @@
 				// console.log(result.data.data)
 				if (!result.data.data) {
 					this.nomore = true;
-					this.loadStatus = "nomore"
+					this.loadStatus = "nomore";
+					this.skeleton = false;
 					return;
 				}
 				if (ispush) {
@@ -140,6 +146,7 @@
 					this.acticeList = result.data.data;
 				}
 				this.loadStatus = "loadmore";
+				this.skeleton = false;
 			},
 			search() {
 				this.nomore = false;
