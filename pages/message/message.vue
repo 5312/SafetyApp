@@ -3,12 +3,14 @@
 		<view class="mesbody">
 			<u-cell-group>
 				<u-cell-item
-				  v-for="x,y in message"
+				  v-for="(x,y) in message"
 				  :key="y"
 				  :title="x.xx_title" :label="x.createdate" :arrow="false">
 				  </u-cell-item>
 			</u-cell-group>
 		</view>
+		<u-loadmore v-if="message.length > 0" :status="loadStatus" :load-text="loadText" bgColor="#f5f5f5"
+			@loadmore="loadmore"></u-loadmore>
 	</view>
 </template>
 
@@ -21,6 +23,14 @@
 		data() {
 			return {
 				message:[],
+				page: 1,
+				nomore: false,
+				loadStatus: 'loadmore',
+				loadText: {
+					loadmore: '轻轻上拉',
+					loading: '努力加载中',
+					nomore: '实在没有了'
+				},
 			}
 		},
 		onLoad() {
@@ -29,9 +39,18 @@
 		computed:{
 			...mapState(['user', 'mesNum','userid']),
 		},
+		onReachBottom() {
+			this.loadStatus = "loading"
+			this.page += 1;
+			this.getMessage(true)
+		},
 		methods: {
 			...mapMutations(['setMessageNum']),
-			async getMessage(){
+			async getMessage(ispush = false){
+				if (this.nomore) {
+					this.loadStatus = 'nomore';
+					return
+				}
 				// 消息
 				const mes = await this.$http.get('/index/Hjob.ashx?type=sel', {
 					type: 'sel',
@@ -41,10 +60,22 @@
 					job: 'demo_node_1',
 					tbname: 'xx_news',
 					T: '新消息sql',
-					page: 1,
-					limit:3
+					page: this.page,
+					limit:10
 				})
-				this.message = mes.data.data
+				this.loading = false;
+				if (!mes.data.data) {
+					this.nomore = true;
+					this.loadStatus = "nomore";
+					return;
+				}
+				if (ispush) {
+					this.message.push(...mes.data.data)
+				} else {
+					this.message = mes.data.data;
+				}
+				this.loadStatus = "loadmore";
+				// this.message = mes.data.data
 				this.setMessageNum(mes.data.count)
 			},
 		}
