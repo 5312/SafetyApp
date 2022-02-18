@@ -1,5 +1,5 @@
 <!-- 
- * qiun-data-charts 秋云高性能跨全端图表组件 v2.3.3-20210706
+ * qiun-data-charts 秋云高性能跨全端图表组件 v2.3.7-20220118
  * Copyright (c) 2021 QIUN® 秋云 https://www.ucharts.cn All rights reserved.
  * Licensed ( http://www.apache.org/licenses/LICENSE-2.0 )
  * 复制使用请保留本段注释，感谢支持开源！
@@ -42,13 +42,13 @@
     </block>
     <block v-else>
       <view
-        @tap="rdcharts.tap"
-        @mousemove="rdcharts.mouseMove"
-        @mousedown="rdcharts.mouseDown"
-        @mouseup="rdcharts.mouseUp"
-        @touchstart="rdcharts.touchStart"
-        @touchmove="rdcharts.touchMove"
-        @touchend="rdcharts.touchEnd"
+        v-on:tap="rdcharts.tap"
+        v-on:mousemove="rdcharts.mouseMove"
+        v-on:mousedown="rdcharts.mouseDown"
+        v-on:mouseup="rdcharts.mouseUp"
+        v-on:touchstart="rdcharts.touchStart"
+        v-on:touchmove="rdcharts.touchMove"
+        v-on:touchend="rdcharts.touchEnd"
         :id="'UC'+cid"
         :prop="uchartsOpts"
         :change:prop="rdcharts.ucinit"
@@ -156,7 +156,7 @@
 </template>
 
 <script>
-import uChartsMp from '../../js_sdk/u-charts/u-charts.js';
+import uCharts from '../../js_sdk/u-charts/u-charts.js';
 import cfu from '../../js_sdk/u-charts/config-ucharts.js';
 // #ifdef APP-VUE || H5
 import cfe from '../../js_sdk/u-charts/config-echarts.js';
@@ -247,7 +247,7 @@ export default {
     },
     background: {
       type: String,
-      default: 'none'
+      default: 'rgba(0,0,0,0)'
     },
     animation: {
       type: Boolean,
@@ -373,6 +373,12 @@ export default {
     tapLegend: {
       type: Boolean,
       default: true
+    },
+    menus: {
+      type: Array,
+      default () {
+        return []
+      }
     }
   },
   data() {
@@ -403,7 +409,7 @@ export default {
   created(){
     this.cid = this.canvasId
     if (this.canvasId == 'uchartsid' || this.canvasId == '') {
-      let t = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+      let t = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
       let len = t.length
       let id = ''
       for (let i = 0; i < 32; i++) {
@@ -412,12 +418,12 @@ export default {
       this.cid = id
     }
     const systemInfo = uni.getSystemInfoSync()
-    if(systemInfo.platform === 'windows'){
+    if(systemInfo.platform === 'windows' || systemInfo.platform === 'mac'){
       this.inWin = true;
     }
     // #ifdef MP-WEIXIN
     this.inWx = true;
-    if (this.canvas2d === false || systemInfo.platform === 'windows') {
+    if (this.canvas2d === false || systemInfo.platform === 'windows' || systemInfo.platform === 'mac') {
       this.type2d = false;
     }else{
       this.pixel = systemInfo.pixelRatio;
@@ -870,7 +876,7 @@ export default {
             this.cWidth = data.width;
             this.cHeight = data.height;
             if(this.echarts !== true){
-              cfu.option[cid].background = this.background == 'none' ? '#FFFFFF' : this.background;
+              cfu.option[cid].background = this.background == 'rgba(0,0,0,0)' ? '#FFFFFF' : this.background;
               cfu.option[cid].canvas2d = this.type2d;
               cfu.option[cid].pixelRatio = this.pixel;
               cfu.option[cid].animation = this.animation;
@@ -995,7 +1001,7 @@ export default {
         return;
       }
       this.showchart = true;
-      cfu.instance[cid] = new uChartsMp(cfu.option[cid]);
+      cfu.instance[cid] = new uCharts(cfu.option[cid]);
       cfu.instance[cid].addEventListener('renderComplete', () => {
         this.emitMsg({name: 'complete', params: {type:"complete", complete: true, id: cid}});
         cfu.instance[cid].delEventListener('renderComplete')
@@ -1215,7 +1221,7 @@ export default {
     // #endif
     setTimeout(()=>{
       if(this.rid === null){
-        this.$ownerInstance.callMethod('getRenderType')
+        this.$ownerInstance && this.$ownerInstance.callMethod('getRenderType')
       }
     },200)
   },
@@ -1230,7 +1236,7 @@ export default {
     ecinit(newVal, oldVal, owner, instance){
       let cid = JSON.stringify(newVal.id)
       this.rid = cid
-      that[cid] = this.$ownerInstance
+      that[cid] = this.$ownerInstance || instance
       let eopts = JSON.parse(JSON.stringify(newVal))
       let type = eopts.type;
       //载入并覆盖默认配置
@@ -1285,6 +1291,10 @@ export default {
               x:resdata.event.offsetX,y:resdata.event.offsetY
             }))
             that[cid].callMethod('emitMsg',{name:"getIndex", params:{type:"getIndex", event:event, currentIndex:resdata.dataIndex, value:resdata.data, seriesName: resdata.seriesName,id:cid}})
+          })
+          // 增加ECharts的highlight消息，实现按下移动返回索引功能。add by onefish 创建于 2021-12-11 09:50
+          cfe.instance[cid].on('highlight', resdata => {
+            that[cid].callMethod('emitMsg',{name:"getHighlight", params:{type:"highlight", dataIndex:resdata.batch[0].dataIndex, id:cid}})
           })
         }
         this.updataEChart(cid,cfe.option[cid])
@@ -1344,9 +1354,12 @@ export default {
       if(JSON.stringify(newVal) == JSON.stringify(oldVal)){
         return;
       }
+      if(!newVal.canvasId){
+        return;
+      }
       let cid = JSON.parse(JSON.stringify(newVal.canvasId))
       this.rid = cid
-      that[cid] = this.$ownerInstance
+      that[cid] = this.$ownerInstance || instance
       cfu.option[cid] = JSON.parse(JSON.stringify(newVal))
       cfu.option[cid] = rdformatterAssign(cfu.option[cid],cfu.formatter)
       let canvasdom = document.getElementById(cid)
@@ -1442,6 +1455,7 @@ export default {
       }else{//mouse的事件
         tmpe = { x: e.clientX - rchartdom.left, y:e.clientY - rchartdom.top + rootdom.top}
       }
+      e.changedTouches = [];
       e.changedTouches.unshift(tmpe)
       currentIndex=cfu.instance[cid].getCurrentDataIndex(e)
       legendIndex=cfu.instance[cid].getLegendDataIndex(e)
@@ -1469,6 +1483,7 @@ export default {
       if(cfu.option[cid].ontap === true && cfu.option[cid].enableScroll === false && cfu.option[cid].onmovetip === true){
         let rchartdom = document.getElementById('UC'+cid).getBoundingClientRect()
         let tmpe = { x: e.changedTouches[0].clientX - rchartdom.left, y:e.changedTouches[0].clientY - rchartdom.top + rootdom.top}
+        e.changedTouches = [];
         e.changedTouches.unshift(tmpe)
         if(cfu.option[cid].tooltipShow === true){
           this.showTooltip(e,cid)
@@ -1489,6 +1504,7 @@ export default {
       let rchartdom = document.getElementById('UC'+cid).getBoundingClientRect()
       let tmpe = {}
       tmpe = { x: e.clientX - rchartdom.left, y:e.clientY - rchartdom.top + rootdom.top}
+      e.changedTouches = [];
       e.changedTouches.unshift(tmpe)
       cfu.instance[cid].scrollStart(e)
       cfu.option[cid].mousedown=true;
@@ -1502,6 +1518,7 @@ export default {
       let rchartdom = document.getElementById('UC'+cid).getBoundingClientRect()
       let tmpe = {}
       tmpe = { x: e.clientX - rchartdom.left, y:e.clientY - rchartdom.top + rootdom.top}
+      e.changedTouches = [];
       e.changedTouches.unshift(tmpe)
       if(cfu.option[cid].mousedown){
         cfu.instance[cid].scroll(e)
@@ -1519,6 +1536,7 @@ export default {
       let rchartdom = document.getElementById('UC'+cid).getBoundingClientRect()
       let tmpe = {}
       tmpe = { x: e.clientX - rchartdom.left, y:e.clientY - rchartdom.top + rootdom.top}
+      e.changedTouches = [];
       e.changedTouches.unshift(tmpe)
       cfu.instance[cid].scrollEnd(e)
       cfu.option[cid].mousedown=false;

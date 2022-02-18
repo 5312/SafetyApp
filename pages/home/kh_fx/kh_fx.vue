@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<u-card margin="20rpx" title="考核分析" @click="navto">
-			<view class="charts-box"  slot="body">
+			<view class="charts-box" slot="body">
 				<qiun-data-charts :errorShow="true" :echartsH5="true" :echartsApp="true" :errorReload="false"
 					:eopts="opts3" :loadingType="1" type="column" :localdata="khDataBase" />
 			</view>
@@ -40,7 +40,7 @@
 							"fontSize": 16,
 						}
 					},
-					
+
 					"xAxis": {
 						"name": "扣分",
 						"type": 'value',
@@ -49,10 +49,10 @@
 					"yAxis": {
 						"type": 'category',
 						"gridType": "dash",
-						"rotateLabel":true,
+						"rotateLabel": true,
 						"axisLabel": {
-							interval: 0,
-							rotate: 53
+							'interval': 0,
+							'rotate': 53
 						}
 					},
 					"grid": {
@@ -64,7 +64,7 @@
 					"legend": {
 						"show": false,
 					},
-					"seriesTemplate":{
+					"seriesTemplate": {
 						"type": 'bar',
 						"data": [],
 						"barwidth": 10,
@@ -73,7 +73,25 @@
 							"color": "#665809",
 							"position": 'right',
 						},
-					}
+					},
+					
+					"dataZoom": [{
+							'show': true,
+							'realtime': true,
+							'yAxisIndex': [0],
+							'start': 0,
+							'left': '-4%', //滑动条位置
+							'end': 50
+						},
+						{
+							'yAxisIndex': [0], //表示y轴折叠
+							'type': 'inside', // 'inside',
+							'yAxisIndex': [0], //表示y轴折叠
+							'realtime': true,
+							'start': 0,
+							'end': 50
+						}
+					],
 				},
 			}
 		},

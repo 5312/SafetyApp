@@ -40,7 +40,7 @@
 					mid: 'f53bc1eb-762e-43bc-9a87-1a676ad577ea',
 					job: 'demo_node_1',
 					tbname: 'xx_news',
-					T: '新消息sql',
+					T: '全部消息sql',//'新消息sql',
 					page: 1,
 					limit:3
 				})

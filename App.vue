@@ -46,7 +46,7 @@
 				}
 			},
 			async indexAddCatch(update = false) {
-				if (!this.$cache.get('_dangerData') || update ) {
+				if (!this.$cache.get('_dangerData') || update) {
 					// 隐患等级
 					this.$http.get('/index/Hjob.ashx?type=sel', {
 						tabid: 'YH_liebiao08d2367f-618b-429c-bb8f-5c7634ad508b',
@@ -61,7 +61,7 @@
 						this.$cache.set('_dangerData', res.data.data, 0)
 					})
 				}
-				if (!this.$cache.get('_dangertypeAllData') || update ) {
+				if (!this.$cache.get('_dangertypeAllData') || update) {
 					// 隐患种类
 					this.$http.get('/index/Hjob.ashx?type=sel', {
 						tabid: 'YH_liebiao08d2367f-618b-429c-bb8f-5c7634ad508b',
@@ -76,7 +76,7 @@
 						this.$cache.set('_dangertypeAllData', res.data.data, 0)
 					})
 				}
-				if (!this.$cache.get('_checkingType') || update ) {
+				if (!this.$cache.get('_checkingType') || update) {
 					// 检查类别
 					this.$http.get('/index/Hjob.ashx?type=sel', {
 						tabid: 'YH_liebiao08d2367f-618b-429c-bb8f-5c7634ad508b',
@@ -91,7 +91,7 @@
 						this.$cache.set('_checkingType', res.data.data, 0)
 					})
 				}
-				if (update ) {
+				if (update) {
 					let function_perms = ''
 					if (this.user.function_perms) {
 						function_perms = this.user.function_perms.split(",")
@@ -143,6 +143,9 @@
 </script>
 
 <style lang="scss">
+	// 
+	@import "colorui/main.css";
+	@import "colorui/icon.css";
 	/* 此处为style标签内容的最前面 */
 	@import "./static/font-icon/iconfont.css";
 	@import "uview-ui/index.scss";
@@ -159,6 +162,7 @@
 		/* 如果您想让slot内容与导航栏左右有空隙 */
 		padding: 0rpx 30rpx;
 	}
+
 	page {
 		height: 100%;
 		background-color: #f5f5f5;

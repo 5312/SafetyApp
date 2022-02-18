@@ -130,7 +130,7 @@
 						"top": 80,
 						"bottom": 30,
 						"right": 30,
-						"left": 50
+						"left": 80
 					},
 					"xAxis": {
 						"type": 'value',
@@ -139,8 +139,8 @@
 						"type": 'category',
 						"inverse": true,
 						"axisLabel": {
-							interval: 0,
-							rotate: 45
+							'interval': 0,
+							'rotate': 45
 						}
 					},
 					"title": {
@@ -161,7 +161,24 @@
 							"color": "#665809",
 							"position": 'right',
 						},
-					}
+					},
+					"dataZoom": [{
+							'show': true,
+							'realtime': true,
+							'yAxisIndex': [0],
+							'start': 0,
+							'left': '-4%', //滑动条位置
+							'end': 50
+						},
+						{
+							'yAxisIndex': [0], //表示y轴折叠
+							'type': 'inside', // 'inside',
+							'yAxisIndex': [0], //表示y轴折叠
+							'realtime': true,
+							'start': 0,
+							'end': 50
+						}
+					],
 				},
 				yh_qipao: { // uch
 					"xAxis": {
@@ -385,7 +402,7 @@
 				}
 				return {
 					"categories": cate,
-					"series": [ {
+					"series": [{
 						"name": "一般隐患",
 						"stack": 'total',
 						"data": c
@@ -393,7 +410,7 @@
 						"name": "较大隐患",
 						"stack": 'total',
 						"data": b
-					},{
+					}, {
 						"name": "重大隐患",
 						"stack": 'total',
 						"data": a
@@ -452,7 +469,7 @@
 					array.push(res[key]);
 				}
 				// console.log(array);
-				let formatdata = [0,0,0];
+				let formatdata = [0, 0, 0];
 
 				for (var i = 0; i < array.length; i++) {
 					const obj = array[i]

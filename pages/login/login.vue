@@ -66,8 +66,8 @@
 				password: '',
 				// #endif
 				// #ifndef APP-PLUS
-				tel: '测试',
-				password: '123456',
+				tel: 'admin',
+				password: 'zhouyefan',
 				// #endif
 				isRotate: false, //是否加载旋转
 				isFocus: true, // 是否聚焦

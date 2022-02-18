@@ -1,6 +1,10 @@
 {
 	"easycom": {
-		"^u-(.*)": "@/uview-ui/components/u-$1/u-$1.vue"
+		"autoscan": true,
+		"custom": {
+			"^u-(.*)": "@/uview-ui/components/u-$1/u-$1.vue",
+			"tui-(.*)": "@/components/thorui/tui-$1/tui-$1.vue"
+		}
 	},
 	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
 
@@ -259,6 +263,14 @@
 			}
 
 		}, {
+			"path": "pages/assessment/leader_kh/leader_kh",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false,
+				"navigationStyle": "custom"
+			}
+
+		}, {
 			"path": "pages/assessment/add_assessment/add_assessment",
 			"style": {
 				"navigationBarTitleText": "添加考核计划",
@@ -334,6 +346,7 @@
 			}
 
 		}
+
 	],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
@@ -360,10 +373,10 @@
 				"text": "控制台"
 			},
 			{
-				"pagePath": "pages/assessment/assessment",
+				"pagePath": "pages/assessment/leader_kh/leader_kh",
 				"iconPath": "/static/uview/example/fengxian.png",
 				"selectedIconPath": "/static/uview/example/fengxian_select.png",
-				"text": "考核管理"
+				"text": "领导考核"
 			},
 			{
 				"pagePath": "pages/index/index",

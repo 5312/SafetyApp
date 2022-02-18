@@ -3,7 +3,6 @@ import request from "./request";
 let baseUrl = "http://www.xxx.com/api/";
 //可以new多个request来支持多个域名请求
 let $http = new request({
-	withCredentials:true,
 	//接口请求地址
 	baseUrl: baseUrl,
 	//服务器本地上传文件地址
@@ -46,7 +45,32 @@ $http.getQnToken = function(callback){
 		});
 	});
 }
-
+// 添加获取阿里云token的方法
+$http.getAliToken = function(callback){
+	//该地址需要开发者自行配置（每个后台的接口风格都不一样）
+	$http.get("api/open/v1/ali_oss_upload").then(data => {
+		/*
+		 *接口返回参数：
+		 *visitPrefix: 访问文件的域名
+		 *folderPath: 上传的文件夹
+		 *region: 地区 
+		 *bucket: 阿里云的 bucket
+		 *accessKeyId: 阿里云的访问ID
+		 *accessKeySecret: 阿里云的访问密钥
+		 *stsToken: 阿里云的访问token
+		 */
+		callback({
+			accessKeyId: data.accessKeyId,
+			accessKeySecret: data.accessKeySecret,
+			bucket: data.bucket,
+			region: data.region,
+			visitPrefix: data.visitPrefix,
+			token: data.token,
+			folderPath: data.folderPath,
+			stsToken: data.securityToken,
+		});
+	});
+}
 //当前接口请求数
 let requestNum = 0;
 //请求开始拦截器
