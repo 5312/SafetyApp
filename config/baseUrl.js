@@ -4,7 +4,7 @@ if (process.env.NODE_ENV === 'development') {
 	// 开发环境
 	socketUrl = "ws://210.76.0.70:15449/handlers/websocket-connect.ashx";
 	baseUrl = "http://210.76.0.70:15449";
-	baseUrl = "http://210.76.0.70:15459";
+	// baseUrl = "http://210.76.0.70:15459";
 } else if (process.env.NODE_ENV === 'production') {
 	// 生产环境
 	baseUrl = "http://210.76.0.70:15459";
