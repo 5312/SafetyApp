@@ -538,6 +538,8 @@
 			this.getYhCount();
 			// 消息
 			this.getMessage()
+			
+
 			// this.$http.get("/index/Hjob.ashx?type=sel&t=app_update",{
 			// 	isPrompt: ''
 			// }).then(res=>{

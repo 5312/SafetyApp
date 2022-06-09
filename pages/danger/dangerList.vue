@@ -8,10 +8,8 @@
 		</u-navbar>
 		<view class="wrap">
 			<view class="u-tabs-box">
-				<!-- <u-tabs-swiper activeColor="#1e76ef" inactive-color="#1e76ef" ref="tabs" :list="list" :current="current"
-					@change="change" :is-scroll="false" swiperWidth="750"></u-tabs-swiper> -->
+				
 			</view>
-			<!-- <view class="u-tabs-box-shadow"></view>	 -->
 			<swiper class="swiper-box">
 				<swiper-item class="swiper-item" catchtouchmove="stopTouthMove" v-for="(x,y) in tabar" :key='y'>
 					<scroll-view v-if="orderList[x].length!= 0" scroll-y style="height: 100%;width: 100%;"
@@ -105,7 +103,7 @@
 									:style="{color:detailData?detailData.yh_level.split('~')[2]:''}">{{detailData?detailData.yh_level.split('~')[0]:''}}</text>
 							</view>
 							<view>
-								检查时间：<text>{{detailData.yh_requesttime}}</text>
+								要求完成时间：<text>{{detailData.yh_requesttime}}</text>
 							</view>
 						</view>
 					</view>

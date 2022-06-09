@@ -1,5 +1,13 @@
 <template>
-	<u-modal v-model="show" :show-cancel-button="true" confirm-text="升级" title="发现新版本" @cancel="cancel" @confirm="confirm">
+	<u-modal 
+	v-model="show" 
+	:show-cancel-button="true" 
+	:async-close="true" 
+	confirm-text="领导考核" 
+	cancel-text="单位考核"
+	title="请选择模块" 
+	@cancel="cancel" 
+	@confirm="confirm">
 		<view class="u-update-content">
 			<rich-text :nodes="content"></rich-text>
 		</view>
@@ -11,12 +19,7 @@
 		data() {
 			return {
 				show: false,
-				content: `
-					1. 修复badge组件的size参数无效问题<br>
-					2. 新增Modal模态框组件<br>
-					3. 新增压窗屏组件，可以在APP上以弹窗的形式遮盖导航栏和底部tabbar<br>
-					4. 修复键盘组件在微信小程序上遮罩无效的问题
-				`,
+				content: ``,
 			}
 		},
 		onReady() {
@@ -31,6 +34,7 @@
 			},
 			closeModal() {
 				uni.navigateBack();
+				this.show = false;
 			}
 		}
 	}

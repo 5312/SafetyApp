@@ -5,6 +5,7 @@
 				<u-search v-model="keyword" placeholder="考核查询" @search="search" @custom="search"></u-search>
 			</view>
 		</u-navbar>
+		<u-alert-tips type="warning" :description="description"></u-alert-tips>
 		<u-card v-if="acticeList.length == 0 && !loading" :show-head="false">
 			<view class="u-skeleton" slot="body">
 				<u-empty class="u-skeleton-fillet" text="暂无数据" mode="list"></u-empty>
@@ -88,10 +89,13 @@
 					loading: '努力加载中',
 					nomore: '实在没有了'
 				},
+				description:'领导考核'
 			}
 		},
-		onLoad() {
-			this.index()
+		onLoad() { 
+			this.index();
+			// 也可以在onShow生命周期打开，此为uView封装的请求方法
+
 		},
 		onShow() {
 			// this.index()
@@ -101,6 +105,9 @@
 		},
 		onPullDownRefresh() {
 			this.keyword = '';
+			this.page  = 1;
+			/* 重新 */
+			this.nomore = false;
 			this.index().then(res => {
 				uni.stopPullDownRefresh()
 			})
@@ -129,7 +136,7 @@
 					tbname: 'kh_leader',
 					T: '领导考核_list_sql',
 					page: this.page,
-					limit: 2,
+					limit: 5,
 				}, {
 					load: false
 				})

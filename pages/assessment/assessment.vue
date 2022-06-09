@@ -96,6 +96,7 @@
 		},
 		onPullDownRefresh() {
 			this.keyword = '';
+			this.nomore = false;
 			this.index().then(res => {
 				uni.stopPullDownRefresh()
 			})
@@ -126,14 +127,13 @@
 					T: '考核清单列表sql',
 					kh_plan_state: '1',
 					page: this.page,
-					limit: 10,
+					limit:5,
 					function_perms: this.user.function_perms,
 					keyword: this.keyword
 				}, {
 					load: false
 				})
 				this.loading = false;
-				// console.log(result.data.data)
 				if (!result.data.data) {
 					this.nomore = true;
 					this.loadStatus = "nomore";

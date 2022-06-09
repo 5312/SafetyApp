@@ -266,7 +266,7 @@
 			"path": "pages/assessment/leader_kh/leader_kh",
 			"style": {
 				"navigationBarTitleText": "",
-				"enablePullDownRefresh": false,
+				"enablePullDownRefresh": true,
 				"navigationStyle": "custom"
 			}
 
@@ -345,9 +345,31 @@
 				"navigationStyle": "custom" // 隐藏系统导航栏
 			}
 
+		},
+		{
+			"path": "uview-ui/components/u-full-screen/u-full-screen",
+			"style": {
+				"navigationStyle": "custom",  // 取消本页面的导航栏
+				"app-plus": {
+					"animationType": "fade-in", // 设置fade-in淡入动画，为最合理的动画类型
+					"background": "transparent", // 背景透明
+					"backgroundColor": "rgba(0,0,0,0)", // 背景透明
+					"popGesture": "none" // 关闭IOS屏幕左边滑动关闭当前页面的功能
+				}
+			}
 		}
 
-	],
+	    ,{
+            "path" : "pages/assessment/route_perms/route_perms",
+            "style" :                                                                                    
+            {
+               "navigationBarTitleText": "",
+               "enablePullDownRefresh": false,
+               "navigationStyle": "custom"
+            }
+            
+        }
+    ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "Safety",
@@ -373,7 +395,7 @@
 				"text": "控制台"
 			},
 			{
-				"pagePath": "pages/assessment/leader_kh/leader_kh",
+				"pagePath": "pages/assessment/route_perms/route_perms",
 				"iconPath": "/static/uview/example/fengxian.png",
 				"selectedIconPath": "/static/uview/example/fengxian_select.png",
 				"text": "领导考核"

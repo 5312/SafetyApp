@@ -390,15 +390,18 @@
 				let array = []
 				if (data.statusCode == '200') {
 					let data1 = data.data.data;
-					if (!data1) {
-						return;
-					}
 					if (ispush) {
-						array.push(data1)
+						array = this.f_list;
+						if (!data1) {
+							// array
+						}else{
+							array.push(...data1)
+						}
 					} else {
 						array = data1
 					}
 				}
+				// console.log(array)
 				this.f_list = array
 			},
 			// 页面数据
